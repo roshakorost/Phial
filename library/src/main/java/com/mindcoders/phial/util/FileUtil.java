@@ -1,5 +1,10 @@
 package com.mindcoders.phial.util;
 
+import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -23,6 +28,14 @@ public final class FileUtil {
             if (bw != null) {
                 bw.close();
             }
+        }
+    }
+
+    public static Uri getUriForFile(Context context, File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return FileProvider.getUriForFile(context, "com.wsitrader.fileprovider", file);
+        } else {
+            return Uri.fromFile(file);
         }
     }
 }

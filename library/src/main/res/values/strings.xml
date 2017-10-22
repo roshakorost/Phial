@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">phial</string>
+    <string name="enter_message">share.enter_message</string>
 </resources>
