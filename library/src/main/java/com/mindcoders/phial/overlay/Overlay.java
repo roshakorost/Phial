@@ -187,7 +187,8 @@ public final class Overlay {
 
         @Override
         public void onPageSelectionChanged(OverlayView.Page page) {
-
+            pageContainer.removeAllViews();
+            pageContainer.addView(page.pageViewFactory.onPageCreate());
         }
 
         @Override
