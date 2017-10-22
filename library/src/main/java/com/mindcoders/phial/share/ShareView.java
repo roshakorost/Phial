@@ -37,12 +37,13 @@ public class ShareView extends FrameLayout {
     public ShareView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.view_share, this, true);
-        contentRV = findViewById(R.id.message);
-        messageTV = findViewById(R.id.content);
+        contentRV = findViewById(R.id.content);
+        messageTV = findViewById(R.id.message);
 
         adapter = new ShareAdapter(LayoutInflater.from(context));
 
         contentRV.setLayoutManager(new GridLayoutManager(context, 4));
+        contentRV.setAdapter(adapter);
     }
 
     public void setFiles(List<File> attachment) {
