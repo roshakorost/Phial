@@ -18,6 +18,8 @@ public interface KVSaver {
      */
     void setKey(String key, String value);
 
+    void setKey(String key, Object object);
+
     /**
      * Removes entry with given key from debug data.
      * <p>
