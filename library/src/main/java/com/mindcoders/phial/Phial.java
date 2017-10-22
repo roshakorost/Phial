@@ -1,10 +1,14 @@
 package com.mindcoders.phial;
 
+import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mindcoders.phial.keyvalue.KVEntry;
 import com.mindcoders.phial.keyvalue.KVSaver;
+import com.mindcoders.phial.overlay.Overlay;
+import com.mindcoders.phial.overlay.OverlayLifecycleCallbacks;
 
 import java.util.List;
 
@@ -13,6 +17,9 @@ import java.util.List;
  */
 
 public final class Phial {
+
+    private static Overlay overlay;
+
     private static final KVStore KV_STORE = new KVStore();
 
     /**
@@ -42,11 +49,18 @@ public final class Phial {
     /**
      * Set's category name that will be associated with Key.
      */
-    public KVSaver category(String categoryName) {
+    public static KVSaver category(String categoryName) {
         return KV_STORE.category(categoryName);
     }
 
     static List<KVEntry> getEntries() {
         return KV_STORE.getEntries();
     }
+
+    public static void init(Application application) {
+        overlay = new Overlay(application);
+        OverlayLifecycleCallbacks overlayLifecycleCallbacks = new OverlayLifecycleCallbacks(overlay);
+        application.registerActivityLifecycleCallbacks(overlayLifecycleCallbacks);
+    }
+
 }
