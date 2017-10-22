@@ -1,6 +1,6 @@
 package com.mindcoders.phial.sample;
 
-import com.mindcoders.phial.overlay.Overlay;
+import com.mindcoders.phial.Phial;
 
 import android.app.Application;
 
@@ -10,7 +10,7 @@ public class SampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Overlay overlay = new Overlay(this);
+        Phial.init(this);
     }
 
 }

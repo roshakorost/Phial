@@ -4,9 +4,15 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-public final class OverlayLifecycleListener implements Application.ActivityLifecycleCallbacks {
+public final class OverlayLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+
+    private final Overlay overlay;
 
     private int activeActivityCount;
+
+    public OverlayLifecycleCallbacks(Overlay overlay) {
+        this.overlay = overlay;
+    }
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -47,7 +53,9 @@ public final class OverlayLifecycleListener implements Application.ActivityLifec
 
     private void toggleOverlay() {
         if (activeActivityCount > 0) {
-
+            overlay.show();
+        } else {
+            overlay.hide();
         }
     }
 
