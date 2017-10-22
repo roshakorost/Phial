@@ -40,6 +40,6 @@ public class ShareView extends FrameLayout {
 
     void setFiles(List<File> attachment) {
         final ShareManager shareManager = ShareManager.getInstance();
-        final List<ShareItem> shareables = shareManager.getShareables(attachment);
+        final List<ShareItem> shareables = shareManager.getShareables();
     }
 }

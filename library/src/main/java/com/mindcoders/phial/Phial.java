@@ -1,6 +1,7 @@
 package com.mindcoders.phial;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -8,14 +9,35 @@ import com.mindcoders.phial.keyvalue.KVCategoryProvider;
 import com.mindcoders.phial.keyvalue.KVSaver;
 import com.mindcoders.phial.overlay.Overlay;
 import com.mindcoders.phial.overlay.OverlayLifecycleCallbacks;
+import com.mindcoders.phial.share.Shareable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rost on 10/22/17.
  */
 
 public final class Phial {
+    private static Phial instance;
+    private final Context context;
+    private final List<Shareable> userSharables = new ArrayList<>();
 
-    private static Overlay overlay;
+    public Phial(Context context) {
+        this.context = context;
+    }
+
+    public static Phial getInstance() {
+        return instance;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public List<Shareable> getSharables() {
+        return userSharables;
+    }
 
     /**
      * Sets a value to be associated with your debug data.
@@ -62,7 +84,9 @@ public final class Phial {
     }
 
     public static void init(Application application) {
-        overlay = new Overlay(application);
+        instance = new Phial(application);
+
+        final Overlay overlay = new Overlay(application);
         OverlayLifecycleCallbacks overlayLifecycleCallbacks = new OverlayLifecycleCallbacks(overlay);
         application.registerActivityLifecycleCallbacks(overlayLifecycleCallbacks);
     }
