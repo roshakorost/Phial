@@ -2,8 +2,10 @@ package com.mindcoders.phial.overlay;
 
 import android.view.View;
 
-interface PageViewFactory {
+interface PageViewFactory<T extends View> {
 
-    View createPageView();
+    T onPageCreate();
+
+    void onPageDestroy(T view);
 
 }

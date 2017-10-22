@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public final class KVCategoryProvider extends Observable {
     private static final KVCategoryProvider instance = new KVCategoryProvider();
-    private static final String DEFAULT_CATEGORY_NAME = null;
+    private static final String DEFAULT_CATEGORY_NAME = "Default";
 
     public static KVCategoryProvider getInstance() {
         return instance;

@@ -1,6 +1,7 @@
 package com.mindcoders.phial.overlay;
 
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.keyvalue.KeyValueView;
 import com.mindcoders.phial.overlay.OverlayView.OnPageSelectedListener;
 
 import android.animation.Animator;
@@ -50,10 +51,15 @@ public final class Overlay {
 
         overlayView.addPage(new OverlayView.Page(
                 R.drawable.ic_keyvalue,
-                new PageViewFactory() {
+                new PageViewFactory<KeyValueView>() {
                     @Override
-                    public View createPageView() {
+                    public KeyValueView onPageCreate() {
                         return new KeyValueView(context);
+                    }
+
+                    @Override
+                    public void onPageDestroy(KeyValueView view) {
+                        view.onDestroy();
                     }
                 }
         ));
@@ -180,7 +186,7 @@ public final class Overlay {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             createPageContainer();
-                            pageContainer.addView(page.pageViewFactory.createPageView());
+                            pageContainer.addView(page.pageViewFactory.onPageCreate());
                         }
                     }
                    );

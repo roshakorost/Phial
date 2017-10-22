@@ -89,6 +89,7 @@ public final class Phial {
         final Overlay overlay = new Overlay(application);
         OverlayLifecycleCallbacks overlayLifecycleCallbacks = new OverlayLifecycleCallbacks(overlay);
         application.registerActivityLifecycleCallbacks(overlayLifecycleCallbacks);
+        SystemInfoWriter.writeSystemInfo(KVCategoryProvider.getInstance().defaultCategory(), application);
     }
 
 }
