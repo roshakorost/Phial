@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -23,7 +24,9 @@ public class ShareView extends FrameLayout {
     private final RecyclerView contentRV;
     private final EditText messageTV;
 
-    public ShareView(@NonNull Context context) {
+    private final ShareAdapter adapter;
+
+    public ShareView(@NonNull Context context){
         this(context, null);
     }
 
@@ -36,10 +39,17 @@ public class ShareView extends FrameLayout {
         LayoutInflater.from(context).inflate(R.layout.view_share, this, true);
         contentRV = findViewById(R.id.message);
         messageTV = findViewById(R.id.content);
+
+        adapter = new ShareAdapter(LayoutInflater.from(context));
+
+        contentRV.setLayoutManager(new GridLayoutManager(context, 4));
     }
 
-    void setFiles(List<File> attachment) {
+    public void setFiles(List<File> attachment) {
         final ShareManager shareManager = ShareManager.getInstance();
         final List<ShareItem> shareables = shareManager.getShareables();
+
+        adapter.swapData(shareables);
     }
+
 }

@@ -3,6 +3,10 @@ package com.mindcoders.phial.overlay;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.keyvalue.KeyValueView;
 import com.mindcoders.phial.overlay.OverlayView.OnPageSelectedListener;
+import com.mindcoders.phial.share.ShareView;
+
+import java.io.File;
+import java.util.Collections;
 
 import android.animation.Animator;
 import android.animation.PropertyValuesHolder;
@@ -60,6 +64,23 @@ public final class Overlay {
                     @Override
                     public void onPageDestroy(KeyValueView view) {
                         view.onDestroy();
+                    }
+                }
+        ));
+
+        overlayView.addPage(new OverlayView.Page(
+                R.drawable.ic_keyvalue,
+                new PageViewFactory<ShareView>() {
+                    @Override
+                    public ShareView onPageCreate() {
+                        ShareView shareView = new ShareView(context);
+                        shareView.setFiles(Collections.<File>emptyList());
+                        return shareView;
+                    }
+
+                    @Override
+                    public void onPageDestroy(ShareView view) {
+
                     }
                 }
         ));

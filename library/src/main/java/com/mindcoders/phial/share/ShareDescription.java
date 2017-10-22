@@ -22,4 +22,12 @@ public class ShareDescription {
     public ShareDescription(Context context, @DrawableRes int drawableRes, @StringRes int label) {
         this(ContextCompat.getDrawable(context, drawableRes), context.getString(label));
     }
+
+    public Drawable getDrawable() {
+        return drawable;
+    }
+
+    public CharSequence getLabel() {
+        return label;
+    }
 }
