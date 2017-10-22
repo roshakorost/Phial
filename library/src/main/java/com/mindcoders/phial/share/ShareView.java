@@ -12,6 +12,9 @@ import android.widget.FrameLayout;
 
 import com.mindcoders.phial.R;
 
+import java.io.File;
+import java.util.List;
+
 /**
  * Created by rost on 10/22/17.
  */
@@ -33,5 +36,10 @@ public class ShareView extends FrameLayout {
         LayoutInflater.from(context).inflate(R.layout.view_share, this, true);
         contentRV = findViewById(R.id.message);
         messageTV = findViewById(R.id.content);
+    }
+
+    void setFiles(List<File> attachment) {
+        final ShareManager shareManager = ShareManager.getInstance();
+        final List<ShareItem> shareables = shareManager.getShareables(attachment);
     }
 }

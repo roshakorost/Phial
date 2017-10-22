@@ -20,6 +20,15 @@ import java.util.List;
 class ShareManager {
     private final Context context;
     private final List<ShareItem> userShareItems;
+    private static ShareManager instance;
+
+    static ShareManager getInstance() {
+        if (instance == null) {
+            instance = new ShareManager(null, null);
+        }
+
+        return instance;
+    }
 
     ShareManager(Context context, List<Shareable> userShareables) {
         this.context = context;
