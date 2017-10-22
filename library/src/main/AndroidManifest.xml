@@ -1,3 +1,7 @@
-<manifest package="com.mindcoders.phial">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mindcoders.phial">
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
 </manifest>
