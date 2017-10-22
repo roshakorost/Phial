@@ -89,5 +89,10 @@ public final class KVCategoryProvider extends Observable {
             }
             return result;
         }
+
+        @Override
+        public boolean isEmpty() {
+            return keyValues.isEmpty();
+        }
     }
 }
