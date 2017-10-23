@@ -5,11 +5,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mindcoders.phial.keyvalue.KVCategoryProvider;
-import com.mindcoders.phial.keyvalue.KVSaver;
-import com.mindcoders.phial.overlay.Overlay;
-import com.mindcoders.phial.overlay.OverlayLifecycleCallbacks;
-import com.mindcoders.phial.share.Shareable;
+import com.mindcoders.phial.internal.keyvalue.KVCategoryProvider;
+import com.mindcoders.phial.internal.keyvalue.SystemInfoWriter;
+import com.mindcoders.phial.internal.overlay.Overlay;
+import com.mindcoders.phial.internal.overlay.OverlayLifecycleCallbacks;
 
 import java.util.ArrayList;
 import java.util.List;
