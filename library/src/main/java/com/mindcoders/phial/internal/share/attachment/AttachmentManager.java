@@ -1,6 +1,7 @@
 package com.mindcoders.phial.internal.share.attachment;
 
 import com.mindcoders.phial.Attacher;
+import com.mindcoders.phial.PhialListener;
 import com.mindcoders.phial.internal.PhialErrorHandler;
 
 import java.io.File;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by rost on 10/22/17.
  */
-public class AttachmentManager {
+public class AttachmentManager implements PhialListener {
     private final List<Attacher> providers;
 
     public AttachmentManager(List<Attacher> providers) {
@@ -29,5 +30,19 @@ public class AttachmentManager {
         }
 
         return result;
+    }
+
+    @Override
+    public void onDebugWindowShow() {
+        for (Attacher provider : providers) {
+            provider.onPreDebugWindowCreated();
+        }
+    }
+
+    @Override
+    public void onDebugWindowHide() {
+        for (Attacher provider : providers) {
+            provider.onAttachmentNotNeeded();
+        }
     }
 }

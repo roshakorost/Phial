@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.mindcoders.phial.Attacher;
 import com.mindcoders.phial.PhialBuilder;
+import com.mindcoders.phial.internal.keyvalue.KVAttacher;
 import com.mindcoders.phial.internal.keyvalue.KVCategoryProvider;
 import com.mindcoders.phial.internal.keyvalue.SystemInfoWriter;
 import com.mindcoders.phial.internal.overlay.Overlay;
@@ -89,8 +90,9 @@ public final class PhialCore {
         final KVCategoryProvider categoryProvider = new KVCategoryProvider();
         final PhialNotifier phialNotifier = new PhialNotifier();
 
-        final List<Attacher> attachers = prepareAttachers(phialBuilder, activityProvider, phialNotifier);
+        final List<Attacher> attachers = prepareAttachers(phialBuilder, categoryProvider, activityProvider);
         final AttachmentManager attachmentManager = new AttachmentManager(attachers);
+        phialNotifier.addListener(attachmentManager);
 
         final ShareManager shareManager = new ShareManager(application, phialBuilder.getShareables());
 
@@ -121,19 +123,27 @@ public final class PhialCore {
 
     private static List<Attacher> prepareAttachers(
             PhialBuilder phialBuilder,
-            CurrentActivityProvider activityProvider,
-            PhialNotifier notifier) {
-        final boolean attachScreenShots = phialBuilder.isAttachScreenshots();
+            KVCategoryProvider categoryProvider,
+            CurrentActivityProvider activityProvider) {
         final List<Attacher> attachers = new ArrayList<>(phialBuilder.getAttachers());
-        if (attachScreenShots) {
-            final ScreenShotAttacher screenShotAttacher = new ScreenShotAttacher(
+
+        if (phialBuilder.isAttachKeyValues()) {
+            final KVAttacher attacher = new KVAttacher(
+                    categoryProvider,
+                    InternalPhialConfig.getKeyValueFile(phialBuilder.getApplication())
+            );
+            attachers.add(attacher);
+        }
+
+        if (phialBuilder.isAttachScreenshots()) {
+            final Attacher screenShotAttacher = new ScreenShotAttacher(
                     activityProvider,
                     InternalPhialConfig.getScreenShotFile(phialBuilder.getApplication()),
                     DEFAULT_SHARE_IMAGE_QUALITY
             );
-            notifier.addListener(screenShotAttacher);
             attachers.add(screenShotAttacher);
         }
+
         return attachers;
     }
 }

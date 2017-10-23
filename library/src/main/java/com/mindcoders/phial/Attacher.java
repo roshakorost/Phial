@@ -12,4 +12,8 @@ public interface Attacher {
      * If method returns directory all files from it would be attached to debug data.
      */
     File provideAttachment() throws Exception;
+
+    void onPreDebugWindowCreated();
+
+    void onAttachmentNotNeeded();
 }

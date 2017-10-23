@@ -12,17 +12,23 @@ class InternalPhialConfig {
     //should match value in res/path.xml
     private static final String PHIAL_DATA = "PhialData";
     private static final String SCREEN_SHOT_FILE_NAME = "screenshot.jpg";
+    private static final String KEY_VALUE_FILE_NAME = "keyValues.json";
     static final int DEFAULT_SHARE_IMAGE_QUALITY = 95;
     static final String SYSTEM_INFO_CATEGORY = "System";
 
-    static File getShareFromDirectory(Context context) {
+    static File getWorkingDirectory(Context context) {
         final File file = new File(context.getExternalCacheDir(), PHIAL_DATA);
         file.mkdirs();
         return file;
     }
 
     static File getScreenShotFile(Context context) {
-        final File directory = getShareFromDirectory(context);
+        final File directory = getWorkingDirectory(context);
         return new File(directory, SCREEN_SHOT_FILE_NAME);
+    }
+
+    static File getKeyValueFile(Context context) {
+        final File directory = getWorkingDirectory(context);
+        return new File(directory, KEY_VALUE_FILE_NAME);
     }
 }

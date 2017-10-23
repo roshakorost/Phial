@@ -16,7 +16,7 @@ import java.io.File;
  * Created by rost on 10/22/17.
  */
 
-public class ScreenShotAttacher implements Attacher, PhialListener {
+public class ScreenShotAttacher implements Attacher {
     private final CurrentActivityProvider activityProvider;
     private final File targetFile;
     private final int quality;
@@ -33,7 +33,7 @@ public class ScreenShotAttacher implements Attacher, PhialListener {
     }
 
     @Override
-    public void onDebugWindowShow() {
+    public void onPreDebugWindowCreated() {
         try {
             final Window window = activityProvider.getActivity().getWindow();
             final Bitmap bitmap = ScreenShotUtil.takeScreenShot(window);
@@ -44,7 +44,7 @@ public class ScreenShotAttacher implements Attacher, PhialListener {
     }
 
     @Override
-    public void onDebugWindowHide() {
+    public void onAttachmentNotNeeded() {
         targetFile.delete();
     }
 }

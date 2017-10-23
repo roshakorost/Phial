@@ -9,13 +9,18 @@ import java.util.List;
 /**
  * Created by rost on 10/22/17.
  */
-class KVAttacher implements Attacher {
+public class KVAttacher implements Attacher {
     private final File targetFile;
     private final KVCategoryProvider categoryProvider;
     private final KVJsonSerializer jsonSerializer;
 
-    public KVAttacher(File targetDirectory, KVCategoryProvider categoryProvider, KVJsonSerializer jsonSerializer) {
-        this.targetFile = targetDirectory;
+
+    public KVAttacher(KVCategoryProvider categoryProvider, File targetFile) {
+        this(categoryProvider, targetFile, new KVJsonSerializer());
+    }
+
+    public KVAttacher(KVCategoryProvider categoryProvider, File targetFile, KVJsonSerializer jsonSerializer) {
+        this.targetFile = targetFile;
         this.categoryProvider = categoryProvider;
         this.jsonSerializer = jsonSerializer;
     }
@@ -26,5 +31,15 @@ class KVAttacher implements Attacher {
         final String text = jsonSerializer.serializeToString(categories);
         FileUtil.write(text, targetFile);
         return targetFile;
+    }
+
+    @Override
+    public void onPreDebugWindowCreated() {
+
+    }
+
+    @Override
+    public void onAttachmentNotNeeded() {
+        targetFile.delete();
     }
 }
