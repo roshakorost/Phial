@@ -41,7 +41,10 @@ public final class KeyValueView extends FrameLayout {
         categoryProvider.addObserver(observer);
     }
 
-    public void onDestroy() {
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
         categoryProvider.deleteObserver(observer);
     }
+
 }

@@ -70,21 +70,19 @@ public final class Overlay {
         overlayView.addPage(new OverlayView.Page(
                 R.drawable.ic_keyvalue,
                 new PageViewFactory<KeyValueView>() {
+
                     @Override
                     public KeyValueView createPageView() {
                         return new KeyValueView(context);
                     }
 
-                    @Override
-                    public void onPageDestroy(KeyValueView view) {
-                        view.onDestroy();
-                    }
                 }
         ));
 
         overlayView.addPage(new OverlayView.Page(
                 R.drawable.ic_share,
                 new PageViewFactory<ShareView>() {
+
                     @Override
                     public ShareView createPageView() {
                         ShareView shareView = new ShareView(context);
@@ -92,10 +90,6 @@ public final class Overlay {
                         return shareView;
                     }
 
-                    @Override
-                    public void onPageDestroy(ShareView view) {
-
-                    }
                 }
         ));
     }

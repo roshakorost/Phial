@@ -6,6 +6,4 @@ interface PageViewFactory<T extends View> {
 
     T createPageView();
 
-    void onPageDestroy(T view);
-
 }
