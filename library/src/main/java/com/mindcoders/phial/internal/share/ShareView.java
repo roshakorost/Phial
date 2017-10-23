@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.mindcoders.phial.R;
-import com.mindcoders.phial.internal.PhialComponent;
+import com.mindcoders.phial.internal.PhialCore;
 
 import java.io.File;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ShareView extends FrameLayout {
 
     public ShareView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        shareManager = PhialComponent.get(ShareManager.class);
+        shareManager = PhialCore.getInstance().getShareManager();
 
         LayoutInflater.from(context).inflate(R.layout.view_share, this, true);
         contentRV = findViewById(R.id.content);

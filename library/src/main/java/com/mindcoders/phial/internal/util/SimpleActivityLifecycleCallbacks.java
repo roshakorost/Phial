@@ -1,19 +1,14 @@
-package com.mindcoders.phial.internal.overlay;
+package com.mindcoders.phial.internal.util;
 
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-public final class OverlayLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+/**
+ * Created by rost on 10/23/17.
+ */
 
-    private final Overlay overlay;
-
-    private int activeActivityCount;
-
-    public OverlayLifecycleCallbacks(Overlay overlay) {
-        this.overlay = overlay;
-    }
-
+public class SimpleActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
@@ -21,8 +16,7 @@ public final class OverlayLifecycleCallbacks implements Application.ActivityLife
 
     @Override
     public void onActivityStarted(Activity activity) {
-        activeActivityCount++;
-        toggleOverlay();
+
     }
 
     @Override
@@ -37,8 +31,7 @@ public final class OverlayLifecycleCallbacks implements Application.ActivityLife
 
     @Override
     public void onActivityStopped(Activity activity) {
-        activeActivityCount--;
-        toggleOverlay();
+
     }
 
     @Override
@@ -50,13 +43,4 @@ public final class OverlayLifecycleCallbacks implements Application.ActivityLife
     public void onActivityDestroyed(Activity activity) {
 
     }
-
-    private void toggleOverlay() {
-        if (activeActivityCount > 0) {
-            overlay.show();
-        } else {
-            overlay.hide();
-        }
-    }
-
 }

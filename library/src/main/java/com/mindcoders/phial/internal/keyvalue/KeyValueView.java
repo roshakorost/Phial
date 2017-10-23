@@ -2,7 +2,7 @@ package com.mindcoders.phial.internal.keyvalue;
 
 
 import com.mindcoders.phial.R;
-import com.mindcoders.phial.internal.PhialComponent;
+import com.mindcoders.phial.internal.PhialCore;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -20,7 +20,7 @@ public final class KeyValueView extends FrameLayout {
 
     private final CategoriesConverter converter = new CategoriesConverter();
 
-    private final KVCategoryProvider categoryProvider = PhialComponent.get(KVCategoryProvider.class);
+    private final KVCategoryProvider categoryProvider = PhialCore.getInstance().getCategoryProvider();
 
     private final Observer observer = new Observer() {
         @Override

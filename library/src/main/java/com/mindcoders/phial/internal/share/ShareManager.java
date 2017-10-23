@@ -7,9 +7,7 @@ import android.net.Uri;
 
 import com.mindcoders.phial.Shareable;
 import com.mindcoders.phial.internal.util.CollectionUtils;
-import com.mindcoders.phial.internal.util.FileUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,16 +25,21 @@ public class ShareManager {
         this.userShareItems = createUserShareItem(userShareables);
     }
 
-    Intent createShareIntent(ArrayList<Uri> files, String message) {
-        return new Intent(Intent.ACTION_SEND)
+    Intent createShareIntent(Uri file, String message) {
+        final Intent intent = new Intent(Intent.ACTION_SEND)
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                .setType("*/*")
-                .putExtra(Intent.EXTRA_TEXT, message)
-                .putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                .setType("application/zip")
+                .putExtra(Intent.EXTRA_TEXT, message);
+
+        if (file != null) {
+            intent.putExtra(Intent.EXTRA_STREAM, file);
+        }
+
+        return intent;
     }
 
     List<ShareItem> getShareables() {
-        final Intent shareIntent = createShareIntent(new ArrayList<Uri>(), "dummy message");
+        final Intent shareIntent = createShareIntent(null, "dummy message");
 
         final List<ResolveInfo> infos = context.getPackageManager().queryIntentActivities(shareIntent, 0);
 
@@ -52,15 +55,6 @@ public class ShareManager {
             @Override
             public ShareItem call(ResolveInfo info) {
                 return ShareItem.create(context, info);
-            }
-        });
-    }
-
-    private ArrayList<Uri> getUris(List<File> files) {
-        return CollectionUtils.map(files, new CollectionUtils.Function1<Uri, File>() {
-            @Override
-            public Uri call(File file) {
-                return FileUtil.getUriForFile(context, file);
             }
         });
     }

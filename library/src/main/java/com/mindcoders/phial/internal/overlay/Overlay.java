@@ -1,9 +1,11 @@
 package com.mindcoders.phial.internal.overlay;
 
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.internal.PhialNotifier;
 import com.mindcoders.phial.internal.keyvalue.KeyValueView;
 import com.mindcoders.phial.internal.overlay.OverlayView.OnPageSelectedListener;
 import com.mindcoders.phial.internal.share.ShareView;
+import com.mindcoders.phial.internal.util.CurrentActivityProvider;
 import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
 
 import java.io.File;
@@ -23,10 +25,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-public final class Overlay {
-
+public final class Overlay implements CurrentActivityProvider.AppStateListener {
     private final static int BUTTON_SIZE = 160;
 
+    private final PhialNotifier notifier;
     private final Context context;
 
     final WindowManager windowManager;
@@ -41,9 +43,9 @@ public final class Overlay {
 
     private ViewGroup pageContainer;
 
-    public Overlay(final Context context) {
+    public Overlay(PhialNotifier notifier, final Context context) {
+        this.notifier = notifier;
         this.context = context;
-
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getSize(displaySize);
 
@@ -111,11 +113,11 @@ public final class Overlay {
         return permissionFlag;
     }
 
-    public void show() {
+    private void show() {
         overlayView.setVisibility(View.VISIBLE);
     }
 
-    public void hide() {
+    private void hide() {
         overlayView.setVisibility(View.GONE);
     }
 
@@ -183,11 +185,13 @@ public final class Overlay {
 
         @Override
         public void onFirstPageSelected(OverlayView.Page page) {
+            notifier.fireDebugWindowShown();
             animateForward(page);
         }
 
         @Override
         public void onPageSelectionChanged(OverlayView.Page page) {
+            notifier.fireDebugWindowHide();
             pageContainer.removeAllViews();
             pageContainer.addView(page.pageViewFactory.onPageCreate());
         }
@@ -212,7 +216,7 @@ public final class Overlay {
                             pageContainer.addView(page.pageViewFactory.onPageCreate());
                         }
                     }
-                   );
+            );
         }
 
         private void animateBackward() {
@@ -229,13 +233,13 @@ public final class Overlay {
                             windowManager.removeView(pageContainer);
                         }
                     }
-                   );
+            );
         }
 
         private void animate(
                 int startX, int endX, int startY, int endY, final View view, final WindowManager.LayoutParams params,
                 Animator.AnimatorListener listener
-                            ) {
+        ) {
             PropertyValuesHolder x = PropertyValuesHolder.ofInt("x", startX, endX);
             PropertyValuesHolder y = PropertyValuesHolder.ofInt("y", startY, endY);
             ValueAnimator valueAnimator = ValueAnimator.ofPropertyValuesHolder(x, y);
@@ -254,4 +258,13 @@ public final class Overlay {
 
     };
 
+    @Override
+    public void onAppForeground() {
+        show();
+    }
+
+    @Override
+    public void onAppBackground() {
+        hide();
+    }
 }

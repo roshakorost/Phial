@@ -10,7 +10,7 @@ public class SampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Phial.init(this);
+        Phial.builder(this).initPhial();
     }
 
 }

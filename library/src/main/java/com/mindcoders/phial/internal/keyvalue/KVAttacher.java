@@ -1,6 +1,6 @@
 package com.mindcoders.phial.internal.keyvalue;
 
-import com.mindcoders.phial.AttachmentProvider;
+import com.mindcoders.phial.Attacher;
 import com.mindcoders.phial.internal.util.FileUtil;
 
 import java.io.File;
@@ -9,12 +9,12 @@ import java.util.List;
 /**
  * Created by rost on 10/22/17.
  */
-class KVAttachmentProvider implements AttachmentProvider {
+class KVAttacher implements Attacher {
     private final File targetFile;
     private final KVCategoryProvider categoryProvider;
     private final KVJsonSerializer jsonSerializer;
 
-    public KVAttachmentProvider(File targetDirectory, KVCategoryProvider categoryProvider, KVJsonSerializer jsonSerializer) {
+    public KVAttacher(File targetDirectory, KVCategoryProvider categoryProvider, KVJsonSerializer jsonSerializer) {
         this.targetFile = targetDirectory;
         this.categoryProvider = categoryProvider;
         this.jsonSerializer = jsonSerializer;
