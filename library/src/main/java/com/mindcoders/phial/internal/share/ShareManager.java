@@ -7,7 +7,9 @@ import android.net.Uri;
 
 import com.mindcoders.phial.Shareable;
 import com.mindcoders.phial.internal.util.CollectionUtils;
+import com.mindcoders.phial.internal.util.FileUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,19 +27,6 @@ public class ShareManager {
         this.userShareItems = createUserShareItem(userShareables);
     }
 
-    Intent createShareIntent(Uri file, String message) {
-        final Intent intent = new Intent(Intent.ACTION_SEND)
-                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                .setType("application/zip")
-                .putExtra(Intent.EXTRA_TEXT, message);
-
-        if (file != null) {
-            intent.putExtra(Intent.EXTRA_STREAM, file);
-        }
-
-        return intent;
-    }
-
     List<ShareItem> getShareables() {
         final Intent shareIntent = createShareIntent(null, "dummy message");
 
@@ -48,6 +37,40 @@ public class ShareManager {
         result.addAll(createSystemShareItems(infos));
 
         return result;
+    }
+
+    void share(ShareItem shareItem, File attachment, String message) {
+        if (shareItem instanceof SystemShareItem) {
+            share((SystemShareItem) shareItem, attachment, message);
+        } else if (shareItem instanceof UserShareItem) {
+            share((UserShareItem) shareItem, attachment, message);
+        } else {
+            throw new IllegalArgumentException("unexpected share item type " + shareItem);
+        }
+    }
+
+    void share(SystemShareItem shareItem, File attachment, String message) {
+        final Uri uri = FileUtil.getUri(context, attachment);
+        final Intent shareIntent = createShareIntent(uri, message);
+        shareIntent.setComponent(shareItem.getComponentName());
+        context.startActivity(shareIntent);
+    }
+
+    void share(UserShareItem shareItem, File attachment, String message) {
+        shareItem.getShareable().share(attachment, message);
+    }
+
+    private Intent createShareIntent(Uri file, String message) {
+        final Intent intent = new Intent(Intent.ACTION_SEND)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                .setType("application/zip")
+                .putExtra(Intent.EXTRA_TEXT, message);
+
+        if (file != null) {
+            intent.putExtra(Intent.EXTRA_STREAM, file);
+        }
+
+        return intent;
     }
 
     private ArrayList<ShareItem> createSystemShareItems(List<ResolveInfo> infos) {

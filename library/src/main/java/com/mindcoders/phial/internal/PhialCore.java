@@ -1,6 +1,7 @@
 package com.mindcoders.phial.internal;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
 import com.mindcoders.phial.PhialBuilder;
@@ -91,7 +92,7 @@ public final class PhialCore {
         final PhialNotifier phialNotifier = new PhialNotifier();
 
         final List<Attacher> attachers = prepareAttachers(phialBuilder, categoryProvider, activityProvider);
-        final AttachmentManager attachmentManager = new AttachmentManager(attachers);
+        final AttachmentManager attachmentManager = createAttachmentManager(phialBuilder, attachers);
         phialNotifier.addListener(attachmentManager);
 
         final ShareManager shareManager = new ShareManager(application, phialBuilder.getShareables());
@@ -119,6 +120,15 @@ public final class PhialCore {
     private void destroy() {
         application.unregisterActivityLifecycleCallbacks(activityProvider);
         overlay.destroy();
+    }
+
+    @NonNull
+    private static AttachmentManager createAttachmentManager(PhialBuilder phialBuilder, List<Attacher> attachers) {
+        return new AttachmentManager(
+                attachers,
+                InternalPhialConfig.getWorkingDirectory(phialBuilder.getApplication()),
+                phialBuilder.getShareDataFilePattern()
+        );
     }
 
     private static List<Attacher> prepareAttachers(

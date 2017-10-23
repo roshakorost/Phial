@@ -4,8 +4,7 @@ import android.graphics.Bitmap;
 import android.view.Window;
 
 import com.mindcoders.phial.Attacher;
-import com.mindcoders.phial.PhialListener;
-import com.mindcoders.phial.internal.PhialErrorHandler;
+import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
 import com.mindcoders.phial.internal.util.FileUtil;
 import com.mindcoders.phial.internal.util.ScreenShotUtil;
@@ -39,7 +38,7 @@ public class ScreenShotAttacher implements Attacher {
             final Bitmap bitmap = ScreenShotUtil.takeScreenShot(window);
             FileUtil.saveBitmap(bitmap, targetFile, quality);
         } catch (Exception ex) {
-            PhialErrorHandler.onError(ex);
+            PhialErrorPlugins.onError(ex);
         }
     }
 

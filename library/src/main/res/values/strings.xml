@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">phial</string>
-    <string name="enter_message">share.enter_message</string>
+    <string name="share.enter_message">Enter message</string>
+    <string name="share.error_attachment">Error during preparing of debug attachment</string>
 </resources>

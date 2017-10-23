@@ -6,17 +6,25 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Created by rost on 10/22/17.
  */
 
 public final class FileUtil {
+    private static final int BUFFER_SIZE = 2048;
+
     private FileUtil() {
     }
 
@@ -33,7 +41,7 @@ public final class FileUtil {
         }
     }
 
-    public static Uri getUriForFile(Context context, File file) {
+    public static Uri getUri(Context context, File file) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return FileProvider.getUriForFile(context, "com.wsitrader.fileprovider", file);
         } else {
@@ -53,6 +61,39 @@ public final class FileUtil {
         } finally {
             if (outputStream != null) {
                 outputStream.close();
+            }
+        }
+    }
+
+    public static void zip(List<File> sources, File target) throws IOException {
+        ZipOutputStream out = null;
+        try {
+            out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(target)));
+
+            byte data[] = new byte[BUFFER_SIZE];
+
+            for (File source : sources) {
+                BufferedInputStream bis = null;
+                try {
+                    bis = new BufferedInputStream(new FileInputStream(source), BUFFER_SIZE);
+
+                    out.putNextEntry(new ZipEntry(source.getName()));
+
+                    int count;
+                    while ((count = bis.read(data, 0, BUFFER_SIZE)) != -1) {
+                        out.write(data, 0, count);
+                    }
+
+                } finally {
+                    if (bis != null) {
+                        bis.close();
+                    }
+                }
+            }
+
+        } finally {
+            if (out != null) {
+                out.close();
             }
         }
     }

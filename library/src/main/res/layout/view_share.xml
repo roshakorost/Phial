@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/share.padding.default"
-        android:hint="@string/enter_message" />
+        android:hint="@string/share.enter_message" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/content"

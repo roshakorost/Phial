@@ -8,7 +8,7 @@ import java.util.List;
  */
 
 public interface Shareable {
-    void share(String message, List<File> attachment);
+    void share(File attachment, String message);
 
     ShareDescription getDescription();
 }

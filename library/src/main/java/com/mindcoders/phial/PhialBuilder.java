@@ -20,6 +20,7 @@ public class PhialBuilder {
     private boolean attachScreenShots = true;
     private boolean attachKeyValues = true;
     private boolean applySystemInfo = true;
+    private String shareDataFilePattern = "'data_M'MM'D'dd_'H'HH_mm_ss";
 
     public PhialBuilder(Application application) {
         this.application = application;
@@ -55,6 +56,11 @@ public class PhialBuilder {
         return this;
     }
 
+    public PhialBuilder setShareDataFilePattern(String shareDataFilePattern) {
+        this.shareDataFilePattern = shareDataFilePattern;
+        return this;
+    }
+
     public void initPhial() {
         Phial.init(PhialCore.init(this));
     }
@@ -85,5 +91,9 @@ public class PhialBuilder {
 
     public boolean isAttachKeyValues() {
         return attachKeyValues;
+    }
+
+    public String getShareDataFilePattern() {
+        return shareDataFilePattern;
     }
 }
