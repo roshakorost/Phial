@@ -94,7 +94,7 @@ public final class PhialCore {
 
         final ShareManager shareManager = new ShareManager(application, phialBuilder.getShareables());
 
-        final Overlay overlay = new Overlay(phialNotifier, application);
+        final Overlay overlay = new Overlay(phialNotifier, application, phialBuilder.getPages());
         activityProvider.addListener(overlay);
 
         instance = new PhialCore(
@@ -123,7 +123,7 @@ public final class PhialCore {
             PhialBuilder phialBuilder,
             CurrentActivityProvider activityProvider,
             PhialNotifier notifier) {
-        final boolean attachScreenShots = phialBuilder.isAttachScreenShots();
+        final boolean attachScreenShots = phialBuilder.isAttachScreenshots();
         final List<Attacher> attachers = new ArrayList<>(phialBuilder.getAttachers());
         if (attachScreenShots) {
             final ScreenShotAttacher screenShotAttacher = new ScreenShotAttacher(

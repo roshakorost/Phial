@@ -1,16 +1,12 @@
 package com.mindcoders.phial.internal.overlay;
 
-import com.mindcoders.phial.R;
+import com.mindcoders.phial.Page;
 import com.mindcoders.phial.internal.PhialNotifier;
-import com.mindcoders.phial.internal.keyvalue.KeyValueView;
 import com.mindcoders.phial.internal.overlay.OverlayView.OnPageSelectedListener;
-import com.mindcoders.phial.internal.share.ShareView;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
 import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 import android.animation.Animator;
 import android.animation.PropertyValuesHolder;
@@ -22,7 +18,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -52,7 +47,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private final int btnSizePx;
 
-    public Overlay(PhialNotifier notifier, final Context context) {
+    public Overlay(PhialNotifier notifier, final Context context, List<Page> pages) {
         this.notifier = notifier;
         this.context = context;
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -80,31 +75,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         overlayView.setOnPageSelectedListener(onPageSelectedListener);
 
-        overlayView.addPage(new OverlayView.Page(
-                R.drawable.ic_keyvalue,
-                new PageViewFactory<KeyValueView>() {
-
-                    @Override
-                    public KeyValueView createPageView() {
-                        return new KeyValueView(context);
-                    }
-
-                }
-        ));
-
-        overlayView.addPage(new OverlayView.Page(
-                R.drawable.ic_share,
-                new PageViewFactory<ShareView>() {
-
-                    @Override
-                    public ShareView createPageView() {
-                        ShareView shareView = new ShareView(context);
-                        shareView.setFiles(Collections.<File>emptyList());
-                        return shareView;
-                    }
-
-                }
-        ));
+        overlayView.addPages(pages);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -144,7 +115,10 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     }
 
     public void destroy() {
-        throw new IllegalArgumentException("NOT implemented yet");
+        windowManager.removeView(overlayView);
+        if (pageContainerView != null) {
+            windowManager.removeView(pageContainerView);
+        }
     }
 
     private FrameLayout createPageContainerView() {
@@ -193,8 +167,6 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             overlayViewX = params.x;
             overlayViewY = params.y;
 
-            Log.i("viewPosition", String.format("x = %s, y = %s", overlayViewX, overlayViewY));
-
             moveViewToTheEdge();
         }
 
@@ -225,16 +197,16 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     private final OnPageSelectedListener onPageSelectedListener = new OnPageSelectedListener() {
 
         @Override
-        public void onFirstPageSelected(OverlayView.Page page) {
+        public void onFirstPageSelected(Page page) {
             notifier.fireDebugWindowShown();
             animateForward(page);
         }
 
         @Override
-        public void onPageSelectionChanged(OverlayView.Page page) {
+        public void onPageSelectionChanged(Page page) {
             notifier.fireDebugWindowHide();
             pageContainerView.removeAllViews();
-            pageContainerView.addView(page.pageViewFactory.createPageView());
+            pageContainerView.addView(page.getPageViewFactory().createPageView(context));
         }
 
         @Override
@@ -242,7 +214,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             animateBackward();
         }
 
-        private void animateForward(final OverlayView.Page page) {
+        private void animateForward(final Page page) {
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
             int startX = params.x;
             int endX = displaySize.x / 2;
@@ -254,7 +226,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             pageContainerView = createPageContainerView();
-                            pageContainerView.addView(page.pageViewFactory.createPageView());
+                            pageContainerView.addView(page.getPageViewFactory().createPageView(context));
                         }
                     }
             );
@@ -281,7 +253,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         private void animate(
                 int startX, int endX, int startY, int endY, final View view, final WindowManager.LayoutParams params,
                 Animator.AnimatorListener listener
-        ) {
+                            ) {
             PropertyValuesHolder x = PropertyValuesHolder.ofInt("x", startX, endX);
             PropertyValuesHolder y = PropertyValuesHolder.ofInt("y", startY, endY);
             ValueAnimator valueAnimator = ValueAnimator.ofPropertyValuesHolder(x, y);

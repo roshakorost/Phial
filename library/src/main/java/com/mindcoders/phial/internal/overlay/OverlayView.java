@@ -1,5 +1,6 @@
 package com.mindcoders.phial.internal.overlay;
 
+import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+// TODO: 10/23/17 add pages from either left or right depending on which edge the handle is sticking to
 class OverlayView extends LinearLayout {
 
     interface OnPageSelectedListener {
@@ -72,6 +74,13 @@ class OverlayView extends LinearLayout {
     public void addPage(Page page) {
         pages.add(page);
         addPageButton(page, 0);
+    }
+
+    public void addPages(List<Page> pages) {
+        this.pages.addAll(pages);
+        for (Page page : this.pages) {
+            addPageButton(page, 0);
+        }
     }
 
     public void setOnPageSelectedListener(OnPageSelectedListener onPageSelectedListener) {
@@ -156,18 +165,5 @@ class OverlayView extends LinearLayout {
             return false;
         }
     };
-
-    static class Page {
-
-        final int iconResourceId;
-
-        final PageViewFactory pageViewFactory;
-
-        Page(int iconResourceId, PageViewFactory pageViewFactory) {
-            this.iconResourceId = iconResourceId;
-            this.pageViewFactory = pageViewFactory;
-        }
-
-    }
 
 }
