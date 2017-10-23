@@ -112,7 +112,7 @@ class OverlayView extends LinearLayout {
 
     private void addPageButton(final Page page, int position) {
         ImageButton button = new ImageButton(getContext());
-        button.setImageResource(page.iconResourceId);
+        button.setImageResource(page.getIconResourceId());
         button.setBackgroundResource(R.drawable.bg_overlay_button);
         LinearLayout.LayoutParams params = new LayoutParams(btnSize, btnSize);
         addView(button, position, params);
