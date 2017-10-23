@@ -16,30 +16,32 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import static com.mindcoders.phial.internal.util.UiUtils.dpToPx;
+
 public final class Overlay {
 
-    private final static int BUTTON_SIZE = 160;
+    private static final int BUTTON_SIZE = 53; //dp
+
+    private static final int STATUSBAR_HEIGHT = 25; //dp
 
     private final Context context;
 
-    final WindowManager windowManager;
+    private final WindowManager windowManager;
 
-    final OverlayView overlayView;
+    private final OverlayView overlayView;
 
-    int overlayViewX;
+    private FrameLayout pageContainerView;
 
-    int overlayY;
+    private int overlayViewX, overlayViewY;
 
     private final Point displaySize = new Point();
 
-    private ViewGroup pageContainer;
+    private final int btnSizePx;
 
     public Overlay(final Context context) {
         this.context = context;
@@ -47,10 +49,20 @@ public final class Overlay {
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getSize(displaySize);
 
-        overlayView = new OverlayView(context);
-        overlayView.setOnHandleTouchListener(overlayOnTouchListener);
+        btnSizePx = dpToPx(context, BUTTON_SIZE);
 
-        addButton(overlayView);
+        overlayView = new OverlayView(context, btnSizePx);
+        overlayView.setOnHandleMoveListener(onHandleMoveListener);
+
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                btnSizePx,
+                getType(),
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT
+        );
+
+        windowManager.addView(overlayView, params);
 
         overlayView.setOnPageSelectedListener(onPageSelectedListener);
 
@@ -70,7 +82,7 @@ public final class Overlay {
         ));
 
         overlayView.addPage(new OverlayView.Page(
-                R.drawable.ic_keyvalue,
+                R.drawable.ic_share,
                 new PageViewFactory<ShareView>() {
                     @Override
                     public ShareView onPageCreate() {
@@ -87,97 +99,77 @@ public final class Overlay {
         ));
     }
 
-    private void addButton(View view) {
-        int permissionFlag = getFlag();
-
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                160,
-                permissionFlag,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT
-        );
-
-        windowManager.addView(view, params);
-    }
-
-    private int getFlag() {
-        int permissionFlag;
+    private int getType() {
+        final int type;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            permissionFlag = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         } else {
-            permissionFlag = WindowManager.LayoutParams.TYPE_PHONE;
+            type = WindowManager.LayoutParams.TYPE_PHONE;
         }
-        return permissionFlag;
+        return type;
     }
 
-    public void show() {
+    void show() {
         overlayView.setVisibility(View.VISIBLE);
+        if (pageContainerView != null) {
+            pageContainerView.setVisibility(View.VISIBLE);
+        }
     }
 
-    public void hide() {
+    void hide() {
         overlayView.setVisibility(View.GONE);
+        if (pageContainerView != null) {
+            pageContainerView.setVisibility(View.GONE);
+        }
     }
 
-    public void destroy() {
-        windowManager.removeView(overlayView);
-    }
+    private FrameLayout createPageContainerView() {
+        FrameLayout pageContainterView = new FrameLayout(context);
 
-    private void createPageContainer() {
-        FrameLayout frameLayout = new FrameLayout(context);
-
-        int height = displaySize.y - BUTTON_SIZE;
+        int height = displaySize.y - btnSizePx - dpToPx(context, STATUSBAR_HEIGHT);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 height,
-                getFlag(),
+                getType(),
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
         );
 
         params.y = displaySize.y / 2;
 
-        windowManager.addView(frameLayout, params);
+        windowManager.addView(pageContainterView, params);
 
-        pageContainer = frameLayout;
+        return pageContainterView;
     }
 
-    private OnTouchListener overlayOnTouchListener = new OnTouchListener() {
+    private final OverlayView.OnHandleMoveListener onHandleMoveListener = new OverlayView.OnHandleMoveListener() {
 
-        private int initialX;
-        private int initialY;
-
-        private float initialTouchX;
-        private float initialTouchY;
+        private int initialX, initialY;
 
         @Override
-        public boolean onTouch(View __, MotionEvent event) {
+        public void onMoveStart(float x, float y) {
+
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
+            initialX = params.x;
+            initialY = params.y;
+        }
 
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    initialX = params.x;
-                    initialY = params.y;
+        @Override
+        public void onMove(float dx, float dy) {
+            WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
+            params.x = initialX + (int) dx;
+            params.y = initialY + (int) dy;
+            windowManager.updateViewLayout(overlayView, params);
+        }
 
-                    initialTouchX = event.getRawX();
-                    initialTouchY = event.getRawY();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    overlayViewX = params.x;
-                    overlayY = params.y;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    params.x = initialX + (int) (event.getRawX() - initialTouchX);
-                    params.y = initialY + (int) (event.getRawY() - initialTouchY);
-                    windowManager.updateViewLayout(overlayView, params);
-                    break;
-            }
-
-            return false;
+        @Override
+        public void onMoveEnd() {
+            WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
+            overlayViewX = params.x;
+            overlayViewY = params.y;
         }
     };
-
 
     private final OnPageSelectedListener onPageSelectedListener = new OnPageSelectedListener() {
 
@@ -188,8 +180,8 @@ public final class Overlay {
 
         @Override
         public void onPageSelectionChanged(OverlayView.Page page) {
-            pageContainer.removeAllViews();
-            pageContainer.addView(page.pageViewFactory.onPageCreate());
+            pageContainerView.removeAllViews();
+            pageContainerView.addView(page.pageViewFactory.onPageCreate());
         }
 
         @Override
@@ -208,8 +200,8 @@ public final class Overlay {
                     new SimpleAnimatorListener() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            createPageContainer();
-                            pageContainer.addView(page.pageViewFactory.onPageCreate());
+                            pageContainerView = createPageContainerView();
+                            pageContainerView.addView(page.pageViewFactory.onPageCreate());
                         }
                     }
                    );
@@ -221,12 +213,13 @@ public final class Overlay {
             int endX = overlayViewX;
 
             int startY = params.y;
-            int endY = overlayY;
+            int endY = overlayViewY;
             animate(startX, endX, startY, endY, overlayView, params,
                     new SimpleAnimatorListener() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            windowManager.removeView(pageContainer);
+                            windowManager.removeView(pageContainerView);
+                            pageContainerView = null;
                         }
                     }
                    );

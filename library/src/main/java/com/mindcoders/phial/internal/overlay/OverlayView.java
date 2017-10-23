@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -22,32 +23,50 @@ class OverlayView extends LinearLayout {
 
     }
 
+    interface OnHandleMoveListener {
+
+        void onMoveStart(float x, float y);
+
+        void onMove(float dx, float dy);
+
+        void onMoveEnd();
+
+    }
+
+    private final int btnSize;
+
     private final List<Page> pages = new ArrayList<>();
 
-    private final ImageButton mainButton;
+    private OnPageSelectedListener onPageSelectedListener;
 
-    OnPageSelectedListener onPageSelectedListener;
+    private OnHandleMoveListener onHandleMoveListener;
 
-    private boolean isShown;
+    /**
+     * True if page buttons are shown
+     */
+    private boolean isExpanded;
 
     private Page selectedPage;
 
-    public OverlayView(Context context) {
+    public OverlayView(Context context, int btnSize) {
         super(context);
+        this.btnSize = btnSize;
         setOrientation(HORIZONTAL);
 
-        mainButton = new ImageButton(context);
-        mainButton.setImageResource(R.drawable.ic_handle);
-        mainButton.setBackgroundResource(R.drawable.bg_overlay_button);
-        mainButton.setOnClickListener(new OnClickListener() {
+        ImageButton btnHandle = new ImageButton(context);
+        btnHandle.setImageResource(R.drawable.ic_handle);
+        btnHandle.setBackgroundResource(R.drawable.bg_overlay_button);
+        btnHandle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggle();
             }
         });
 
-        LinearLayout.LayoutParams params = new LayoutParams(160, 160);
-        addView(mainButton, params);
+        btnHandle.setOnTouchListener(handleOnTouchListener);
+
+        LinearLayout.LayoutParams params = new LayoutParams(btnSize, btnSize);
+        addView(btnHandle, params);
     }
 
     public void addPage(Page page) {
@@ -59,23 +78,23 @@ class OverlayView extends LinearLayout {
         this.onPageSelectedListener = onPageSelectedListener;
     }
 
-    public void setOnHandleTouchListener(OnTouchListener onTouchListener) {
-        mainButton.setOnTouchListener(onTouchListener);
+    public void setOnHandleMoveListener(OnHandleMoveListener onHandleMoveListener) {
+        this.onHandleMoveListener = onHandleMoveListener;
     }
 
-    void toggle() {
+    private void toggle() {
         for (int i = 0; i < getChildCount() - 1; i++) {
             View v = getChildAt(i);
-            v.setVisibility(isShown ? View.GONE : View.VISIBLE);
+            v.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
         }
-        isShown = !isShown;
+        isExpanded = !isExpanded;
     }
 
     private void addPageButton(final Page page, int position) {
         ImageButton button = new ImageButton(getContext());
         button.setImageResource(page.iconResourceId);
         button.setBackgroundResource(R.drawable.bg_overlay_button);
-        LinearLayout.LayoutParams params = new LayoutParams(160, 160);
+        LinearLayout.LayoutParams params = new LayoutParams(btnSize, btnSize);
         addView(button, position, params);
         button.setVisibility(View.GONE);
 
@@ -97,6 +116,31 @@ class OverlayView extends LinearLayout {
             }
         });
     }
+
+    private final OnTouchListener handleOnTouchListener = new OnTouchListener() {
+
+        private float initialTouchX, initialTouchY;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    initialTouchX = event.getRawX();
+                    initialTouchY = event.getRawY();
+
+                    onHandleMoveListener.onMoveStart(initialTouchX, initialTouchY);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    onHandleMoveListener.onMove(event.getRawX() - initialTouchX, event.getRawY() - initialTouchY);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    onHandleMoveListener.onMoveEnd();
+                    break;
+            }
+
+            return false;
+        }
+    };
 
     static class Page {
 
