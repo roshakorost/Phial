@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
-import com.mindcoders.phial.Phial;
 import com.mindcoders.phial.Shareable;
 import com.mindcoders.phial.internal.util.CollectionUtils;
 import com.mindcoders.phial.internal.util.FileUtil;
@@ -19,21 +18,11 @@ import java.util.List;
  * Created by rost on 10/22/17.
  */
 
-class ShareManager {
+public class ShareManager {
     private final Context context;
     private final List<ShareItem> userShareItems;
-    private static ShareManager instance;
 
-    static ShareManager getInstance() {
-        if (instance == null) {
-            final Phial phial = Phial.getInstance();
-            instance = new ShareManager(phial.getContext(), phial.getSharables());
-        }
-
-        return instance;
-    }
-
-    private ShareManager(Context context, List<Shareable> userShareables) {
+    public ShareManager(Context context, List<Shareable> userShareables) {
         this.context = context;
         this.userShareItems = createUserShareItem(userShareables);
     }

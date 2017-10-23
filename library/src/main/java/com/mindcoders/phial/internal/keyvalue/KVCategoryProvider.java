@@ -16,16 +16,11 @@ import java.util.concurrent.ConcurrentMap;
  */
 
 public final class KVCategoryProvider extends Observable {
-    private static final KVCategoryProvider instance = new KVCategoryProvider();
     private static final String DEFAULT_CATEGORY_NAME = "Default";
-
-    public static KVCategoryProvider getInstance() {
-        return instance;
-    }
 
     private final ConcurrentMap<String, KVCategoryStore> categories = new ConcurrentHashMap<>();
 
-    private KVCategoryProvider() {
+    public KVCategoryProvider() {
         //to hide;
     }
 
@@ -40,6 +35,10 @@ public final class KVCategoryProvider extends Observable {
 
     List<KVCategory> getCategories() {
         return Collections.unmodifiableList(new ArrayList<KVCategory>(categories.values()));
+    }
+
+    public void removeCategoty(String categoryName) {
+        categories.remove(categoryName);
     }
 
     private class KVCategoryStore implements KVSaver, KVCategory {

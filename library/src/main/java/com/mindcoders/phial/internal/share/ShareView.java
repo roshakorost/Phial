@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.internal.PhialComponent;
 
 import java.io.File;
 import java.util.List;
@@ -25,8 +26,9 @@ public class ShareView extends FrameLayout {
     private final EditText messageTV;
 
     private final ShareAdapter adapter;
+    private final ShareManager shareManager;
 
-    public ShareView(@NonNull Context context){
+    public ShareView(@NonNull Context context) {
         this(context, null);
     }
 
@@ -36,6 +38,8 @@ public class ShareView extends FrameLayout {
 
     public ShareView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        shareManager = PhialComponent.get(ShareManager.class);
+
         LayoutInflater.from(context).inflate(R.layout.view_share, this, true);
         contentRV = findViewById(R.id.content);
         messageTV = findViewById(R.id.message);
@@ -47,9 +51,7 @@ public class ShareView extends FrameLayout {
     }
 
     public void setFiles(List<File> attachment) {
-        final ShareManager shareManager = ShareManager.getInstance();
         final List<ShareItem> shareables = shareManager.getShareables();
-
         adapter.swapData(shareables);
     }
 
