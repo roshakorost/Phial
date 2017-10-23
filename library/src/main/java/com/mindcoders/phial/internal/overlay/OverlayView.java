@@ -83,11 +83,22 @@ class OverlayView extends LinearLayout {
     }
 
     private void toggle() {
+        if (selectedPage != null) {
+            selectedPage = null;
+            onPageSelectedListener.onNothingSelected();
+            setPageButtonsVisible(false);
+        } else {
+            setPageButtonsVisible(!isExpanded);
+        }
+
+        isExpanded = !isExpanded;
+    }
+
+    private void setPageButtonsVisible(boolean visible) {
         for (int i = 0; i < getChildCount() - 1; i++) {
             View v = getChildAt(i);
-            v.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
+            v.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
-        isExpanded = !isExpanded;
     }
 
     private void addPageButton(final Page page, int position) {
@@ -123,6 +134,10 @@ class OverlayView extends LinearLayout {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            if (selectedPage != null) {
+                return false;
+            }
+
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     initialTouchX = event.getRawX();
