@@ -4,7 +4,7 @@ import android.view.View;
 
 interface PageViewFactory<T extends View> {
 
-    T onPageCreate();
+    T createPageView();
 
     void onPageDestroy(T view);
 

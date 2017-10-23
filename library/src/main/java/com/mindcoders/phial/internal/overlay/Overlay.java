@@ -16,6 +16,7 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -70,7 +71,7 @@ public final class Overlay {
                 R.drawable.ic_keyvalue,
                 new PageViewFactory<KeyValueView>() {
                     @Override
-                    public KeyValueView onPageCreate() {
+                    public KeyValueView createPageView() {
                         return new KeyValueView(context);
                     }
 
@@ -85,7 +86,7 @@ public final class Overlay {
                 R.drawable.ic_share,
                 new PageViewFactory<ShareView>() {
                     @Override
-                    public ShareView onPageCreate() {
+                    public ShareView createPageView() {
                         ShareView shareView = new ShareView(context);
                         shareView.setFiles(Collections.<File>emptyList());
                         return shareView;
@@ -168,7 +169,34 @@ public final class Overlay {
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
             overlayViewX = params.x;
             overlayViewY = params.y;
+
+            Log.i("viewPosition", String.format("x = %s, y = %s", overlayViewX, overlayViewY));
+
+            moveViewToTheEdge();
         }
+
+        private void moveViewToTheEdge() {
+            final int x;
+            if (overlayViewX > 0) {
+                x = displaySize.x / 2;
+            } else {
+                x = -displaySize.x / 2;
+            }
+
+            ValueAnimator animator = ValueAnimator.ofInt(overlayViewX, x);
+            final WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
+
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    params.x = (int) animation.getAnimatedValue();
+                    windowManager.updateViewLayout(overlayView, params);
+                }
+            });
+            animator.setDuration(100);
+            animator.start();
+        }
+
     };
 
     private final OnPageSelectedListener onPageSelectedListener = new OnPageSelectedListener() {
@@ -181,7 +209,7 @@ public final class Overlay {
         @Override
         public void onPageSelectionChanged(OverlayView.Page page) {
             pageContainerView.removeAllViews();
-            pageContainerView.addView(page.pageViewFactory.onPageCreate());
+            pageContainerView.addView(page.pageViewFactory.createPageView());
         }
 
         @Override
@@ -201,7 +229,7 @@ public final class Overlay {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             pageContainerView = createPageContainerView();
-                            pageContainerView.addView(page.pageViewFactory.onPageCreate());
+                            pageContainerView.addView(page.pageViewFactory.createPageView());
                         }
                     }
                    );

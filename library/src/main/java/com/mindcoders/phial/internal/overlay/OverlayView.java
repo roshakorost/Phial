@@ -74,6 +74,10 @@ class OverlayView extends LinearLayout {
         addPageButton(page, 0);
     }
 
+    public List<Page> getPages() {
+        return pages;
+    }
+
     public void setOnPageSelectedListener(OnPageSelectedListener onPageSelectedListener) {
         this.onPageSelectedListener = onPageSelectedListener;
     }
