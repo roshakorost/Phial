@@ -10,14 +10,18 @@ import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Set;
 
 import android.animation.Animator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +63,11 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         overlayView = new OverlayView(context, btnSizePx);
         overlayView.setOnHandleMoveListener(onHandleMoveListener);
 
+        if (!canDrawOverlay()) {
+            startSettingsActivity();
+            return;
+        }
+
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 btnSizePx,
@@ -96,6 +105,18 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
                 }
         ));
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean canDrawOverlay() {
+        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) || Settings.canDrawOverlays(context);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void startSettingsActivity() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     private int getType() {
