@@ -93,23 +93,23 @@ public class PhialBuilder {
         return Collections.unmodifiableList(pages);
     }
 
-    public boolean isAttachScreenshots() {
+    public boolean attachScreenshots() {
         return attachScreenshots;
     }
 
-    public boolean isApplySystemInfo() {
+    public boolean applySystemInfo() {
         return applySystemInfo;
     }
 
-    public boolean isAttachKeyValues() {
+    public boolean attachKeyValues() {
         return attachKeyValues;
     }
 
-    public boolean isEnableKeyValueView() {
+    public boolean enableKeyValueView() {
         return enableKeyValueView;
     }
 
-    public boolean isEnableShareView() {
+    public boolean enableShareView() {
         return enableShareView;
     }
 

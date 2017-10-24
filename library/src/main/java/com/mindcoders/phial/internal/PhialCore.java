@@ -3,7 +3,6 @@ package com.mindcoders.phial.internal;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
@@ -107,11 +106,11 @@ public final class PhialCore {
         final OverlayPositionStorage positionStorage = new OverlayPositionStorage(prefs);
 
         List<Page> pages = new ArrayList<>();
-        if (phialBuilder.isEnableKeyValueView()) {
+        if (phialBuilder.enableKeyValueView()) {
             pages.add(DefaultPages.KEY_VALUE_PAGE);
         }
 
-        if (phialBuilder.isEnableShareView()) {
+        if (phialBuilder.enableShareView()) {
             pages.add(DefaultPages.SHARE_PAGE);
         }
 
@@ -130,7 +129,7 @@ public final class PhialCore {
                 overlay
         );
 
-        if (phialBuilder.isApplySystemInfo()) {
+        if (phialBuilder.applySystemInfo()) {
             SystemInfoWriter.writeSystemInfo(categoryProvider.category(SYSTEM_INFO_CATEGORY), application);
         }
 
@@ -157,7 +156,7 @@ public final class PhialCore {
             CurrentActivityProvider activityProvider) {
         final List<Attacher> attachers = new ArrayList<>(phialBuilder.getAttachers());
 
-        if (phialBuilder.isAttachKeyValues()) {
+        if (phialBuilder.attachKeyValues()) {
             final KVAttacher attacher = new KVAttacher(
                     categoryProvider,
                     InternalPhialConfig.getKeyValueFile(phialBuilder.getApplication())
@@ -165,7 +164,7 @@ public final class PhialCore {
             attachers.add(attacher);
         }
 
-        if (phialBuilder.isAttachScreenshots()) {
+        if (phialBuilder.attachScreenshots()) {
             final Attacher screenShotAttacher = new ScreenShotAttacher(
                     activityProvider,
                     InternalPhialConfig.getScreenShotFile(phialBuilder.getApplication()),
