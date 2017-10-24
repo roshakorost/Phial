@@ -35,6 +35,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     private final PhialNotifier notifier;
     private final Context context;
     private final List<Page> pages;
+    private final OverlayPositionStorage positionStorage;
 
     private final WindowManager windowManager;
 
@@ -42,7 +43,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private FrameLayout pageContainerView;
 
-    private int overlayViewX, overlayViewY;
+    private Point overlayViewPosition = new Point();
 
     private final Point displaySize = new Point();
 
@@ -52,10 +53,16 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private boolean isDrawOverlayPermissionRequested;
 
-    public Overlay(PhialNotifier notifier, Context context, List<Page> pages) {
+    public Overlay(
+            PhialNotifier notifier,
+            Context context,
+            List<Page> pages,
+            OverlayPositionStorage positionStorage
+                  ) {
         this.notifier = notifier;
         this.context = context;
         this.pages = pages;
+        this.positionStorage = positionStorage;
 
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getSize(displaySize);
@@ -66,6 +73,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     }
 
     private void setupOverlayView(List<Page> pages) {
+        overlayViewPosition = positionStorage.getPosition();
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 btnSizePx,
@@ -73,6 +81,9 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
         );
+
+        params.x = overlayViewPosition.x;
+        params.y = overlayViewPosition.y;
 
         windowManager.addView(overlayView, params);
 
@@ -108,7 +119,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         if (canDrawOverlay() && !isOverlayViewSetup) {
             setupOverlayView(pages);
             isOverlayViewSetup = true;
-        } else if (!isDrawOverlayPermissionRequested) {
+        } else if (!canDrawOverlay() && !isDrawOverlayPermissionRequested) {
             startSettingsActivity();
             isDrawOverlayPermissionRequested = true;
             return;
@@ -125,6 +136,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         if (pageContainerView != null) {
             pageContainerView.setVisibility(View.GONE);
         }
+        positionStorage.savePosition(overlayViewPosition);
     }
 
     public void destroy() {
@@ -177,21 +189,21 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         @Override
         public void onMoveEnd() {
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
-            overlayViewX = params.x;
-            overlayViewY = params.y;
+            overlayViewPosition.x = params.x;
+            overlayViewPosition.y = params.y;
 
             moveViewToTheEdge();
         }
 
         private void moveViewToTheEdge() {
             final int x;
-            if (overlayViewX > 0) {
+            if (overlayViewPosition.x > 0) {
                 x = displaySize.x / 2;
             } else {
                 x = -displaySize.x / 2;
             }
 
-            ValueAnimator animator = ValueAnimator.ofInt(overlayViewX, x);
+            ValueAnimator animator = ValueAnimator.ofInt(overlayViewPosition.x, x);
             final WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
 
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -248,10 +260,10 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         private void animateBackward() {
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
             int startX = params.x;
-            int endX = overlayViewX;
+            int endX = overlayViewPosition.x;
 
             int startY = params.y;
-            int endY = overlayViewY;
+            int endY = overlayViewPosition.y;
             animate(startX, endX, startY, endY, overlayView, params,
                     new SimpleAnimatorListener() {
                         @Override

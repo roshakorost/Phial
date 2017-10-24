@@ -1,6 +1,9 @@
 package com.mindcoders.phial.internal;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
@@ -9,6 +12,7 @@ import com.mindcoders.phial.internal.keyvalue.KVAttacher;
 import com.mindcoders.phial.internal.keyvalue.KVCategoryProvider;
 import com.mindcoders.phial.internal.keyvalue.SystemInfoWriter;
 import com.mindcoders.phial.internal.overlay.Overlay;
+import com.mindcoders.phial.internal.overlay.OverlayPositionStorage;
 import com.mindcoders.phial.internal.share.ShareManager;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.share.attachment.ScreenShotAttacher;
@@ -25,6 +29,7 @@ import static com.mindcoders.phial.internal.InternalPhialConfig.SYSTEM_INFO_CATE
  */
 
 public final class PhialCore {
+    public static final String PREFERENCES_FILE_NAME = "phial";
     private static PhialCore instance;
 
     private final Application application;
@@ -97,7 +102,10 @@ public final class PhialCore {
 
         final ShareManager shareManager = new ShareManager(application, phialBuilder.getShareables());
 
-        final Overlay overlay = new Overlay(phialNotifier, application, phialBuilder.getPages());
+        final SharedPreferences prefs = application.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        final OverlayPositionStorage positionStorage = new OverlayPositionStorage(prefs);
+
+        final Overlay overlay = new Overlay(phialNotifier, application, phialBuilder.getPages(), positionStorage);
         activityProvider.addListener(overlay);
 
         instance = new PhialCore(
