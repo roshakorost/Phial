@@ -27,13 +27,14 @@ import static com.mindcoders.phial.internal.util.UiUtils.dpToPx;
 
 public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
-    private final static int BUTTON_SIZE = 53;
+    private static final int BUTTON_SIZE = 53;
 
     private static final int STATUSBAR_HEIGHT = 25; //dp
 
 
     private final PhialNotifier notifier;
     private final Context context;
+    private final List<Page> pages;
 
     private final WindowManager windowManager;
 
@@ -47,22 +48,24 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private final int btnSizePx;
 
-    public Overlay(PhialNotifier notifier, final Context context, List<Page> pages) {
+    private boolean isOverlayViewSetup;
+
+    private boolean isDrawOverlayPermissionRequested;
+
+    public Overlay(PhialNotifier notifier, Context context, List<Page> pages) {
         this.notifier = notifier;
         this.context = context;
+        this.pages = pages;
+
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getSize(displaySize);
 
         btnSizePx = dpToPx(context, BUTTON_SIZE);
 
         overlayView = new OverlayView(context, btnSizePx);
-        overlayView.setOnHandleMoveListener(onHandleMoveListener);
+    }
 
-        if (!canDrawOverlay()) {
-            startSettingsActivity();
-            return;
-        }
-
+    private void setupOverlayView(List<Page> pages) {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 btnSizePx,
@@ -74,6 +77,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         windowManager.addView(overlayView, params);
 
         overlayView.setOnPageSelectedListener(onPageSelectedListener);
+        overlayView.setOnHandleMoveListener(onHandleMoveListener);
 
         overlayView.addPages(pages);
     }
@@ -101,6 +105,15 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     }
 
     private void show() {
+        if (canDrawOverlay() && !isOverlayViewSetup) {
+            setupOverlayView(pages);
+            isOverlayViewSetup = true;
+        } else if (!isDrawOverlayPermissionRequested) {
+            startSettingsActivity();
+            isDrawOverlayPermissionRequested = true;
+            return;
+        }
+
         overlayView.setVisibility(View.VISIBLE);
         if (pageContainerView != null) {
             pageContainerView.setVisibility(View.VISIBLE);
