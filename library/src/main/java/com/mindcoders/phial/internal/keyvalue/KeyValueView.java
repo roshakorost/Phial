@@ -9,23 +9,23 @@ import java.util.Observer;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
 public final class KeyValueView extends FrameLayout {
 
-    private final ListView listView;
+    private final ExpandableListView listView;
 
     private final KeyValueAdapter adapter;
-
-    private final CategoriesConverter converter = new CategoriesConverter();
 
     private final KVSaver categoryProvider = PhialCore.getInstance().getKvSaver();
 
     private final Observer observer = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
-            adapter.swapData(converter.transform(categoryProvider.getData()));
+            adapter.swapData(categoryProvider.getData());
         }
     };
 
@@ -35,9 +35,9 @@ public final class KeyValueView extends FrameLayout {
         listView = findViewById(R.id.list_keyvalue);
 
         adapter = new KeyValueAdapter(LayoutInflater.from(context));
-        listView.setAdapter(adapter);
+        listView.setAdapter((ExpandableListAdapter) adapter);
 
-        adapter.swapData(converter.transform(categoryProvider.getData()));
+        adapter.swapData(categoryProvider.getData());
         categoryProvider.addObserver(observer);
     }
 
