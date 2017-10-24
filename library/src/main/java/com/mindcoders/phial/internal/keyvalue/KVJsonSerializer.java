@@ -2,6 +2,8 @@ package com.mindcoders.phial.internal.keyvalue;
 
 import android.support.annotation.NonNull;
 
+import com.mindcoders.phial.internal.keyvalue.KVSaver.KVCategory;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +34,7 @@ class KVJsonSerializer {
         categoryJsonObject.put("name", category.getName());
 
         final JSONArray entriesJsonArray = new JSONArray();
-        for (KVEntry entry : category.entries()) {
+        for (KVSaver.KVEntry entry : category.entries()) {
             final JSONObject entryJsonObject = new JSONObject();
             entryJsonObject.put("name", entry.getName());
             entryJsonObject.put("value", entry.getValue());

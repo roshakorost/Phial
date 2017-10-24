@@ -9,7 +9,7 @@ import com.mindcoders.phial.Attacher;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.internal.keyvalue.KVAttacher;
-import com.mindcoders.phial.internal.keyvalue.KVCategoryProvider;
+import com.mindcoders.phial.internal.keyvalue.KVSaver;
 import com.mindcoders.phial.internal.keyvalue.SystemInfoWriter;
 import com.mindcoders.phial.internal.overlay.Overlay;
 import com.mindcoders.phial.internal.overlay.OverlayPositionStorage;
@@ -17,6 +17,7 @@ import com.mindcoders.phial.internal.share.ShareManager;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.share.attachment.ScreenShotAttacher;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
+import com.mindcoders.phialkv.KVPhial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public final class PhialCore {
     private static PhialCore instance;
 
     private final Application application;
-    private final KVCategoryProvider categoryProvider;
+    private final KVSaver kvSaver;
     private final PhialNotifier notifier;
     private final ShareManager shareManager;
     private final AttachmentManager attachmentManager;
@@ -41,13 +42,13 @@ public final class PhialCore {
     private final Overlay overlay;
 
     private PhialCore(Application application,
-                      KVCategoryProvider categoryProvider,
+                      KVSaver kvSaver,
                       PhialNotifier notifier,
                       ShareManager shareManager,
                       AttachmentManager attachmentManager,
                       CurrentActivityProvider activityProvider, Overlay overlay) {
         this.application = application;
-        this.categoryProvider = categoryProvider;
+        this.kvSaver = kvSaver;
         this.notifier = notifier;
         this.shareManager = shareManager;
         this.attachmentManager = attachmentManager;
@@ -63,8 +64,8 @@ public final class PhialCore {
         return application;
     }
 
-    public KVCategoryProvider getCategoryProvider() {
-        return categoryProvider;
+    public KVSaver getKvSaver() {
+        return kvSaver;
     }
 
     public PhialNotifier getNotifier() {
@@ -93,10 +94,12 @@ public final class PhialCore {
         final CurrentActivityProvider activityProvider = new CurrentActivityProvider();
         application.registerActivityLifecycleCallbacks(activityProvider);
 
-        final KVCategoryProvider categoryProvider = new KVCategoryProvider();
+        final KVSaver kvSaver = new KVSaver();
+        KVPhial.addSaver(kvSaver);
+
         final PhialNotifier phialNotifier = new PhialNotifier();
 
-        final List<Attacher> attachers = prepareAttachers(phialBuilder, categoryProvider, activityProvider);
+        final List<Attacher> attachers = prepareAttachers(phialBuilder, kvSaver, activityProvider);
         final AttachmentManager attachmentManager = createAttachmentManager(phialBuilder, attachers);
         phialNotifier.addListener(attachmentManager);
 
@@ -121,7 +124,7 @@ public final class PhialCore {
 
         instance = new PhialCore(
                 application,
-                categoryProvider,
+                kvSaver,
                 phialNotifier,
                 shareManager,
                 attachmentManager,
@@ -130,7 +133,7 @@ public final class PhialCore {
         );
 
         if (phialBuilder.applySystemInfo()) {
-            SystemInfoWriter.writeSystemInfo(categoryProvider.category(SYSTEM_INFO_CATEGORY), application);
+            SystemInfoWriter.writeSystemInfo(KVPhial.category(SYSTEM_INFO_CATEGORY), application);
         }
 
         return instance;
@@ -152,13 +155,13 @@ public final class PhialCore {
 
     private static List<Attacher> prepareAttachers(
             PhialBuilder phialBuilder,
-            KVCategoryProvider categoryProvider,
+            KVSaver kvSaver,
             CurrentActivityProvider activityProvider) {
         final List<Attacher> attachers = new ArrayList<>(phialBuilder.getAttachers());
 
         if (phialBuilder.attachKeyValues()) {
             final KVAttacher attacher = new KVAttacher(
-                    categoryProvider,
+                    kvSaver,
                     InternalPhialConfig.getKeyValueFile(phialBuilder.getApplication())
             );
             attachers.add(attacher);

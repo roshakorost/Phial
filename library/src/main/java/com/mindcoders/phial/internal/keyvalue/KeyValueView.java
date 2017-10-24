@@ -20,12 +20,12 @@ public final class KeyValueView extends FrameLayout {
 
     private final CategoriesConverter converter = new CategoriesConverter();
 
-    private final KVCategoryProvider categoryProvider = PhialCore.getInstance().getCategoryProvider();
+    private final KVSaver categoryProvider = PhialCore.getInstance().getKvSaver();
 
     private final Observer observer = new Observer() {
         @Override
         public void update(Observable o, Object arg) {
-            adapter.swapData(converter.transform(categoryProvider.getCategories()));
+            adapter.swapData(converter.transform(categoryProvider.getData()));
         }
     };
 
@@ -37,7 +37,7 @@ public final class KeyValueView extends FrameLayout {
         adapter = new KeyValueAdapter(LayoutInflater.from(context));
         listView.setAdapter(adapter);
 
-        adapter.swapData(converter.transform(categoryProvider.getCategories()));
+        adapter.swapData(converter.transform(categoryProvider.getData()));
         categoryProvider.addObserver(observer);
     }
 
