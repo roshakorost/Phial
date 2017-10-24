@@ -27,7 +27,7 @@ import static com.mindcoders.phial.internal.util.UiUtils.dpToPx;
 
 public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
-    private final static int BUTTON_SIZE = 160;
+    private final static int BUTTON_SIZE = 53;
 
     private static final int STATUSBAR_HEIGHT = 25; //dp
 

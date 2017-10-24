@@ -55,9 +55,7 @@ class OverlayView extends LinearLayout {
         this.btnSize = btnSize;
         setOrientation(HORIZONTAL);
 
-        ImageButton btnHandle = new ImageButton(context);
-        btnHandle.setImageResource(R.drawable.ic_handle);
-        btnHandle.setBackgroundResource(R.drawable.bg_overlay_button);
+        HandleButton btnHandle = new HandleButton(context, android.R.color.white, R.drawable.ic_handle);
         btnHandle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
