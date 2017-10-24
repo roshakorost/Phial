@@ -19,7 +19,7 @@ class HandleButton extends View {
         super(context);
 
         backgroundPaint.setColor(ResourcesCompat.getColor(context.getResources(), backgroundColorResource, context.getTheme()));
-        backgroundPaint.setShadowLayer(15, 0, 0, Color.LTGRAY);
+        backgroundPaint.setShadowLayer(12, 0, 0, Color.LTGRAY);
 
         iconBitmap = BitmapFactory.decodeResource(context.getResources(), iconResource);
         setLayerType(LAYER_TYPE_SOFTWARE, backgroundPaint);

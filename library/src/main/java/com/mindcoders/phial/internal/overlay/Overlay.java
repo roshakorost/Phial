@@ -18,6 +18,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -41,7 +42,8 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private final OverlayView overlayView;
 
-    private FrameLayout pageContainerView;
+    private ViewGroup containerWrapperView;
+    private ViewGroup pageContainerView;
 
     private Point overlayViewPosition = new Point();
 
@@ -141,13 +143,15 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     public void destroy() {
         windowManager.removeView(overlayView);
-        if (pageContainerView != null) {
-            windowManager.removeView(pageContainerView);
+        if (containerWrapperView != null) {
+            windowManager.removeView(containerWrapperView);
+            containerWrapperView = null;
+            pageContainerView = null;
         }
     }
 
-    private FrameLayout createPageContainerView() {
-        FrameLayout pageContainterView = new FrameLayout(context);
+    private ViewGroup createWrapperView() {
+        FrameLayout wrapper = new FrameLayout(context);
 
         int height = displaySize.y - btnSizePx - dpToPx(context, STATUSBAR_HEIGHT);
 
@@ -161,9 +165,27 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         params.y = displaySize.y / 2;
 
-        windowManager.addView(pageContainterView, params);
+        wrapper.setLayoutParams(params);
 
-        return pageContainterView;
+        return wrapper;
+    }
+
+    private ViewGroup createPageContainerView() {
+        CardView pageContainer = new CardView(context);
+        pageContainer.setCardElevation(dpToPx(context, 5));
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+
+        int margin = dpToPx(context, 5);
+        params.leftMargin = margin;
+        params.rightMargin = margin;
+        params.bottomMargin = margin;
+
+        pageContainer.setLayoutParams(params);
+
+        return pageContainer;
     }
 
     private final OverlayView.OnHandleMoveListener onHandleMoveListener = new OverlayView.OnHandleMoveListener() {
@@ -250,11 +272,19 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                     new SimpleAnimatorListener() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            pageContainerView = createPageContainerView();
+                            showContainerView();
                             pageContainerView.addView(page.getPageViewFactory().createPageView(context));
                         }
                     }
-            );
+                   );
+        }
+
+        private void showContainerView() {
+            containerWrapperView = createWrapperView();
+            pageContainerView = createPageContainerView();
+
+            containerWrapperView.addView(pageContainerView);
+            windowManager.addView(containerWrapperView, containerWrapperView.getLayoutParams());
         }
 
         private void animateBackward() {
@@ -268,11 +298,12 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                     new SimpleAnimatorListener() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            windowManager.removeView(pageContainerView);
+                            windowManager.removeView(containerWrapperView);
+                            containerWrapperView = null;
                             pageContainerView = null;
                         }
                     }
-            );
+                   );
         }
 
         private void animate(

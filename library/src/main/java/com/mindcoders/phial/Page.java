@@ -5,23 +5,30 @@ import android.view.View;
 
 public final class Page {
 
-    public interface PageViewFactory<T extends View> {
+    public interface PageViewFactory {
 
-        T createPageView(Context context);
+        View createPageView(Context context);
 
     }
 
     private final int iconResourceId;
 
+    private final String title;
+
     private final PageViewFactory pageViewFactory;
 
-    public Page(int iconResourceId, PageViewFactory pageViewFactory) {
+    public Page(int iconResourceId, String title, PageViewFactory pageViewFactory) {
         this.iconResourceId = iconResourceId;
+        this.title = title;
         this.pageViewFactory = pageViewFactory;
     }
 
     public int getIconResourceId() {
         return iconResourceId;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public PageViewFactory getPageViewFactory() {

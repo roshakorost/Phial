@@ -9,7 +9,6 @@ import java.util.List;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 // TODO: 10/23/17 add pages from either left or right depending on which edge the handle is sticking to
@@ -90,15 +89,17 @@ class OverlayView extends LinearLayout {
     }
 
     private void toggle() {
-        if (selectedPage != null) {
-            selectedPage = null;
-            onPageSelectedListener.onNothingSelected();
-            setPageButtonsVisible(false);
-        } else {
+        if (pages.size() > 0) {
             setPageButtonsVisible(!isExpanded);
+            isExpanded = !isExpanded;
+            if (isExpanded) {
+                selectedPage = pages.get(0);
+                onPageSelectedListener.onFirstPageSelected(selectedPage);
+            } else {
+                selectedPage = null;
+                onPageSelectedListener.onNothingSelected();
+            }
         }
-
-        isExpanded = !isExpanded;
     }
 
     private void setPageButtonsVisible(boolean visible) {
@@ -109,9 +110,7 @@ class OverlayView extends LinearLayout {
     }
 
     private void addPageButton(final Page page, int position) {
-        ImageButton button = new ImageButton(getContext());
-        button.setImageResource(page.getIconResourceId());
-        button.setBackgroundResource(R.drawable.bg_overlay_button);
+        HandleButton button = new HandleButton(getContext(), android.R.color.white, page.getIconResourceId());
         LinearLayout.LayoutParams params = new LayoutParams(btnSize, btnSize);
         addView(button, position, params);
         button.setVisibility(View.GONE);
@@ -129,6 +128,8 @@ class OverlayView extends LinearLayout {
                     } else {
                         selectedPage = null;
                         onPageSelectedListener.onNothingSelected();
+                        setPageButtonsVisible(false);
+                        isExpanded = false;
                     }
                 }
             }
