@@ -17,9 +17,11 @@ public class PhialBuilder {
     private final List<Shareable> shareables = new ArrayList<>();
     private final List<Attacher> attachers = new ArrayList<>();
     private final List<Page> pages = new ArrayList<>();
-    private boolean attachScreenShots = true;
+    private boolean attachScreenshots = true;
     private boolean attachKeyValues = true;
     private boolean applySystemInfo = true;
+    private boolean enableKeyValueView = true;
+    private boolean enableShareView = true;
     private String shareDataFilePattern = "'data_M'MM'D'dd_'H'HH_mm_ss";
 
     public PhialBuilder(Application application) {
@@ -37,7 +39,7 @@ public class PhialBuilder {
     }
 
     public PhialBuilder attachScreenshot(boolean attachScreenshot) {
-        this.attachScreenShots = attachScreenshot;
+        this.attachScreenshots = attachScreenshot;
         return this;
     }
 
@@ -48,6 +50,16 @@ public class PhialBuilder {
 
     public PhialBuilder addPage(Page page) {
         this.pages.add(page);
+        return this;
+    }
+
+    public PhialBuilder enableKeyValueView(boolean enableKeyValueView) {
+        this.enableKeyValueView = enableKeyValueView;
+        return this;
+    }
+
+    public PhialBuilder enableShareView(boolean enableShareView) {
+        this.enableShareView = enableShareView;
         return this;
     }
 
@@ -82,7 +94,7 @@ public class PhialBuilder {
     }
 
     public boolean isAttachScreenshots() {
-        return attachScreenShots;
+        return attachScreenshots;
     }
 
     public boolean isApplySystemInfo() {
@@ -91,6 +103,14 @@ public class PhialBuilder {
 
     public boolean isAttachKeyValues() {
         return attachKeyValues;
+    }
+
+    public boolean isEnableKeyValueView() {
+        return enableKeyValueView;
+    }
+
+    public boolean isEnableShareView() {
+        return enableShareView;
     }
 
     public String getShareDataFilePattern() {

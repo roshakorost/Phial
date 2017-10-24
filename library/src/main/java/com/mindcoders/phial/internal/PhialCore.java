@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
+import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.internal.keyvalue.KVAttacher;
 import com.mindcoders.phial.internal.keyvalue.KVCategoryProvider;
@@ -105,7 +106,18 @@ public final class PhialCore {
         final SharedPreferences prefs = application.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         final OverlayPositionStorage positionStorage = new OverlayPositionStorage(prefs);
 
-        final Overlay overlay = new Overlay(phialNotifier, application, phialBuilder.getPages(), positionStorage);
+        List<Page> pages = new ArrayList<>();
+        if (phialBuilder.isEnableKeyValueView()) {
+            pages.add(DefaultPages.KEY_VALUE_PAGE);
+        }
+
+        if (phialBuilder.isEnableShareView()) {
+            pages.add(DefaultPages.SHARE_PAGE);
+        }
+
+        pages.addAll(phialBuilder.getPages());
+
+        final Overlay overlay = new Overlay(phialNotifier, application, pages, positionStorage);
         activityProvider.addListener(overlay);
 
         instance = new PhialCore(

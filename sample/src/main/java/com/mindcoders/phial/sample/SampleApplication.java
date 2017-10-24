@@ -1,15 +1,10 @@
 package com.mindcoders.phial.sample;
 
-import android.app.Application;
-import android.content.Context;
-import android.util.Log;
-import android.view.View;
-
-import com.mindcoders.phial.Page;
 import com.mindcoders.phial.Phial;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
-import com.mindcoders.phial.internal.keyvalue.KeyValueView;
-import com.mindcoders.phial.internal.share.ShareView;
+
+import android.app.Application;
+import android.util.Log;
 
 
 public class SampleApplication extends Application {
@@ -18,25 +13,7 @@ public class SampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Phial.builder(this)
-                .addPage(new Page(
-                        R.drawable.ic_keyvalue,
-                        new Page.PageViewFactory() {
-                            @Override
-                            public View createPageView(Context context) {
-                                return new KeyValueView(context);
-                            }
-                        }
-                ))
-                .addPage(new Page(
-                        R.drawable.ic_share,
-                        new Page.PageViewFactory() {
-                            @Override
-                            public View createPageView(Context context) {
-                                return new ShareView(context);
-                            }
-                        }
-                ))
-                .initPhial();
+             .initPhial();
 
         PhialErrorPlugins.setHandler(new PhialErrorPlugins.ErrorHandler() {
             @Override
