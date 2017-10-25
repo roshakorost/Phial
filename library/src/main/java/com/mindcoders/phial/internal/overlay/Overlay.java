@@ -1,13 +1,5 @@
 package com.mindcoders.phial.internal.overlay;
 
-import com.mindcoders.phial.Page;
-import com.mindcoders.phial.internal.PhialNotifier;
-import com.mindcoders.phial.internal.overlay.OverlayView.OnPageSelectedListener;
-import com.mindcoders.phial.internal.util.CurrentActivityProvider;
-import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
-
-import java.util.List;
-
 import android.animation.Animator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
@@ -24,22 +16,27 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.mindcoders.phial.Page;
+import com.mindcoders.phial.internal.PhialNotifier;
+import com.mindcoders.phial.internal.overlay.OverlayView.OnPageSelectedListener;
+import com.mindcoders.phial.internal.util.CurrentActivityProvider;
+import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
+
+import java.util.List;
+
 import static com.mindcoders.phial.internal.util.UiUtils.dpToPx;
 
 public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private static final int BUTTON_SIZE = 53;
-
     private static final int STATUSBAR_HEIGHT = 25; //dp
-
 
     private final PhialNotifier notifier;
     private final Context context;
     private final List<Page> pages;
     private final OverlayPositionStorage positionStorage;
-
+    private final CurrentActivityProvider activityProvider;
     private final WindowManager windowManager;
-
     private final OverlayView overlayView;
 
     private ViewGroup containerWrapperView;
@@ -56,22 +53,25 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     private boolean isDrawOverlayPermissionRequested;
 
     public Overlay(
-            PhialNotifier notifier,
             Context context,
             List<Page> pages,
-            OverlayPositionStorage positionStorage
-                  ) {
-        this.notifier = notifier;
+            PhialNotifier notifier,
+            CurrentActivityProvider activityProvider,
+            OverlayPositionStorage positionStorage) {
         this.context = context;
         this.pages = pages;
+        this.notifier = notifier;
+        this.activityProvider = activityProvider;
         this.positionStorage = positionStorage;
 
-        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        this.windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+
         windowManager.getDefaultDisplay().getSize(displaySize);
 
         btnSizePx = dpToPx(context, BUTTON_SIZE);
-
         overlayView = new OverlayView(context, btnSizePx);
+
+        activityProvider.addListener(this);
     }
 
     private void setupOverlayView(List<Page> pages) {
@@ -142,6 +142,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     }
 
     public void destroy() {
+        activityProvider.removeListener(this);
         windowManager.removeView(overlayView);
         if (containerWrapperView != null) {
             windowManager.removeView(containerWrapperView);
@@ -276,7 +277,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                             pageContainerView.addView(page.getPageViewFactory().createPageView(context));
                         }
                     }
-                   );
+            );
         }
 
         private void showContainerView() {
@@ -303,13 +304,13 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                             pageContainerView = null;
                         }
                     }
-                   );
+            );
         }
 
         private void animate(
                 int startX, int endX, int startY, int endY, final View view, final WindowManager.LayoutParams params,
                 Animator.AnimatorListener listener
-                            ) {
+        ) {
             PropertyValuesHolder x = PropertyValuesHolder.ofInt("x", startX, endX);
             PropertyValuesHolder y = PropertyValuesHolder.ofInt("y", startY, endY);
             ValueAnimator valueAnimator = ValueAnimator.ofPropertyValuesHolder(x, y);

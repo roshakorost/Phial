@@ -15,6 +15,8 @@ class InternalPhialConfig {
     private static final String KEY_VALUE_FILE_NAME = "keyValues.json";
     static final int DEFAULT_SHARE_IMAGE_QUALITY = 95;
     static final String SYSTEM_INFO_CATEGORY = "System";
+    static final String PREFERENCES_FILE_NAME = "phial";
+
 
     static File getWorkingDirectory(Context context) {
         final File file = new File(context.getExternalCacheDir(), PHIAL_DATA);

@@ -31,4 +31,8 @@ public class PhialNotifier {
             listener.onDebugWindowHide();
         }
     }
+
+    void destroy() {
+        listeners.clear();
+    }
 }

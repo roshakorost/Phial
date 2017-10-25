@@ -74,7 +74,7 @@ public class PhialBuilder {
     }
 
     public void initPhial() {
-        PhialCore.init(this);
+        PhialOverlay.init(this);
     }
 
     public Application getApplication() {

@@ -2,4 +2,7 @@
     <string name="app_name">phial</string>
     <string name="share.enter_message">Enter message</string>
     <string name="share.error_attachment">Error during preparing of debug attachment</string>
+    <string name="share.page_title">Share</string>
+    <string name="system_info.page_title">System Info</string>
+
 </resources>

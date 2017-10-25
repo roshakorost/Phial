@@ -1,50 +1,58 @@
 package com.mindcoders.phial.internal.keyvalue;
 
 
-import com.mindcoders.phial.R;
-import com.mindcoders.phial.internal.PhialCore;
-
-import java.util.Observable;
-import java.util.Observer;
-
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 
-public final class KeyValueView extends FrameLayout {
+import com.mindcoders.phial.R;
+import com.mindcoders.phial.internal.util.Precondition;
 
-    private final ExpandableListView listView;
+import java.util.Observable;
+import java.util.Observer;
 
+public final class KeyValueView extends FrameLayout implements Observer {
     private final KeyValueAdapter adapter;
+    private final KVSaver kvSaver;
 
-    private final KVSaver categoryProvider = PhialCore.getInstance().getKvSaver();
-
-    private final Observer observer = new Observer() {
-        @Override
-        public void update(Observable o, Object arg) {
-            adapter.swapData(categoryProvider.getData());
-        }
-    };
-
-    public KeyValueView(Context context) {
+    //only for Android Studio tests
+    @VisibleForTesting
+    public KeyValueView(@NonNull Context context) {
         super(context);
-        inflate(context, R.layout.view_keyvalue, this);
-        listView = findViewById(R.id.list_keyvalue);
+        Precondition.calledFromTools(this);
+        adapter = null;
+        kvSaver = null;
+    }
 
+    public KeyValueView(Context context, KVSaver kvSaver) {
+        super(context);
+        this.kvSaver = kvSaver;
+
+        inflate(context, R.layout.view_keyvalue, this);
+        ExpandableListView listView = findViewById(R.id.list_keyvalue);
         adapter = new KeyValueAdapter(LayoutInflater.from(context));
         listView.setAdapter((ExpandableListAdapter) adapter);
 
-        adapter.swapData(categoryProvider.getData());
-        categoryProvider.addObserver(observer);
+        updateData();
+        kvSaver.addObserver(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        categoryProvider.deleteObserver(observer);
+        kvSaver.deleteObserver(this);
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        updateData();
+    }
+
+    private void updateData() {
+        adapter.swapData(kvSaver.getData());
+    }
 }
