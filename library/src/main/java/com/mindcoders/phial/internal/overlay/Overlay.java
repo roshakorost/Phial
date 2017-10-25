@@ -252,13 +252,13 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         @Override
         public void onPageSelectionChanged(Page page) {
-            notifier.fireDebugWindowHide();
             pageContainerView.removeAllViews();
             pageContainerView.addView(page.getPageViewFactory().createPageView(context));
         }
 
         @Override
         public void onNothingSelected() {
+            notifier.fireDebugWindowHide();
             animateBackward();
         }
 
