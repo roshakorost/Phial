@@ -18,9 +18,9 @@ public class Category {
 
     /**
      * Sets a value to be associated with your debug data.
-     * Entry will be under the category set via {@link KVPhial#category(String)}
+     * Entry will be under the category set via {@link Phial#category(String)}
      * <p>
-     * Note: setKey(key, null) will set associated value to null. In order to remove entry use {@link KVPhial#removeKey(String)}
+     * Note: setKey(key, null) will set associated value to null. In order to remove entry use {@link Phial#removeKey(String)}
      *
      * @param key   of the debug data
      * @param value associated value
@@ -35,9 +35,9 @@ public class Category {
 
     /**
      * Sets a value to be associated with your debug data.
-     * Entry will be under the category set via {@link KVPhial#category(String)}
+     * Entry will be under the category set via {@link Phial#category(String)}
      * <p>
-     * Note: setKey(key, null) will set associated value to null. In order to remove entry use {@link KVPhial#removeKey(String)}
+     * Note: setKey(key, null) will set associated value to null. In order to remove entry use {@link Phial#removeKey(String)}
      *
      * @param key   of the debug data
      * @param value associated value
@@ -53,7 +53,7 @@ public class Category {
     /**
      * Removes entry with given key from debug data.
      * <p>
-     * Note: Entry would be removed only from the category set via {@link KVPhial#category(String)}
+     * Note: Entry would be removed only from the category set via {@link Phial#category(String)}
      *
      * @param key to be removed.
      */

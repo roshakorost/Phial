@@ -17,7 +17,7 @@ import com.mindcoders.phial.internal.share.ShareManager;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.share.attachment.ScreenShotAttacher;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
-import com.mindcoders.phialkv.KVPhial;
+import com.mindcoders.phialkv.Phial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +95,7 @@ public final class PhialCore {
         application.registerActivityLifecycleCallbacks(activityProvider);
 
         final KVSaver kvSaver = new KVSaver();
-        KVPhial.addSaver(kvSaver);
+        Phial.addSaver(kvSaver);
 
         final PhialNotifier phialNotifier = new PhialNotifier();
 
@@ -133,7 +133,7 @@ public final class PhialCore {
         );
 
         if (phialBuilder.applySystemInfo()) {
-            SystemInfoWriter.writeSystemInfo(KVPhial.category(SYSTEM_INFO_CATEGORY), application);
+            SystemInfoWriter.writeSystemInfo(Phial.category(SYSTEM_INFO_CATEGORY), application);
         }
 
         return instance;

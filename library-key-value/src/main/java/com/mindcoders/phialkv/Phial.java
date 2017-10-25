@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by rost on 10/24/17.
  */
 
-public class KVPhial {
+public class Phial {
     private static final List<Saver> SAVERS = new CopyOnWriteArrayList<>();
     private static final String DEFAULT_CATEGORY_NAME = "default";
     private static final Category DEFAULT_CATEGORY = new Category(DEFAULT_CATEGORY_NAME, SAVERS);
@@ -26,7 +26,7 @@ public class KVPhial {
      * Sets a value to be associated with your debug data.
      * Entry will be set under default category.
      * <p>
-     * Note: setKey(key, null) will set associated value to null. In order to remove entry use {@link KVPhial#removeKey(String)}
+     * Note: setKey(key, null) will set associated value to null. In order to remove entry use {@link Phial#removeKey(String)}
      *
      * @param key   of the debug data
      * @param value associated value
@@ -39,7 +39,7 @@ public class KVPhial {
      * Sets a value to be associated with your debug data.
      * Entry will be set under default category.
      * <p>
-     * Note: setKey(key, null) will set associated value to null. In order to remove entry use {@link KVPhial#removeKey(String)}
+     * Note: setKey(key, null) will set associated value to null. In order to remove entry use {@link Phial#removeKey(String)}
      *
      * @param key   of the debug data
      * @param value associated value

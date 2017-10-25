@@ -1,6 +1,6 @@
 package com.mindcoders.phial.sample;
 
-import com.mindcoders.phial.Phial;
+import com.mindcoders.phial.PhialOverlay;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
 
 import android.app.Application;
@@ -12,7 +12,7 @@ public class SampleApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Phial.builder(this)
+        PhialOverlay.builder(this)
              .initPhial();
 
         PhialErrorPlugins.setHandler(new PhialErrorPlugins.ErrorHandler() {
