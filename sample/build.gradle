@@ -35,7 +35,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.jakewharton.timber:timber:4.5.1'
     
-    qaCompile project(':library')
+    qaCompile project(':phial-overlay')
     qaCompile project(':phial-logging')
-    prodCompile project(":library-key-value")
+    prodCompile project(':phial-key-value')
 }
