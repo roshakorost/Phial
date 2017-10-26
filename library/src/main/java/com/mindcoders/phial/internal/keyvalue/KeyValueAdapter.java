@@ -56,12 +56,7 @@ final class KeyValueAdapter extends BaseAdapter implements ExpandableListAdapter
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        int childrenCount = 0;
-        for (KVCategory item : items) {
-            childrenCount += item.entries().size();
-        }
-
-        return childrenCount;
+        return getGroup(groupPosition).entries().size();
     }
 
     @Override
