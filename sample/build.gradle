@@ -18,11 +18,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        qa {
+            
+        }
+
+        prod {
+
+        }
+    }
 }
 
 dependencies {
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    compile project (':library')
+    qaCompile project(':library')
+    prodCompile project(":library-key-value")
 }

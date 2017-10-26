@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.mindcoders.phial.internal.keyvalue.KVSaver;
 import com.mindcoders.phial.keyvalue.Phial;
 
 
