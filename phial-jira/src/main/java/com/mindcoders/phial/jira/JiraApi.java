@@ -2,9 +2,11 @@ package com.mindcoders.phial.jira;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -49,6 +51,25 @@ public class JiraApi {
         }
 
         return RestModelConverter.convertIssueCreatedResponse(responseBody);
+    }
+
+    public Response attachFile(String issueKey, File file) throws IOException {
+        final MultipartBody body = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.getName(), RequestBody.create(null, file))
+                .build();
+
+        final String url = String.format("%srest/api/2/issue/%s/attachments", baseUrl, issueKey);
+
+        final Request request = new Request.Builder()
+                .url(url)
+                .addHeader("X-Atlassian-Token", "nocheck")
+                .post(body)
+                .build();
+
+        final Response response = client.newCall(request).execute();
+
+        return response;
     }
 
     private String getResponseBodyAsText(Response response) throws IOException {
