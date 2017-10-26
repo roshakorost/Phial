@@ -10,8 +10,9 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 
 class HandleButton extends View {
-
-    private final Paint backgroundPaint = new Paint();
+    private static final int SHADOW_SIZE = 14;
+    private static final int SHADOW_COLOR = Color.argb(60, 0, 0, 0);
+    private final Paint backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private Bitmap iconBitmap;
 
@@ -19,7 +20,7 @@ class HandleButton extends View {
         super(context);
 
         backgroundPaint.setColor(ResourcesCompat.getColor(context.getResources(), backgroundColorResource, context.getTheme()));
-        backgroundPaint.setShadowLayer(12, 0, 0, Color.LTGRAY);
+        backgroundPaint.setShadowLayer(SHADOW_SIZE, 0, SHADOW_SIZE / 2f, SHADOW_COLOR);
 
         iconBitmap = BitmapFactory.decodeResource(context.getResources(), iconResource);
         setLayerType(LAYER_TYPE_SOFTWARE, backgroundPaint);
@@ -33,7 +34,7 @@ class HandleButton extends View {
         float cx = w / 2;
         float cy = h / 2;
 
-        float radius = (w / 2) - 10;
+        float radius = (w / 2f) - SHADOW_SIZE * 1.2f;
 
         canvas.drawCircle(cx, cy, radius, backgroundPaint);
 

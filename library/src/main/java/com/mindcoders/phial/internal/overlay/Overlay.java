@@ -28,8 +28,9 @@ import static com.mindcoders.phial.internal.util.UiUtils.dpToPx;
 
 public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
-    private static final int BUTTON_SIZE = 53;
-    private static final int STATUSBAR_HEIGHT = 25; //dp
+    private static final int BUTTON_SIZE_DP = 68;
+    private static final int STATUSBAR_HEIGHT_DP = 25;
+    private static final int PAGE_MARGIN_DP = 8;
 
     private final PhialNotifier notifier;
     private final Context context;
@@ -68,7 +69,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         windowManager.getDefaultDisplay().getSize(displaySize);
 
-        btnSizePx = dpToPx(context, BUTTON_SIZE);
+        btnSizePx = dpToPx(context, BUTTON_SIZE_DP);
         overlayView = new OverlayView(context, btnSizePx);
 
         activityProvider.addListener(this);
@@ -154,7 +155,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     private ViewGroup createWrapperView() {
         FrameLayout wrapper = new FrameLayout(context);
 
-        int height = displaySize.y - btnSizePx - dpToPx(context, STATUSBAR_HEIGHT);
+        int height = displaySize.y - btnSizePx - dpToPx(context, STATUSBAR_HEIGHT_DP);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -173,13 +174,13 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private ViewGroup createPageContainerView() {
         CardView pageContainer = new CardView(context);
-        pageContainer.setCardElevation(dpToPx(context, 5));
+        pageContainer.setCardElevation(dpToPx(context, 4));
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
 
-        int margin = dpToPx(context, 5);
+        int margin = dpToPx(context, PAGE_MARGIN_DP);
         params.leftMargin = margin;
         params.rightMargin = margin;
         params.bottomMargin = margin;

@@ -1,7 +1,9 @@
 package com.mindcoders.phial.internal.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 public class UiUtils {
 
@@ -10,8 +12,8 @@ public class UiUtils {
     }
 
     public static int dpToPx(Context context, int dp) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        Resources r = context.getResources();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
 
 }
