@@ -42,7 +42,7 @@ class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHolder> {
     @Override
     public ShareViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ShareViewHolder(inflater.inflate(R.layout.item_share, parent, false));
+        return new ShareViewHolder(inflater.inflate(R.layout.listitem_share, parent, false));
     }
 
     @Override

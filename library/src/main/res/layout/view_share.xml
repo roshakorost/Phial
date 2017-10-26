@@ -3,20 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/share.padding.default">
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/share.padding.default"
-        android:hint="@string/share.enter_message" />
+        android:layout_marginBottom="@dimen/share.padding.small"
+        android:background="#f8f8f8"
+        android:padding="@dimen/share.padding.default">
+
+        <EditText
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:hint="@string/share.enter_message" />
+    </FrameLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/item_share" />
+        android:padding="@dimen/share.padding.default"
+        tools:listitem="@layout/listitem_share" />
 
 </LinearLayout>

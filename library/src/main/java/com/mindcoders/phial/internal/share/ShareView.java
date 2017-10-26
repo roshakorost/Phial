@@ -14,6 +14,7 @@ import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.internal.share.ShareAdapter.OnItemClickedListener;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
+import com.mindcoders.phial.internal.util.GridSpacingItemDecoration;
 import com.mindcoders.phial.internal.util.Precondition;
 
 import java.io.File;
@@ -24,6 +25,8 @@ import java.util.List;
  */
 
 public class ShareView extends FrameLayout {
+    private static final int COLUMN_COUNT = 4;
+
     private final RecyclerView contentRV;
     private final EditText messageTV;
     private final ShareManager shareManager;
@@ -55,7 +58,11 @@ public class ShareView extends FrameLayout {
         contentRV = findViewById(R.id.content);
         messageTV = findViewById(R.id.message);
 
-        contentRV.setLayoutManager(new GridLayoutManager(context, 4));
+        contentRV.setLayoutManager(new GridLayoutManager(context, COLUMN_COUNT));
+
+        final int itemsPaddin = getResources().getDimensionPixelSize(R.dimen.share_padding_items);
+        contentRV.addItemDecoration(new GridSpacingItemDecoration(COLUMN_COUNT, itemsPaddin, false));
+
         final List<ShareItem> shareables = this.shareManager.getShareables();
         final ShareAdapter adapter = new ShareAdapter(shareables);
         adapter.setClickedListener(clickedListener);

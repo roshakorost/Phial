@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="share.padding.default">16dp</dimen>
+    <dimen name="share.padding.items">32dp</dimen>
     <dimen name="share.padding.small">8dp</dimen>
 </resources>
