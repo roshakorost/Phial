@@ -1,5 +1,6 @@
 package com.mindcoders.phial.internal.keyvalue;
 
+import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.keyvalue.KVSaver.KVCategory;
 import com.mindcoders.phial.internal.keyvalue.KVSaver.KVEntry;
 
@@ -94,13 +95,19 @@ final class KeyValueAdapter extends BaseAdapter implements ExpandableListAdapter
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        final KeyValueViewHolder holder;
+
         if (convertView == null) {
-            convertView = layoutInflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false);
+            convertView = layoutInflater.inflate(R.layout.listitem_keyvalue, parent, false);
+            holder = KeyValueViewHolder.fromRootView(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (KeyValueViewHolder) convertView.getTag();
         }
 
         KVEntry entry = getChild(groupPosition, childPosition);
-
-        ((TextView) convertView).setText(String.format("%s: %s", entry.getName(), entry.getValue()));
+        holder.key.setText(String.format("%s:", entry.getName()));
+        holder.value.setText(entry.getValue());
 
         return convertView;
     }
@@ -130,4 +137,19 @@ final class KeyValueAdapter extends BaseAdapter implements ExpandableListAdapter
         return groupId;
     }
 
+    private static class KeyValueViewHolder {
+        final TextView key;
+        final TextView value;
+
+        KeyValueViewHolder(TextView key, TextView value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public static KeyValueViewHolder fromRootView(View view) {
+            final TextView keyTV = view.findViewById(android.R.id.text1);
+            final TextView valueTV = view.findViewById(android.R.id.text2);
+            return new KeyValueViewHolder(keyTV, valueTV);
+        }
+    }
 }
