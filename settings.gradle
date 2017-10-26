@@ -1,1 +1,1 @@
-include ':sample', ':library', ':library-key-value'
+include ':sample', ':library', ':library-key-value', ':phial-logging'

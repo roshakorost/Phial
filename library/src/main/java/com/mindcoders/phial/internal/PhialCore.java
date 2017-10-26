@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
+import com.mindcoders.phial.keyvalue.Phial;
 import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.internal.keyvalue.KVAttacher;
 import com.mindcoders.phial.internal.keyvalue.KVSaver;
@@ -12,7 +13,7 @@ import com.mindcoders.phial.internal.share.ShareManager;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.share.attachment.ScreenShotAttacher;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
-import com.mindcoders.phialkv.Phial;
+
 
 import java.util.ArrayList;
 import java.util.List;

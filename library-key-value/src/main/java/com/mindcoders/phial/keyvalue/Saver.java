@@ -1,4 +1,4 @@
-package com.mindcoders.phialkv;
+package com.mindcoders.phial.keyvalue;
 
 /**
  * Created by rost on 10/24/17.

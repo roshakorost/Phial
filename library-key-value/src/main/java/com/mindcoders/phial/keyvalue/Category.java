@@ -1,4 +1,4 @@
-package com.mindcoders.phialkv;
+package com.mindcoders.phial.keyvalue;
 
 import android.support.annotation.NonNull;
 

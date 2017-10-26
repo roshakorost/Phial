@@ -5,7 +5,8 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 
 import com.mindcoders.phial.BuildConfig;
-import com.mindcoders.phialkv.Category;
+import com.mindcoders.phial.keyvalue.Category;
+
 
 /**
  * Created by rost on 10/22/17.
