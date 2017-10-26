@@ -26,6 +26,7 @@ public final class FileUtil {
     private static final int BUFFER_SIZE = 2048;
 
     private FileUtil() {
+        //to hide
     }
 
     public static void write(String text, File target) throws IOException {
@@ -69,31 +70,40 @@ public final class FileUtil {
         ZipOutputStream out = null;
         try {
             out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(target)));
-
-            byte data[] = new byte[BUFFER_SIZE];
-
             for (File source : sources) {
-                BufferedInputStream bis = null;
-                try {
-                    bis = new BufferedInputStream(new FileInputStream(source), BUFFER_SIZE);
-
-                    out.putNextEntry(new ZipEntry(source.getName()));
-
-                    int count;
-                    while ((count = bis.read(data, 0, BUFFER_SIZE)) != -1) {
-                        out.write(data, 0, count);
-                    }
-
-                } finally {
-                    if (bis != null) {
-                        bis.close();
-                    }
-                }
+                writeFile(source, out);
             }
-
         } finally {
             if (out != null) {
                 out.close();
+            }
+        }
+    }
+
+    private static void writeFile(File source, ZipOutputStream out) throws IOException {
+        if (source.isDirectory()) {
+            final File[] files = source.listFiles();
+            for (File file : files) {
+                writeFile(file, out);
+            }
+            return;
+        }
+
+        final byte[] buffer = new byte[BUFFER_SIZE];
+        BufferedInputStream bis = null;
+        try {
+            bis = new BufferedInputStream(new FileInputStream(source), BUFFER_SIZE);
+
+            out.putNextEntry(new ZipEntry(source.getName()));
+
+            int count;
+            while ((count = bis.read(buffer, 0, BUFFER_SIZE)) != -1) {
+                out.write(buffer, 0, count);
+            }
+
+        } finally {
+            if (bis != null) {
+                bis.close();
             }
         }
     }
