@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import com.mindcoders.phial.keyvalue.Phial;
 
+import timber.log.Timber;
+
 
 public class SampleActivity extends AppCompatActivity {
 
@@ -15,6 +17,8 @@ public class SampleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.d("onCreate");
+
         setContentView(R.layout.activity_main);
         itemNameTV = findViewById(R.id.text);
         showCurrentItem();
@@ -32,9 +36,21 @@ public class SampleActivity extends AppCompatActivity {
         Phial.removeKey("currentActivity");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Timber.d("onDestroy");
+    }
+
     private void showCurrentItem() {
         final ItemRepository.Item item = itemRepository.loadItem();
+
+        //log will get information about every click
+        // and about clicks from previous app start
+        Timber.d("item loaded %s", item);
+        //when KeyValue will have information only about last item.
         Phial.setKey("currentItem", item);
+
         itemNameTV.setText(item.getName());
     }
 }

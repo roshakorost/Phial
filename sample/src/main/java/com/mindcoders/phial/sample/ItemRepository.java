@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import timber.log.Timber;
+
 /**
  * Created by rost on 10/26/17.
  */
@@ -14,6 +16,7 @@ class ItemRepository {
 
     public Item loadItem() {
         final int index = new Random().nextInt(ITEMS.size());
+        Timber.d("loadItem: %d", index);
         return ITEMS.get(index);
     }
 
