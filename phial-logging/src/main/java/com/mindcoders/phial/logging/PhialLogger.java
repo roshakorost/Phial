@@ -22,7 +22,7 @@ import ch.qos.logback.core.util.StatusPrinter;
 
 public class PhialLogger implements Attacher {
     private static final String LOG_PREFIX = "Log";
-    private static final String PATTERN = "%d{HH:mm:ss.SSS}%thread%-5level%logger{36}%msg%n";
+    private static final String PATTERN = "%d{HH:mm:ss.SSS}%thread%-5level%logger{36}%msg";
     private static final String HISTORY_FILE_NAME_PATTERN = ".%d{yyyy-MM-dd}.%i.html";
     private static final String LOG_DIR_NAME = "logs";
     private static final String MAX_FILE_SIZE = "5MB";
