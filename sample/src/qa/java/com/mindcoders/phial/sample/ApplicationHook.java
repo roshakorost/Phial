@@ -1,8 +1,10 @@
 package com.mindcoders.phial.sample;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.mindcoders.phial.PhialOverlay;
+import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.logging.PhialLogger;
 
 import timber.log.Timber;
@@ -15,6 +17,13 @@ final class ApplicationHook {
         PhialOverlay.builder(app)
                 .addAttachmentProvider(logger)
                 .initPhial();
+
+        PhialErrorPlugins.setHandler(new PhialErrorPlugins.ErrorHandler() {
+            @Override
+            public void onError(Throwable throwable) {
+                Log.w("Phial", "error in phial", throwable);
+            }
+        });
     }
 
     private static class PhialTimberTree extends Timber.DebugTree {
