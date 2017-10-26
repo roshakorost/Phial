@@ -3,18 +3,17 @@ package com.mindcoders.phial.internal.share;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
-import com.mindcoders.phial.internal.share.ShareAdapter.OnItemClickedListener;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
-import com.mindcoders.phial.internal.util.GridSpacingItemDecoration;
 import com.mindcoders.phial.internal.util.Precondition;
 
 import java.io.File;
@@ -25,25 +24,16 @@ import java.util.List;
  */
 
 public class ShareView extends FrameLayout {
-    private static final int COLUMN_COUNT = 4;
-
-    private final RecyclerView contentRV;
+    private final GridView contentGV;
     private final EditText messageTV;
     private final ShareManager shareManager;
     private final AttachmentManager attachmentManager;
-
-    private final OnItemClickedListener<ShareItem> clickedListener = new OnItemClickedListener<ShareItem>() {
-        @Override
-        public void onItemClicked(ShareItem item) {
-            shareItem(item);
-        }
-    };
 
     @VisibleForTesting
     public ShareView(@NonNull Context context) {
         super(context);
         Precondition.calledFromTools(this);
-        contentRV = null;
+        contentGV = null;
         messageTV = null;
         shareManager = null;
         attachmentManager = null;
@@ -55,18 +45,19 @@ public class ShareView extends FrameLayout {
         this.attachmentManager = attachmentManager;
 
         LayoutInflater.from(context).inflate(R.layout.view_share, this, true);
-        contentRV = findViewById(R.id.content);
+        contentGV = findViewById(R.id.content);
         messageTV = findViewById(R.id.message);
 
-        contentRV.setLayoutManager(new GridLayoutManager(context, COLUMN_COUNT));
-
-        final int itemsPaddin = getResources().getDimensionPixelSize(R.dimen.share_padding_items);
-        contentRV.addItemDecoration(new GridSpacingItemDecoration(COLUMN_COUNT, itemsPaddin, false));
-
         final List<ShareItem> shareables = this.shareManager.getShareables();
-        final ShareAdapter adapter = new ShareAdapter(shareables);
-        adapter.setClickedListener(clickedListener);
-        contentRV.setAdapter(adapter);
+        final ShareAdapter adapter = new ShareAdapter(context, shareables);
+        contentGV.setAdapter(adapter);
+        contentGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final ShareItem item = adapter.getItem(position);
+                shareItem(item);
+            }
+        });
     }
 
     private void shareItem(ShareItem shareItem) {

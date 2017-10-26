@@ -1,83 +1,81 @@
 package com.mindcoders.phial.internal.share;
 
-import com.mindcoders.phial.R;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.ShareViewHolder> {
-    interface OnItemClickedListener<T> {
-        void onItemClicked(T item);
-    }
+import com.mindcoders.phial.R;
+import com.mindcoders.phial.ShareDescription;
 
+import java.util.List;
+
+/**
+ * Created by rost on 10/26/17.
+ */
+
+class ShareAdapter extends BaseAdapter {
+    private final LayoutInflater inflater;
     private final List<ShareItem> items;
-    private OnItemClickedListener<ShareItem> clickedListener;
 
-    ShareAdapter() {
-        this(Collections.<ShareItem>emptyList());
-    }
-
-    ShareAdapter(List<ShareItem> items) {
-        this.items = new ArrayList<>(items);
-    }
-
-    void swapData(List<ShareItem> items) {
-        this.items.clear();
-        this.items.addAll(items);
-        notifyDataSetChanged();
-    }
-
-    void setClickedListener(OnItemClickedListener<ShareItem> clickedListener) {
-        this.clickedListener = clickedListener;
+    ShareAdapter(Context context, List<ShareItem> items) {
+        this.inflater = LayoutInflater.from(context);
+        this.items = items;
     }
 
     @Override
-    public ShareViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ShareViewHolder(inflater.inflate(R.layout.listitem_share, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(ShareViewHolder holder, int position) {
-        ShareItem shareItem = items.get(position);
-        holder.bind(shareItem);
-    }
-
-    @Override
-    public int getItemCount() {
+    public int getCount() {
         return items.size();
     }
 
-    class ShareViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final TextView tvName;
-        private final ImageView ivIcon;
-
-        ShareViewHolder(View itemView) {
-            super(itemView);
-            tvName = itemView.findViewById(R.id.name);
-            ivIcon = itemView.findViewById(R.id.icon);
-            itemView.setOnClickListener(this);
-        }
-
-        void bind(final ShareItem shareItem) {
-            tvName.setText(shareItem.getDescription().getLabel());
-            ivIcon.setImageDrawable(shareItem.getDescription().getDrawable());
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (clickedListener != null) {
-                clickedListener.onItemClicked(items.get(getAdapterPosition()));
-            }
-        }
+    @Override
+    public ShareItem getItem(int position) {
+        return items.get(position);
     }
 
+    @Override
+    public long getItemId(int position) {
+        return getItem(position).hashCode();
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final ViewHolder viewHolder;
+        if (convertView != null) {
+            viewHolder = (ViewHolder) convertView.getTag();
+        } else {
+            convertView = inflater.inflate(R.layout.listitem_share, parent, false);
+            viewHolder = ViewHolder.create(convertView);
+            convertView.setTag(viewHolder);
+        }
+        viewHolder.bind(getItem(position));
+        return convertView;
+    }
+
+
+    private static class ViewHolder {
+        private final ImageView icon;
+        private final TextView name;
+
+        ViewHolder(ImageView icon, TextView name) {
+            this.icon = icon;
+            this.name = name;
+        }
+
+        static ViewHolder create(View convertView) {
+            TextView name = convertView.findViewById(R.id.name);
+            ImageView icon = convertView.findViewById(R.id.icon);
+            return new ViewHolder(icon, name);
+        }
+
+        void bind(ShareItem shareItem) {
+            final ShareDescription description = shareItem.getDescription();
+            name.setText(description.getLabel());
+            icon.setImageDrawable(description.getDrawable());
+        }
+    }
 }

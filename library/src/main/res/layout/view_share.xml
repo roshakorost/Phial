@@ -21,11 +21,16 @@
     </FrameLayout>
 
 
-    <android.support.v7.widget.RecyclerView
+    <GridView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:horizontalSpacing="@dimen/share.padding.items"
+        android:numColumns="4"
         android:padding="@dimen/share.padding.default"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="@dimen/share.padding.items"
         tools:listitem="@layout/listitem_share" />
 
 </LinearLayout>
