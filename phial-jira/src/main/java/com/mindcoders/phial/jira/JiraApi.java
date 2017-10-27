@@ -17,20 +17,20 @@ import okhttp3.ResponseBody;
  * Created by rost on 10/26/17.
  */
 
-public class JiraApi {
+class JiraApi {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private final OkHttpClient client;
     private final String baseUrl;
     private final String projectKey;
 
-    public JiraApi(OkHttpClient client, String baseUrl, String projectKey) {
+    JiraApi(OkHttpClient client, String baseUrl, String projectKey) {
         this.client = client;
         this.baseUrl = baseUrl;
         this.projectKey = projectKey;
     }
 
-    public CreatedIssueResponse createIssue(String summary, String description) throws IOException, JSONException {
+    CreatedIssueResponse createIssue(String summary, String description) throws IOException, JSONException {
         final String jsonBody = RestModelConverter.createIssueModel(projectKey, summary, description).toString();
         final RequestBody requestBody = RequestBody.create(JSON, jsonBody);
 
@@ -53,7 +53,7 @@ public class JiraApi {
         return RestModelConverter.convertIssueCreatedResponse(responseBody);
     }
 
-    public Response attachFile(String issueKey, File file) throws IOException {
+    Response attachFile(String issueKey, File file) throws IOException {
         final MultipartBody body = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", file.getName(), RequestBody.create(null, file))

@@ -22,6 +22,7 @@ android {
 }
 
 dependencies {
+    compile project(':phial-overlay')
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
 
     testCompile 'org.robolectric:robolectric:3.2.2'

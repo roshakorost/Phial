@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * Created by rost on 10/26/17.
  */
 
-public class RestModelConverter {
+class RestModelConverter {
     private static final String SUMMARY = "summary";
     private static final String DESCRIPTION = "description";
     private static final String KEY = "key";
@@ -16,7 +16,7 @@ public class RestModelConverter {
     private static final String NAME = "name";
 
     private static final String DEFAULT_ISSUE_TYPE = "Bug";
-    public static final String ID = "id";
+    private static final String ID = "id";
 
     static JSONObject createIssueModel(String projectKey, String summary, String description) throws JSONException {
         final JSONObject projectObj = createJsonObj(KEY, projectKey);

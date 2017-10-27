@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.mindcoders.phial.PhialOverlay;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
+import com.mindcoders.phial.jira.JiraShareable;
 import com.mindcoders.phial.logging.PhialLogger;
 
 import timber.log.Timber;
@@ -16,6 +17,7 @@ final class ApplicationHook {
 
         PhialOverlay.builder(app)
                 .addAttachmentProvider(logger)
+                .addShareable(new JiraShareable(app))
                 .initPhial();
 
         PhialErrorPlugins.setHandler(new PhialErrorPlugins.ErrorHandler() {

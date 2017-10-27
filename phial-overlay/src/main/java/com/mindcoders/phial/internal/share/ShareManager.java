@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
+import com.mindcoders.phial.ShareContext;
 import com.mindcoders.phial.Shareable;
 import com.mindcoders.phial.internal.util.CollectionUtils;
 import com.mindcoders.phial.internal.util.FileUtil;
@@ -39,11 +40,11 @@ public class ShareManager {
         return result;
     }
 
-    void share(ShareItem shareItem, File attachment, String message) {
+    void share(ShareItem shareItem, ShareContext shareContext, File attachment, String message) {
         if (shareItem instanceof SystemShareItem) {
             share((SystemShareItem) shareItem, attachment, message);
         } else if (shareItem instanceof UserShareItem) {
-            share((UserShareItem) shareItem, attachment, message);
+            share((UserShareItem) shareItem, shareContext, attachment, message);
         } else {
             throw new IllegalArgumentException("unexpected share item type " + shareItem);
         }
@@ -56,8 +57,8 @@ public class ShareManager {
         context.startActivity(shareIntent);
     }
 
-    void share(UserShareItem shareItem, File attachment, String message) {
-        shareItem.getShareable().share(attachment, message);
+    void share(UserShareItem shareItem, ShareContext shareContext, File attachment, String message) {
+        shareItem.getShareable().share(shareContext, attachment, message);
     }
 
     private Intent createShareIntent(Uri file, String message) {

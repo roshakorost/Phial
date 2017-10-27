@@ -13,16 +13,16 @@ import okhttp3.Response;
  * Created by rost on 10/26/17.
  */
 
-public class OkHttpFactory {
+class OkHttpFactory {
     private final String userName;
     private final String password;
 
-    public OkHttpFactory(String userName, String password) {
+    OkHttpFactory(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
 
-    public OkHttpClient createAuthorizedClient() {
+    OkHttpClient createAuthorizedClient() {
         return new OkHttpClient.Builder()
                 .addInterceptor(new AuthenticationInterceptor(userName, password))
                 .build();
