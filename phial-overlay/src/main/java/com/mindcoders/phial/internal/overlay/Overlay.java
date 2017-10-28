@@ -41,7 +41,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     private final OverlayView overlayView;
 
     private ViewGroup containerWrapperView;
-    private ViewGroup pageContainerView;
+    private PageContainerView pageContainerView;
     private View tintView;
 
     private View selectedPageIndicator;
@@ -180,8 +180,8 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         return wrapper;
     }
 
-    private ViewGroup createPageContainerView() {
-        FrameLayout pageContainer = new FrameLayout(context);
+    private PageContainerView createPageContainerView() {
+        PageContainerView pageContainer = new PageContainerView(context);
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -192,7 +192,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         pageContainer.setLayoutParams(params);
 
-        pageContainer.setBackgroundColor(Color.WHITE);
+        pageContainer.setBackgroundResource(R.drawable.bg_page_container);
 
         return pageContainer;
     }
@@ -276,8 +276,8 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         @Override
         public void onPageSelectionChanged(Page page, int position) {
-            pageContainerView.removeAllViews();
-            pageContainerView.addView(page.getPageViewFactory().createPageView(context));
+            pageContainerView.showPage(page.getPageViewFactory().createPageView(context));
+            pageContainerView.setPageTitle(page.getTitle());
 
             updateSelectedPageIndicator(position);
         }
@@ -307,7 +307,8 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                     new SimpleAnimatorListener() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            pageContainerView.addView(page.getPageViewFactory().createPageView(context));
+                            pageContainerView.showPage(page.getPageViewFactory().createPageView(context));
+                            pageContainerView.setPageTitle(page.getTitle());
                         }
                     }
             );
