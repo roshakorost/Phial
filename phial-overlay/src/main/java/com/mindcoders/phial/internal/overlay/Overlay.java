@@ -129,15 +129,15 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         }
 
         overlayView.setVisibility(View.VISIBLE);
-        if (pageContainerView != null) {
-            pageContainerView.setVisibility(View.VISIBLE);
+        if (containerWrapperView != null) {
+            containerWrapperView.setVisibility(View.VISIBLE);
         }
     }
 
     private void hide() {
         overlayView.setVisibility(View.GONE);
-        if (pageContainerView != null) {
-            pageContainerView.setVisibility(View.GONE);
+        if (containerWrapperView != null) {
+            containerWrapperView.setVisibility(View.GONE);
         }
         positionStorage.savePosition(overlayViewPosition);
     }
