@@ -6,7 +6,6 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
@@ -43,7 +42,6 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private ViewGroup containerWrapperView;
     private PageContainerView pageContainerView;
-    private View tintView;
 
     private View selectedPageIndicator;
 
@@ -85,12 +83,14 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 btnSizePx,
                 getType(),
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_DIM_BEHIND,
                 PixelFormat.TRANSLUCENT
         );
 
         params.x = overlayViewPosition.x;
         params.y = overlayViewPosition.y;
+        params.dimAmount = 0.0f;
 
         windowManager.addView(overlayView, params);
 
@@ -124,8 +124,6 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private void show() {
         if (canDrawOverlay() && !isOverlayViewSetup) {
-            // order is important
-            setupTintView();
             setupOverlayView(pages);
             isOverlayViewSetup = true;
         } else if (!canDrawOverlay() && !isDrawOverlayPermissionRequested) {
@@ -142,7 +140,6 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     private void hide() {
         overlayView.setVisibility(View.GONE);
-        tintView.setVisibility(View.GONE);
         if (containerWrapperView != null) {
             containerWrapperView.setVisibility(View.GONE);
         }
@@ -152,7 +149,6 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     public void destroy() {
         activityProvider.removeListener(this);
         windowManager.removeView(overlayView);
-        windowManager.removeView(tintView);
         if (containerWrapperView != null) {
             windowManager.removeView(containerWrapperView);
             containerWrapperView = null;
@@ -175,6 +171,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         );
 
         params.y = displaySize.y / 2;
+        params.dimAmount = 0.5f;
 
         wrapper.setLayoutParams(params);
 
@@ -203,22 +200,6 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         ViewCompat.setElevation(pageContainer, 5f);
 
         return pageContainer;
-    }
-
-    private void setupTintView() {
-        tintView = new View(context);
-        tintView.setBackgroundColor(Color.parseColor("#60000000"));
-
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                getType(),
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT
-        );
-
-        windowManager.addView(tintView, params);
-        tintView.setVisibility(View.GONE);
     }
 
     private final OverlayView.OnHandleMoveListener onHandleMoveListener = new OverlayView.OnHandleMoveListener() {
@@ -297,7 +278,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         }
 
         private void animateForward(final Page page) {
-            WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
+            final WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
             int startX = params.x;
             int endX = displaySize.x / 2;
 
@@ -305,8 +286,6 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             int endY = -displaySize.y / 2;
             showContainerView();
             containerWrapperView.setAlpha(0f);
-            tintView.setAlpha(0f);
-            tintView.setVisibility(View.VISIBLE);
 
             showSelectedPageIndicator(1);
 
@@ -317,6 +296,9 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                         public void onAnimationEnd(Animator animation) {
                             pageContainerView.showPage(page.getPageViewFactory().createPageView(context));
                             pageContainerView.setPageTitle(page.getTitle());
+
+                            params.dimAmount = 0.5f;
+                            windowManager.updateViewLayout(overlayView, params);
                         }
                     }
             );
@@ -356,7 +338,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         }
 
         private void animateBackward() {
-            WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
+            final WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
             int startX = params.x;
             int endX = overlayViewPosition.x;
 
@@ -372,7 +354,9 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                             windowManager.removeView(containerWrapperView);
                             containerWrapperView = null;
                             pageContainerView = null;
-                            tintView.setVisibility(View.GONE);
+
+                            params.dimAmount = 0.0f;
+                            windowManager.updateViewLayout(overlayView, params);
                         }
                     }
             );
@@ -395,7 +379,6 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                     params.x = (int) animation.getAnimatedValue("x");
                     params.y = (int) animation.getAnimatedValue("y");
                     containerWrapperView.setAlpha((float) animation.getAnimatedValue("alpha"));
-                    tintView.setAlpha((float) animation.getAnimatedValue("alpha"));
                     windowManager.updateViewLayout(overlayView, params);
                 }
             });
