@@ -1,24 +1,23 @@
 package com.mindcoders.phial.internal.overlay;
 
+import android.content.Context;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
+
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.LinearLayout;
-
-// TODO: 10/23/17 add pages from either left or right depending on which edge the handle is sticking to
 class OverlayView extends LinearLayout {
 
     interface OnPageSelectedListener {
 
         void onFirstPageSelected(Page page);
 
-        void onPageSelectionChanged(Page page);
+        void onPageSelectionChanged(Page page, int position);
 
         void onNothingSelected();
 
@@ -124,7 +123,7 @@ class OverlayView extends LinearLayout {
                         onPageSelectedListener.onFirstPageSelected(page);
                     } else if (selectedPage != page) {
                         selectedPage = page;
-                        onPageSelectedListener.onPageSelectionChanged(page);
+                        onPageSelectedListener.onPageSelectionChanged(page, pages.indexOf(page));
                     } else {
                         selectedPage = null;
                         onPageSelectedListener.onNothingSelected();
