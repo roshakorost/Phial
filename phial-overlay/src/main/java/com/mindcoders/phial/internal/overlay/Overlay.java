@@ -11,6 +11,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -188,11 +189,18 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
 
-        params.topMargin =  dpToPx(context, 10);
+        params.topMargin = dpToPx(context, 10);
+
+        int sideMargin = dpToPx(context, 5);
+        params.leftMargin = sideMargin;
+        params.rightMargin = sideMargin;
+        params.bottomMargin = sideMargin;
 
         pageContainer.setLayoutParams(params);
 
         pageContainer.setBackgroundResource(R.drawable.bg_page_container);
+
+        ViewCompat.setElevation(pageContainer, 5f);
 
         return pageContainer;
     }
