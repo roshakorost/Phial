@@ -18,6 +18,9 @@ import java.util.Observer;
 public final class KeyValueView extends FrameLayout implements Observer {
     private final KeyValueAdapter adapter;
     private final KVSaver kvSaver;
+    private ExpandableListView listView;
+
+    private boolean expandFirst = false;
 
     //only for Android Studio tests
     @VisibleForTesting
@@ -33,7 +36,7 @@ public final class KeyValueView extends FrameLayout implements Observer {
         this.kvSaver = kvSaver;
 
         inflate(context, R.layout.view_keyvalue, this);
-        ExpandableListView listView = findViewById(R.id.list_keyvalue);
+        listView = findViewById(R.id.list_keyvalue);
         adapter = new KeyValueAdapter(LayoutInflater.from(context));
         listView.setAdapter((ExpandableListAdapter) adapter);
 
@@ -54,5 +57,9 @@ public final class KeyValueView extends FrameLayout implements Observer {
 
     private void updateData() {
         adapter.swapData(kvSaver.getData());
+        if (!expandFirst) {
+            listView.expandGroup(0, true);
+            expandFirst = true;
+        }
     }
 }
