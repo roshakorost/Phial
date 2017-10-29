@@ -21,6 +21,7 @@ import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.util.AnimatorFactory;
 import com.mindcoders.phial.internal.util.Precondition;
+import com.mindcoders.phial.internal.util.UiUtils;
 
 import java.io.File;
 import java.util.List;
@@ -134,6 +135,9 @@ public class ShareView extends FrameLayout implements PageView {
                 removeSubViews();
             }
 
+            final View focusedChild = ShareView.this.getFocusedChild();
+            UiUtils.hideKeyBoard(focusedChild);
+
             final int insertPosition = getChildCount() - 1; // we would like to keep progressBar at the end.
             addView(view, insertPosition, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             presentView = view;
@@ -183,6 +187,9 @@ public class ShareView extends FrameLayout implements PageView {
         private void showSharePicker() {
             final boolean hasSubView = presentView != null;
             if (hasSubView) {
+                final View focusedChild = ShareView.this.getFocusedChild();
+                UiUtils.hideKeyBoard(focusedChild);
+
                 final Animator appearAnimator = animatorFactory.createDisappearAnimator(presentView);
                 appearAnimator.addListener(new AnimatorListenerAdapter() {
                     @Override

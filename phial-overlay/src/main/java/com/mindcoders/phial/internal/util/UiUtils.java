@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public class UiUtils {
 
@@ -24,5 +25,12 @@ public class UiUtils {
         final int[] relatedLocation = new int[2];
         relatedTo.getLocationOnScreen(relatedLocation);
         return new int[]{relatedLocation[0] - viewLocation[0], relatedLocation[1] - viewLocation[1]};
+    }
+
+    public static void hideKeyBoard(View focusedChild) {
+        if (focusedChild != null) {
+            InputMethodManager imm = (InputMethodManager) focusedChild.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedChild.getWindowToken(), 0);
+        }
     }
 }
