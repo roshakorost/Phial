@@ -2,6 +2,8 @@ package com.mindcoders.phial.internal.overlay;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -30,10 +32,14 @@ final class PageContainerView extends LinearLayout {
         pageTitleTextView.setTextSize(18f);
         pageTitleTextView.setTextColor(Color.BLACK);
 
-        int leftPadding = dpToPx(context, 10);
+        int leftPadding = dpToPx(context, 16);
         int topBottomPadding = dpToPx(context, 8);
+
         pageTitleTextView.setPadding(leftPadding, topBottomPadding, leftPadding, topBottomPadding);
         pageTitleTextView.setBackgroundColor(getResources().getColor(R.color.phial_background_dark));
+        pageTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        pageTitleTextView.setTextColor(getResources().getColor(R.color.phial_title_color));
+        pageTitleTextView.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
 
         LayoutParams pageTitleParams = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
