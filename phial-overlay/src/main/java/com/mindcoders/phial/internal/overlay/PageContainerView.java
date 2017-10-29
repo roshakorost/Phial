@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mindcoders.phial.PageView;
+import com.mindcoders.phial.R;
 
 import static com.mindcoders.phial.internal.util.UiUtils.dpToPx;
 
@@ -32,6 +33,7 @@ final class PageContainerView extends LinearLayout {
         int leftPadding = dpToPx(context, 10);
         int topBottomPadding = dpToPx(context, 8);
         pageTitleTextView.setPadding(leftPadding, topBottomPadding, leftPadding, topBottomPadding);
+        pageTitleTextView.setBackgroundColor(getResources().getColor(R.color.phial_background_dark));
 
         LayoutParams pageTitleParams = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
