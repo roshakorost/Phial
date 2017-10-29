@@ -4,20 +4,28 @@ import android.app.Application;
 import android.util.Log;
 
 import com.mindcoders.phial.PhialOverlay;
+import com.mindcoders.phial.Shareable;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
-import com.mindcoders.phial.jira.JiraShareable;
+import com.mindcoders.phial.jira.JiraSharableBuilder;
 import com.mindcoders.phial.logging.PhialLogger;
 
 import timber.log.Timber;
 
 final class ApplicationHook {
     static void onApplicationCreate(Application app) {
+        //logs integration example
         final PhialLogger logger = new PhialLogger(app);
         Timber.plant(new PhialTimberTree(logger));
 
+        //Jira integration example
+        final Shareable jiraSharable = new JiraSharableBuilder(app)
+                .setBaseUrl("https://roshakorst.atlassian.net/")
+                .setProjectKey("TES")
+                .build();
+
         PhialOverlay.builder(app)
                 .addAttachmentProvider(logger)
-                .addShareable(new JiraShareable(app))
+                .addShareable(jiraSharable)
                 .initPhial();
 
         PhialErrorPlugins.setHandler(new PhialErrorPlugins.ErrorHandler() {
@@ -31,7 +39,7 @@ final class ApplicationHook {
     private static class PhialTimberTree extends Timber.DebugTree {
         private final PhialLogger logger;
 
-        public PhialTimberTree(PhialLogger logger) {
+        PhialTimberTree(PhialLogger logger) {
             this.logger = logger;
         }
 
