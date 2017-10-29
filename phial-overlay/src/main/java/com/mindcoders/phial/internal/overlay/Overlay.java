@@ -78,7 +78,10 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     }
 
     private void setupOverlayView(List<Page> pages) {
-        overlayViewPosition = positionStorage.getPosition();
+        overlayViewPosition = positionStorage.getPosition(
+                displaySize.x / 2,
+                (int) ((displaySize.y / 2) * -0.3)
+                                                         );
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 btnSizePx,

@@ -14,10 +14,10 @@ public class OverlayPositionStorage {
         this.preferences = preferences;
     }
 
-    Point getPosition() {
+    Point getPosition(int defaultX, int defaultY) {
         return new Point(
-                preferences.getInt(KEY_X, 0),
-                preferences.getInt(KEY_Y, 0)
+                preferences.getInt(KEY_X, defaultX),
+                preferences.getInt(KEY_Y, defaultY)
         );
     }
 
