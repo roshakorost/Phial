@@ -25,7 +25,7 @@ class KVJsonSerializer {
             final JSONObject categoryJsonObject = createCategoryObject(category);
             categoriesJsonArray.put(categoryJsonObject);
         }
-        return categoriesJsonArray.toString();
+        return categoriesJsonArray.toString(2);
     }
 
     @NonNull
