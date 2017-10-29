@@ -1,2 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mindcoders.phial.jira" />
+    package="com.mindcoders.phial.jira">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>

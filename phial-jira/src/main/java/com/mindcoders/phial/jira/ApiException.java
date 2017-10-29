@@ -12,7 +12,7 @@ class ApiException extends IOException {
     private final String body;
 
     ApiException(int code, String message, String body) {
-        super("not successful(" + code + ")");
+        super("not successful(" + code + "); " + body);
         this.code = code;
         this.message = message;
         this.body = body;

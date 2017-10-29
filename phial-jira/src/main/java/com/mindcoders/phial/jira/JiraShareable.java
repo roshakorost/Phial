@@ -1,8 +1,10 @@
 package com.mindcoders.phial.jira;
 
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,12 +58,26 @@ class JiraShareable implements Shareable {
             }
         });
 
+        passwordTV.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO | actionId == EditorInfo.IME_ACTION_DONE) {
+                    shareManager.authorize(loginTV.getText().toString(), passwordTV.getText().toString());
+                    internalShare(shareContext, attachment, message);
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
         shareContext.presentView(view);
     }
 
     private void internalShare(ShareContext shareContext, File attachment, String message) {
         shareContext.setProgressBarVisibility(true);
-        shareManager.share(attachment, message, new ShareResult(shareContext));
+        final JiraShareManager.ResultCallback callback = ResultCalbackMainThreadWrapper.wrap(new ShareResult(shareContext));
+        shareManager.share(attachment, message, callback);
     }
 
     private static class ShareResult implements JiraShareManager.ResultCallback {

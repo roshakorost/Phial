@@ -39,7 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="@string/jira.login" />
+            android:hint="@string/jira.login"
+            android:imeOptions="actionNext" />
 
         <EditText
             android:id="@+id/password"
@@ -48,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:hint="@string/jira.password"
+            android:imeOptions="actionGo"
             android:inputType="textPassword" />
 
         <Button

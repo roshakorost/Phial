@@ -8,7 +8,7 @@ import android.os.Looper;
  */
 
 class ResultCalbackMainThreadWrapper {
-    JiraShareManager.ResultCallback wrap(final JiraShareManager.ResultCallback resultCallback) {
+    static JiraShareManager.ResultCallback wrap(final JiraShareManager.ResultCallback resultCallback) {
         final Handler handler = new Handler(Looper.getMainLooper());
         return new JiraShareManager.ResultCallback() {
             @Override
@@ -26,7 +26,7 @@ class ResultCalbackMainThreadWrapper {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        onFail(th);
+                        resultCallback.onFail(th);
                     }
                 });
             }
