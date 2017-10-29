@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="jira.padding.horizontal.big">64dp</dimen>
+    <dimen name="jira.padding.horizontal.small">8dp</dimen>
+    <dimen name="jira.padding.horizontal.normal">16dp</dimen>
+    <dimen name="jira.item.height">48dp</dimen>
+    <dimen name="jira.button.height">58dp</dimen>
+    <dimen name="jira.close.size">32dp</dimen>
+</resources>

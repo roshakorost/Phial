@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="jira.color.primary">#205081</color>
+    <color name="jira.color.primaryDark">#1C4160</color>
+    <color name="jira.background">@color/jira.color.primary</color>
+    <color name="jira.textColor.primary">@android:color/white</color>
+</resources>

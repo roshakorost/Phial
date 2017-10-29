@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="jira.name">Jira</string>
+    <string name="jira.login_to_your_jira_account">Login to your Jira account</string>
+    <string name="jira.login">Login</string>
+    <string name="jira.login_share">Login &amp; Share</string>
+    <string name="jira.password">Password</string>
+    <string name="jira.issue_created">Created issue: %1$s</string>
 </resources>

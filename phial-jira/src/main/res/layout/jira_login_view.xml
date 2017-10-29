@@ -2,14 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#205081">
+    android:background="@color/jira.background">
+
+    <ImageView
+        android:id="@+id/close_button"
+        android:layout_width="@dimen/jira.close.size"
+        android:layout_height="@dimen/jira.close.size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/jira.padding.horizontal.normal"
+        android:background="@drawable/circle_dark_background"
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginLeft="64dp"
-        android:layout_marginRight="64dp"
+        android:layout_marginLeft="@dimen/jira.padding.horizontal.big"
+        android:layout_marginRight="@dimen/jira.padding.horizontal.big"
         android:orientation="vertical">
 
         <TextView
@@ -17,46 +28,34 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Login to your Jira account"
-            android:textColor="@android:color/white"
+            android:fontFamily="@string/jira.font.medium"
+            android:text="@string/jira.login_to_your_jira_account"
+            android:textColor="@color/jira.textColor.primary"
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/login"
+            style="@style/Widget.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:background="@drawable/white_box_background"
-            android:hint="Login"
-            android:minHeight="48dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
+            android:hint="@string/jira.login" />
 
         <EditText
+            android:id="@+id/password"
+            style="@style/Widget.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:background="@drawable/white_box_background"
-            android:hint="Password"
-            android:minHeight="48dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
+            android:hint="@string/jira.password"
+            android:inputType="textPassword" />
 
         <Button
+            android:id="@+id/login_button"
+            style="@style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#1C4160"
-            android:fontFamily="sans-serif-light"
-            android:minHeight="58dp"
-            android:text="Login"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-
+            android:text="@string/jira.login_share" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -14,25 +14,18 @@ import okhttp3.Response;
  */
 
 class OkHttpFactory {
-    private final String userName;
-    private final String password;
 
-    OkHttpFactory(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-    }
-
-    OkHttpClient createAuthorizedClient() {
+    OkHttpClient createAuthorizedClient(String credentials) {
         return new OkHttpClient.Builder()
-                .addInterceptor(new AuthenticationInterceptor(userName, password))
+                .addInterceptor(new AuthenticationInterceptor(credentials))
                 .build();
     }
 
     private class AuthenticationInterceptor implements Interceptor {
         private final String credentials;
 
-        public AuthenticationInterceptor(String userName, String password) {
-            credentials = Credentials.basic(userName, password);
+        AuthenticationInterceptor(String credentials) {
+            this.credentials = credentials;
         }
 
         @Override

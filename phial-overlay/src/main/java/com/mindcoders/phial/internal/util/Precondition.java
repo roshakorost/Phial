@@ -30,4 +30,10 @@ public final class Precondition {
     public static void notImplemented(String what, Context context) {
         Toast.makeText(context, what + " is NOT Implemented yet", Toast.LENGTH_SHORT).show();
     }
+
+    public static void isTrue(boolean condition, String message) {
+        if (!condition) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }

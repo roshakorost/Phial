@@ -30,6 +30,10 @@ class JiraApi {
         this.projectKey = projectKey;
     }
 
+    CreatedIssueResponse createIssue(String summary) throws IOException, JSONException {
+        return createIssue(summary, null);
+    }
+
     CreatedIssueResponse createIssue(String summary, String description) throws IOException, JSONException {
         final String jsonBody = RestModelConverter.createIssueModel(projectKey, summary, description).toString();
         final RequestBody requestBody = RequestBody.create(JSON, jsonBody);
