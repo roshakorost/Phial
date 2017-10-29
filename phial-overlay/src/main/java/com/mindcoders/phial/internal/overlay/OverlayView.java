@@ -87,7 +87,7 @@ class OverlayView extends LinearLayout {
         this.onHandleMoveListener = onHandleMoveListener;
     }
 
-    private void toggle() {
+    public void toggle() {
         if (pages.size() > 0) {
             setPageButtonsVisible(!isExpanded);
             isExpanded = !isExpanded;

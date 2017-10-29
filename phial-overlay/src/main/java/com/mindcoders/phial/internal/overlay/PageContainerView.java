@@ -8,12 +8,16 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mindcoders.phial.PageView;
+
 import static com.mindcoders.phial.internal.util.UiUtils.dpToPx;
 
 final class PageContainerView extends LinearLayout {
 
     private final TextView pageTitleTextView;
     private final FrameLayout pageContainer;
+
+    private View currentPageView;
 
     public PageContainerView(Context context) {
         super(context);
@@ -45,12 +49,17 @@ final class PageContainerView extends LinearLayout {
     }
 
     public void showPage(View pageView) {
+        currentPageView = pageView;
         pageContainer.removeAllViews();
         pageContainer.addView(pageView);
     }
 
     public void setPageTitle(CharSequence title) {
         pageTitleTextView.setText(title);
+    }
+
+    public boolean onBackPressed() {
+        return currentPageView != null && ((PageView) currentPageView).onBackPressed();
     }
 
 }

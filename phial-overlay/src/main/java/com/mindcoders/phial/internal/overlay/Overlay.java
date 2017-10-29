@@ -83,8 +83,8 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 btnSizePx,
                 getType(),
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+                WindowManager.LayoutParams.FLAG_DIM_BEHIND
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
         );
 
@@ -158,7 +158,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     }
 
     private ViewGroup createWrapperView() {
-        FrameLayout wrapper = new FrameLayout(context);
+        WrapperView wrapper = new WrapperView(context);
 
         int height = displaySize.y - btnSizePx - dpToPx(context, STATUSBAR_HEIGHT_DP);
 
@@ -166,7 +166,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 height,
                 getType(),
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 PixelFormat.TRANSLUCENT
         );
 
@@ -174,6 +174,8 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         params.dimAmount = 0.5f;
 
         wrapper.setLayoutParams(params);
+
+        wrapper.setOnBackPressedListener(onBackPressedListener);
 
         return wrapper;
     }
@@ -201,6 +203,17 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         return pageContainer;
     }
+
+    private final WrapperView.OnBackPressedListener onBackPressedListener = new WrapperView.OnBackPressedListener() {
+
+        @Override
+        public void onBackPressed() {
+            if (!pageContainerView.onBackPressed()) {
+                overlayView.toggle();
+            }
+        }
+
+    };
 
     private final OverlayView.OnHandleMoveListener onHandleMoveListener = new OverlayView.OnHandleMoveListener() {
 
