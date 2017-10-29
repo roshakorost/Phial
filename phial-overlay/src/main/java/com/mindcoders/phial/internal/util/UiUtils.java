@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 
 public class UiUtils {
 
@@ -16,4 +17,12 @@ public class UiUtils {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
 
+
+    public static int[] getRelativePosition(View view, View relatedTo) {
+        final int[] viewLocation = new int[2];
+        view.getLocationOnScreen(viewLocation);
+        final int[] relatedLocation = new int[2];
+        relatedTo.getLocationOnScreen(relatedLocation);
+        return new int[]{relatedLocation[0] - viewLocation[0], relatedLocation[1] - viewLocation[1]};
+    }
 }

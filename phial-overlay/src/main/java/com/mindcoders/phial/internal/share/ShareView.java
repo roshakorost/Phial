@@ -1,23 +1,25 @@
 package com.mindcoders.phial.internal.share;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 import com.mindcoders.phial.PageView;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.ShareContext;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
+import com.mindcoders.phial.internal.util.AnimatorFactory;
 import com.mindcoders.phial.internal.util.Precondition;
 
 import java.io.File;
@@ -26,14 +28,13 @@ import java.util.List;
 /**
  * Created by rost on 10/22/17.
  */
-
-public class ShareView extends FrameLayout implements ShareContext, PageView {
+public class ShareView extends FrameLayout implements PageView {
     private final GridView contentGV;
     private final EditText messageTV;
     private final ShareManager shareManager;
     private final AttachmentManager attachmentManager;
-    private final ViewSwitcher viewSwitcher;
-    private final ProgressBar progressBar;
+    private final View sharePickerView;
+    private final View progressBar;
 
     @VisibleForTesting
     public ShareView(@NonNull Context context) {
@@ -47,8 +48,12 @@ public class ShareView extends FrameLayout implements ShareContext, PageView {
         this.attachmentManager = attachmentManager;
 
         LayoutInflater.from(context).inflate(R.layout.view_share, this, true);
+        LayoutInflater.from(context).inflate(R.layout.progressbar_horizontal, this, true);
+
         progressBar = findViewById(R.id.progress);
-        viewSwitcher = findViewById(R.id.view_switcher);
+        progressBar.setVisibility(GONE);
+
+        sharePickerView = findViewById(R.id.share_picker);
         contentGV = findViewById(R.id.content);
         messageTV = findViewById(R.id.message);
 
@@ -65,21 +70,23 @@ public class ShareView extends FrameLayout implements ShareContext, PageView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final ShareItem item = adapter.getItem(position);
-                shareItem(item);
+                shareItem(item, view);
             }
         });
     }
+
 
     @Override
     public boolean onBackPressed() {
         return false;
     }
 
-    private void shareItem(ShareItem shareItem) {
+    private void shareItem(ShareItem shareItem, View view) {
         try {
             final File attachment = attachmentManager.createAttachment();
             final String message = messageTV.getText().toString();
-            shareManager.share(shareItem, this, attachment, message);
+            final AnimatorFactory factory = AnimatorFactory.createFactory(view);
+            shareManager.share(shareItem, new ViewShareContext(factory), attachment, message);
         } catch (Exception e) {
             PhialErrorPlugins.onError(e);
             Toast.makeText(getContext(), R.string.share_error_attachment, Toast.LENGTH_SHORT).show();
@@ -90,46 +97,107 @@ public class ShareView extends FrameLayout implements ShareContext, PageView {
         Precondition.notImplemented("Close", getContext());
     }
 
-    @Override
-    public Context getAndroidContext() {
-        return getContext();
-    }
 
-    @Override
-    public void onSuccess() {
-        moveToInitialStateIfNeeded();
-        close();
-    }
+    private class ViewShareContext implements ShareContext {
+        private final AnimatorFactory animatorFactory;
+        private View presentView;
 
-    @Override
-    public void onFailed(String message) {
-        moveToInitialStateIfNeeded();
-    }
-
-    private void moveToInitialStateIfNeeded() {
-        if (isSubViewAdded()) {
-            viewSwitcher.setDisplayedChild(0);
-            viewSwitcher.removeViews(1, viewSwitcher.getChildCount());
-        }
-    }
-
-    @Override
-    public void presentView(View view) {
-        if (isSubViewAdded()) {
-            throw new IllegalArgumentException("can't present multiple views. Only single instance should be presented");
+        private ViewShareContext(AnimatorFactory animatorFactory) {
+            this.animatorFactory = animatorFactory;
         }
 
-        viewSwitcher.addView(view, new ViewSwitcher.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        viewSwitcher.setDisplayedChild(1);
-    }
+        @Override
+        public Context getAndroidContext() {
+            return getContext();
+        }
 
-    @Override
-    public void setProgressBarVisibility(boolean isVisible) {
-        progressBar.setVisibility(isVisible ? VISIBLE : GONE);
-    }
+        @Override
+        public void onSuccess() {
+            close();
+        }
 
-    private boolean isSubViewAdded() {
-        final int childCount = viewSwitcher.getChildCount();
-        return childCount >= 2;
+        @Override
+        public void onFailed(String message) {
+            showSharePicker();
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel() {
+            showSharePicker();
+        }
+
+        @Override
+        public void presentView(final View view) {
+            boolean isFirstSubView = presentView == null; //only share view
+            if (!isFirstSubView) {
+                removeSubViews();
+            }
+
+            final int insertPosition = getChildCount() - 1; // we would like to keep progressBar at the end.
+            addView(view, insertPosition, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            presentView = view;
+
+            if (isFirstSubView) {
+                animateViewAfterMeasured(view);
+            }
+        }
+
+        private void animateViewAfterMeasured(final View view) {
+            final ViewTreeObserver vto = view.getViewTreeObserver();
+            if (!vto.isAlive()) {
+                sharePickerView.setVisibility(GONE);
+                return;
+            }
+
+            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (view.getHeight() > 0 || view.getWidth() > 0) {
+                        if (vto.isAlive()) {
+                            vto.removeGlobalOnLayoutListener(this);
+                            animateAppear();
+                        }
+                    }
+                }
+            });
+        }
+
+        private void animateAppear() {
+            final Animator appearAnimator = animatorFactory.createAppearAnimator(presentView);
+            appearAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    sharePickerView.setVisibility(GONE);
+                }
+            });
+            appearAnimator.start();
+        }
+
+
+        @Override
+        public void setProgressBarVisibility(boolean isVisible) {
+            progressBar.setVisibility(isVisible ? VISIBLE : GONE);
+        }
+
+        private void showSharePicker() {
+            final boolean hasSubView = presentView != null;
+            if (hasSubView) {
+                final Animator appearAnimator = animatorFactory.createDisappearAnimator(presentView);
+                appearAnimator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        removeSubViews();
+                        sharePickerView.setVisibility(VISIBLE);
+                    }
+                });
+                appearAnimator.start();
+            }
+        }
+
+        private void removeSubViews() {
+            // fist view is sharePicker and last is progress bar that we don't wan't to remove
+            removeViews(1, getChildCount() - 2);
+        }
     }
 }

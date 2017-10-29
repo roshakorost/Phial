@@ -14,6 +14,8 @@ public interface ShareContext {
 
     void onFailed(String message);
 
+    void onCancel();
+
     void presentView(View view);
 
     void setProgressBarVisibility(boolean isVisible);
