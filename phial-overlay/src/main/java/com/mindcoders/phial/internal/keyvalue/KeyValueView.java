@@ -9,13 +9,14 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 
+import com.mindcoders.phial.PageView;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.util.Precondition;
 
 import java.util.Observable;
 import java.util.Observer;
 
-public final class KeyValueView extends FrameLayout implements Observer {
+public final class KeyValueView extends FrameLayout implements Observer, PageView {
     private final KeyValueAdapter adapter;
     private final KVSaver kvSaver;
     private ExpandableListView listView;
@@ -48,6 +49,11 @@ public final class KeyValueView extends FrameLayout implements Observer {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         kvSaver.deleteObserver(this);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 
     @Override

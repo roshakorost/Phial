@@ -5,8 +5,10 @@ import android.view.View;
 
 public final class Page {
 
-    public interface PageViewFactory {
-        View createPageView(Context context);
+    public interface PageViewFactory<T extends View & PageView> {
+
+        T createPageView(Context context);
+
     }
 
     private final int iconResourceId;

@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.mindcoders.phial.PageView;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
@@ -23,7 +24,8 @@ import java.util.List;
  * Created by rost on 10/22/17.
  */
 
-public class ShareView extends FrameLayout {
+public class ShareView extends FrameLayout implements PageView {
+
     private final GridView contentGV;
     private final EditText messageTV;
     private final ShareManager shareManager;
@@ -58,6 +60,11 @@ public class ShareView extends FrameLayout {
                 shareItem(item);
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 
     private void shareItem(ShareItem shareItem) {

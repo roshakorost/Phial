@@ -56,7 +56,7 @@ public final class OverlayFactory {
         return new Overlay(application, pages, phialCore.getNotifier(), phialCore.getActivityProvider(), positionStorage);
     }
 
-    private static final class KVPageFactory implements Page.PageViewFactory {
+    private static final class KVPageFactory implements Page.PageViewFactory<KeyValueView> {
         private final PhialCore phialCore;
 
         KVPageFactory(PhialCore phialCore) {
@@ -69,7 +69,7 @@ public final class OverlayFactory {
         }
     }
 
-    private static final class ShareViewFactory implements Page.PageViewFactory {
+    private static final class ShareViewFactory implements Page.PageViewFactory<ShareView> {
         private final PhialCore phialCore;
 
         ShareViewFactory(PhialCore phialCore) {
