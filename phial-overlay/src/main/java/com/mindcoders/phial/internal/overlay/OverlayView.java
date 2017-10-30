@@ -1,6 +1,7 @@
 package com.mindcoders.phial.internal.overlay;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,13 +58,14 @@ class OverlayView extends LinearLayout {
             Context context,
             int btnSize,
             SelectedPageStorage selectedPageStorage
-                      ) {
+    ) {
         super(context);
         this.btnSize = btnSize;
         this.selectedPageStorage = selectedPageStorage;
         setOrientation(HORIZONTAL);
 
-        btnHandle = new HandleButton(context, android.R.color.white, R.drawable.ic_handle);
+
+        btnHandle = createButton(R.drawable.ic_handle);
         btnHandle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,17 +122,12 @@ class OverlayView extends LinearLayout {
     }
 
     private void setPageButtonsColors(boolean isExpanded) {
-        int activeColor = ResourcesCompat.getColor(getResources(), R.color.phial_background_dark, null);
-        int inactiveColor = ResourcesCompat.getColor(getResources(), android.R.color.white, null);
         if (isExpanded) {
-            btnHandle.setColor(activeColor);
             int activeIndex = pages.size() - 1 - pages.indexOf(selectedPage);
             for (int i = 0; i < getChildCount() - 1; i++) {
                 HandleButton activeBtn = (HandleButton) getChildAt(i);
-                activeBtn.setColor(activeIndex == i ? activeColor : inactiveColor);
+                activeBtn.setSelected(activeIndex == i);
             }
-        } else {
-            btnHandle.setColor(inactiveColor);
         }
     }
 
@@ -146,7 +143,8 @@ class OverlayView extends LinearLayout {
     }
 
     private void addPageButton(final Page page, int position) {
-        final HandleButton button = new HandleButton(getContext(), android.R.color.white, page.getIconResourceId());
+        final HandleButton button = createButton(page.getIconResourceId());
+
         LinearLayout.LayoutParams params = new LayoutParams(btnSize, btnSize);
         addView(button, position, params);
         button.setVisibility(View.GONE);
@@ -172,6 +170,12 @@ class OverlayView extends LinearLayout {
                 }
             }
         });
+    }
+
+    private HandleButton createButton(@DrawableRes int iconResId) {
+        final int bgColor = ResourcesCompat.getColor(getResources(), R.color.phial_button_background, getContext().getTheme());
+        final int fgColor = ResourcesCompat.getColor(getResources(), R.color.phial_button_foreground, getContext().getTheme());
+        return new HandleButton(getContext(), iconResId, bgColor, fgColor);
     }
 
     private final OnTouchListener handleOnTouchListener = new OnTouchListener() {

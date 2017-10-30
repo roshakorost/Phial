@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/share.padding.small"
-        android:background="@color/phial.background.dark"
+        android:background="@color/phial.background.light"
         android:padding="@dimen/share.padding.default">
 
         <EditText

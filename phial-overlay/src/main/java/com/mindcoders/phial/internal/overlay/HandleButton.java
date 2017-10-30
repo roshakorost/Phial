@@ -6,25 +6,32 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.support.annotation.ColorInt;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 
 class HandleButton extends View {
     private static final int SHADOW_SIZE = 14;
     private static final int SHADOW_COLOR = Color.argb(60, 0, 0, 0);
-    private final Paint backgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint fgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private int bgColor;
+    private int fgColor;
 
     private Bitmap iconBitmap;
 
-    public HandleButton(Context context, int backgroundColorResource, int iconResource) {
+    public HandleButton(Context context, int iconResource, @ColorInt int bgColor, @ColorInt int fgColor) {
         super(context);
+        this.bgColor = bgColor;
+        this.fgColor = fgColor;
 
-        backgroundPaint.setColor(ResourcesCompat.getColor(context.getResources(), backgroundColorResource, context.getTheme()));
-        backgroundPaint.setShadowLayer(SHADOW_SIZE, 0, SHADOW_SIZE / 2f, SHADOW_COLOR);
+        bgPaint.setShadowLayer(SHADOW_SIZE, 0, SHADOW_SIZE / 2f, SHADOW_COLOR);
 
         iconBitmap = BitmapFactory.decodeResource(context.getResources(), iconResource);
-        setLayerType(LAYER_TYPE_SOFTWARE, backgroundPaint);
+        setLayerType(LAYER_TYPE_SOFTWARE, bgPaint);
+
+        applyColors();
     }
 
     @Override
@@ -37,17 +44,23 @@ class HandleButton extends View {
 
         float radius = (w / 2f) - SHADOW_SIZE * 1.2f;
 
-        canvas.drawCircle(cx, cy, radius, backgroundPaint);
+        canvas.drawCircle(cx, cy, radius, bgPaint);
 
         float left = cx - (iconBitmap.getWidth() / 2);
         float top = cy - (iconBitmap.getHeight() / 2);
 
-        canvas.drawBitmap(iconBitmap, left, top, null);
+        canvas.drawBitmap(iconBitmap, left, top, fgPaint);
     }
 
-    public void setColor(@ColorInt int color) {
-        backgroundPaint.setColor(color);
+    @Override
+    public void setSelected(boolean selected) {
+        super.setSelected(selected);
+        applyColors();
+    }
+
+    void applyColors() {
+        bgPaint.setColor(isSelected() ? fgColor : bgColor);
+        fgPaint.setColorFilter(new PorterDuffColorFilter(isSelected() ? bgColor : fgColor, PorterDuff.Mode.SRC_ATOP));
         invalidate();
     }
-
 }
