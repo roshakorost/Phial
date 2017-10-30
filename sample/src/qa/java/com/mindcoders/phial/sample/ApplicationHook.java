@@ -13,24 +13,38 @@ import timber.log.Timber;
 
 final class ApplicationHook {
     static void onApplicationCreate(Application app) {
-        //logs integration example
-        final PhialLogger logger = new PhialLogger(app);
-        Timber.plant(new PhialTimberTree(logger));
+        // logs integration example
+        final PhialLogger phialLogger = new PhialLogger(app);
+        // logs written by timber will be saved in HTML file and attached to DebugInfo
+        // Adapter to timber tree interface.
+        // If you use different logging facade you should use own adapter that will call phialLogger.log
+        Timber.plant(new PhialTimberTree(phialLogger));
 
-        //Jira integration example
-        final Shareable jiraSharable = new JiraSharableBuilder(app)
+        // Jira integration example
+        // It will add extra Jira to share window.
+        // Sharing to Jira will create new issue with DebugInfo as attachment
+        final Shareable jiraShareable = new JiraSharableBuilder(app)
                 .setBaseUrl("https://roshakorst.atlassian.net/")
                 .setProjectKey("TES")
                 .build();
 
         PhialOverlay.builder(app)
-                .addAttachmentProvider(logger)
+                // By default Phial includes key-values and screenshots as attachment to share
+                // When user selects share Phial requests all AttachmentProviders to prepare debug data
+                // which will be zipped and shared to selected target.
+                // Here we add provider that will include log file.
+                .addAttachmentProvider(phialLogger)
                 // adds build time stamp and git hash to build info section.
                 // see sample build.gradle how to create these variables.
                 .applyBuildInfo(BuildConfig.BUILD_TIMESTAMP, BuildConfig.GIT_HASH)
-                .addShareable(jiraSharable)
+                // By default in Phials Share tab shows only installed apps that can handle
+                // share with zip file attachment.
+                // The list of options might be extended by providing custom Shareables.
+                // Here we add extra JiraShareable that will add create Jira Issue option in Share Tab
+                .addShareable(jiraShareable)
                 .initPhial();
 
+        //In case you would like to see Phial errors in logcat.
         PhialErrorPlugins.setHandler(new PhialErrorPlugins.ErrorHandler() {
             @Override
             public void onError(Throwable throwable) {
@@ -48,6 +62,7 @@ final class ApplicationHook {
 
         @Override
         protected void log(int priority, String tag, String message, Throwable t) {
+            // use if (priority > Log.DEBUG) in order to filter some priority
             logger.log(priority, tag, message, t);
         }
     }
