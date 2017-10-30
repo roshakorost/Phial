@@ -88,7 +88,8 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 btnSizePx,
                 getType(),
-                WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_DIM_BEHIND,
                 PixelFormat.TRANSLUCENT
         );
 
