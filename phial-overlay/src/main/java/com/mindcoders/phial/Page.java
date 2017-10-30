@@ -11,14 +11,20 @@ public final class Page {
 
     }
 
+    private final String id;
     private final int iconResourceId;
     private final CharSequence title;
     private final PageViewFactory pageViewFactory;
 
-    public Page(int iconResourceId, String title, PageViewFactory pageViewFactory) {
+    public Page(String id, int iconResourceId, String title, PageViewFactory pageViewFactory) {
+        this.id = id;
         this.iconResourceId = iconResourceId;
         this.title = title;
         this.pageViewFactory = pageViewFactory;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public int getIconResourceId() {

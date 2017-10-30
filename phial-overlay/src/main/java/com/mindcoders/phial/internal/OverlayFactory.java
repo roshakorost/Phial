@@ -10,12 +10,13 @@ import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.keyvalue.KeyValueView;
 import com.mindcoders.phial.internal.overlay.Overlay;
 import com.mindcoders.phial.internal.overlay.OverlayPositionStorage;
+import com.mindcoders.phial.internal.overlay.SelectedPageStorage;
 import com.mindcoders.phial.internal.share.ShareView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mindcoders.phial.internal.InternalPhialConfig.*;
+import static com.mindcoders.phial.internal.InternalPhialConfig.PREFERENCES_FILE_NAME;
 
 /**
  * Created by rost on 10/25/17.
@@ -32,6 +33,7 @@ public final class OverlayFactory {
 
         if (phialBuilder.enableKeyValueView()) {
             final Page page = new Page(
+                    "keyvalue",
                     R.drawable.ic_keyvalue,
                     application.getString(R.string.system_info_page_title),
                     new KVPageFactory(phialCore)
@@ -41,6 +43,7 @@ public final class OverlayFactory {
 
         if (phialBuilder.enableShareView()) {
             final Page page = new Page(
+                    "share",
                     R.drawable.ic_share,
                     application.getString(R.string.share_page_title),
                     new ShareViewFactory(phialCore)
@@ -52,8 +55,10 @@ public final class OverlayFactory {
 
         final SharedPreferences prefs = application.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
         final OverlayPositionStorage positionStorage = new OverlayPositionStorage(prefs);
+        final SelectedPageStorage selectedPageStorage = new SelectedPageStorage(prefs);
 
-        return new Overlay(application, pages, phialCore.getNotifier(), phialCore.getActivityProvider(), positionStorage);
+        return new Overlay(application, pages, phialCore.getNotifier(), phialCore.getActivityProvider(), positionStorage,
+                           selectedPageStorage);
     }
 
     private static final class KVPageFactory implements Page.PageViewFactory<KeyValueView> {

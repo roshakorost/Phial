@@ -60,7 +60,9 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             List<Page> pages,
             PhialNotifier notifier,
             CurrentActivityProvider activityProvider,
-            OverlayPositionStorage positionStorage) {
+            OverlayPositionStorage positionStorage,
+            SelectedPageStorage selectedPageStorage
+                  ) {
         this.context = context;
         this.pages = pages;
         this.notifier = notifier;
@@ -72,7 +74,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         windowManager.getDefaultDisplay().getSize(displaySize);
 
         btnSizePx = dpToPx(context, BUTTON_SIZE_DP);
-        overlayView = new OverlayView(context, btnSizePx);
+        overlayView = new OverlayView(context, btnSizePx, selectedPageStorage);
 
         activityProvider.addListener(this);
     }
@@ -273,9 +275,9 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     private final OnPageSelectedListener onPageSelectedListener = new OnPageSelectedListener() {
 
         @Override
-        public void onFirstPageSelected(Page page) {
+        public void onFirstPageSelected(Page page, int position) {
             notifier.fireDebugWindowShown();
-            animateForward(page);
+            animateForward(page, position);
         }
 
         @Override
@@ -292,7 +294,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             animateBackward();
         }
 
-        private void animateForward(final Page page) {
+        private void animateForward(final Page page, int position) {
             final WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
             int startX = params.x;
             int endX = displaySize.x / 2;
@@ -302,7 +304,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             showContainerView();
             containerWrapperView.setAlpha(0f);
 
-            showSelectedPageIndicator(1);
+            showSelectedPageIndicator(position);
 
             animate(startX, endX, startY, endY,
                     0f, 1f, params,
@@ -333,7 +335,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                     dpToPx(context, 10)
             );
 
-            params.leftMargin = getSelectedPageIndicatorMargin(positionOffset);
+            params.leftMargin = getSelectedPageIndicatorMargin(positionOffset + 1);
 
             selectedPageIndicator = new View(context);
             selectedPageIndicator.setBackgroundResource(R.drawable.active_page_arrow);

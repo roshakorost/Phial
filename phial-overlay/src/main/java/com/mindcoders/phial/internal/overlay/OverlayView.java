@@ -15,7 +15,7 @@ class OverlayView extends LinearLayout {
 
     interface OnPageSelectedListener {
 
-        void onFirstPageSelected(Page page);
+        void onFirstPageSelected(Page page, int position);
 
         void onPageSelectionChanged(Page page, int position);
 
@@ -35,6 +35,8 @@ class OverlayView extends LinearLayout {
 
     private final int btnSize;
 
+    private final SelectedPageStorage selectedPageStorage;
+
     private final List<Page> pages = new ArrayList<>();
 
     private OnPageSelectedListener onPageSelectedListener;
@@ -48,9 +50,14 @@ class OverlayView extends LinearLayout {
 
     private Page selectedPage;
 
-    public OverlayView(Context context, int btnSize) {
+    public OverlayView(
+            Context context,
+            int btnSize,
+            SelectedPageStorage selectedPageStorage
+                      ) {
         super(context);
         this.btnSize = btnSize;
+        this.selectedPageStorage = selectedPageStorage;
         setOrientation(HORIZONTAL);
 
         HandleButton btnHandle = new HandleButton(context, android.R.color.white, R.drawable.ic_handle);
@@ -92,8 +99,8 @@ class OverlayView extends LinearLayout {
             setPageButtonsVisible(!isExpanded);
             isExpanded = !isExpanded;
             if (isExpanded) {
-                selectedPage = pages.get(0);
-                onPageSelectedListener.onFirstPageSelected(selectedPage);
+                selectedPage = getPreviouslySelectedPage();
+                onPageSelectedListener.onFirstPageSelected(selectedPage, pages.indexOf(selectedPage));
             } else {
                 selectedPage = null;
                 onPageSelectedListener.onNothingSelected();
@@ -108,6 +115,17 @@ class OverlayView extends LinearLayout {
         }
     }
 
+    private Page getPreviouslySelectedPage() {
+        String id = selectedPageStorage.getSelectedPage();
+        for (Page page : pages) {
+            if (page.getId().equals(id)) {
+                return page;
+            }
+        }
+
+        return pages.get(0);
+    }
+
     private void addPageButton(final Page page, int position) {
         HandleButton button = new HandleButton(getContext(), android.R.color.white, page.getIconResourceId());
         LinearLayout.LayoutParams params = new LayoutParams(btnSize, btnSize);
@@ -120,10 +138,11 @@ class OverlayView extends LinearLayout {
                 if (onPageSelectedListener != null) {
                     if (selectedPage == null) {
                         selectedPage = page;
-                        onPageSelectedListener.onFirstPageSelected(page);
+                        onPageSelectedListener.onFirstPageSelected(page, pages.indexOf(page));
                     } else if (selectedPage != page) {
                         selectedPage = page;
                         onPageSelectedListener.onPageSelectionChanged(page, pages.indexOf(page));
+                        selectedPageStorage.setSelectedPage(page.getId());
                     } else {
                         selectedPage = null;
                         onPageSelectedListener.onNothingSelected();
