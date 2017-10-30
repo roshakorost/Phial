@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.annotation.ColorInt;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 
@@ -42,6 +43,11 @@ class HandleButton extends View {
         float top = cy - (iconBitmap.getHeight() / 2);
 
         canvas.drawBitmap(iconBitmap, left, top, null);
+    }
+
+    public void setColor(@ColorInt int color) {
+        backgroundPaint.setColor(color);
+        invalidate();
     }
 
 }

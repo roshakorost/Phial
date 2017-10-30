@@ -1,6 +1,7 @@
 package com.mindcoders.phial.internal.overlay;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 class OverlayView extends LinearLayout {
+
+    private final HandleButton btnHandle;
 
     interface OnPageSelectedListener {
 
@@ -60,7 +63,7 @@ class OverlayView extends LinearLayout {
         this.selectedPageStorage = selectedPageStorage;
         setOrientation(HORIZONTAL);
 
-        HandleButton btnHandle = new HandleButton(context, android.R.color.white, R.drawable.ic_handle);
+        btnHandle = new HandleButton(context, android.R.color.white, R.drawable.ic_handle);
         btnHandle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,8 +99,8 @@ class OverlayView extends LinearLayout {
 
     public void toggle() {
         if (pages.size() > 0) {
-            setPageButtonsVisible(!isExpanded);
             isExpanded = !isExpanded;
+            setPageButtonsVisible(isExpanded);
             if (isExpanded) {
                 selectedPage = getPreviouslySelectedPage();
                 onPageSelectedListener.onFirstPageSelected(selectedPage, pages.indexOf(selectedPage));
@@ -105,6 +108,7 @@ class OverlayView extends LinearLayout {
                 selectedPage = null;
                 onPageSelectedListener.onNothingSelected();
             }
+            setPageButtonsColors(isExpanded);
         }
     }
 
@@ -112,6 +116,21 @@ class OverlayView extends LinearLayout {
         for (int i = 0; i < getChildCount() - 1; i++) {
             View v = getChildAt(i);
             v.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void setPageButtonsColors(boolean isExpanded) {
+        int activeColor = ResourcesCompat.getColor(getResources(), R.color.phial_background_dark, null);
+        int inactiveColor = ResourcesCompat.getColor(getResources(), android.R.color.white, null);
+        if (isExpanded) {
+            btnHandle.setColor(activeColor);
+            int activeIndex = pages.size() - 1 - pages.indexOf(selectedPage);
+            for (int i = 0; i < getChildCount() - 1; i++) {
+                HandleButton activeBtn = (HandleButton) getChildAt(i);
+                activeBtn.setColor(activeIndex == i ? activeColor : inactiveColor);
+            }
+        } else {
+            btnHandle.setColor(inactiveColor);
         }
     }
 
@@ -127,7 +146,7 @@ class OverlayView extends LinearLayout {
     }
 
     private void addPageButton(final Page page, int position) {
-        HandleButton button = new HandleButton(getContext(), android.R.color.white, page.getIconResourceId());
+        final HandleButton button = new HandleButton(getContext(), android.R.color.white, page.getIconResourceId());
         LinearLayout.LayoutParams params = new LayoutParams(btnSize, btnSize);
         addView(button, position, params);
         button.setVisibility(View.GONE);
@@ -143,6 +162,7 @@ class OverlayView extends LinearLayout {
                         selectedPage = page;
                         onPageSelectedListener.onPageSelectionChanged(page, pages.indexOf(page));
                         selectedPageStorage.setSelectedPage(page.getId());
+                        setPageButtonsColors(isExpanded);
                     } else {
                         selectedPage = null;
                         onPageSelectedListener.onNothingSelected();
