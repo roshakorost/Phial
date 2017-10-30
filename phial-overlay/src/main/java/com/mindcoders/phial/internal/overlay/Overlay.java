@@ -1,6 +1,7 @@
 package com.mindcoders.phial.internal.overlay;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -20,6 +21,7 @@ import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.PhialNotifier;
 import com.mindcoders.phial.internal.overlay.OverlayView.OnPageSelectedListener;
+import com.mindcoders.phial.internal.util.AnimatorFactory;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
 import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
 
@@ -304,34 +306,44 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         private void animateForward(final Page page, int position) {
             final WindowManager.LayoutParams params = (WindowManager.LayoutParams) overlayView.getLayoutParams();
-            int startX = params.x;
-            int endX = displaySize.x / 2;
+            final int startX = params.x;
+            final int endX = displaySize.x / 2;
 
-            int startY = params.y;
-            int endY = -displaySize.y / 2;
+            final int startY = params.y;
+            final int endY = -displaySize.y / 2;
+
             showContainerView();
-            containerWrapperView.setAlpha(0f);
 
             showSelectedPageIndicator(position);
 
-            animate(startX, endX, startY, endY,
-                    0f, 1f, params,
-                    new SimpleAnimatorListener() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            pageContainerView.showPage(page.getPageViewFactory().createPageView(context));
-                            pageContainerView.setPageTitle(page.getTitle());
-
-                            params.dimAmount = 0.5f;
-                            windowManager.updateViewLayout(overlayView, params);
-                        }
-                    }
-            );
+            // TODO: 10/30/17 figure out a way to avoid post() 
+            containerWrapperView.post(new Runnable() {
+                @Override
+                public void run() {
+                    animate(startX, endX, startY, endY,
+                            true, params,
+                            new SimpleAnimatorListener() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    containerWrapperView.setVisibility(View.VISIBLE);
+                                    pageContainerView.showPage(
+                                            page.getPageViewFactory().createPageView(context)
+                                                              );
+                                    pageContainerView.setPageTitle(page.getTitle());
+                                    params.dimAmount = 0.5f;
+                                    windowManager.updateViewLayout(overlayView, params);
+                                }
+                            }
+                           );
+                }
+            });
         }
 
         private void showContainerView() {
             containerWrapperView = createWrapperView();
             pageContainerView = createPageContainerView();
+
+            containerWrapperView.setVisibility(View.GONE);
 
             containerWrapperView.addView(pageContainerView);
             windowManager.addView(containerWrapperView, containerWrapperView.getLayoutParams());
@@ -370,7 +382,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             int startY = params.y;
             int endY = overlayViewPosition.y;
             animate(startX, endX, startY, endY,
-                    1f, 0f, params,
+                    false, params,
                     new SimpleAnimatorListener() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
@@ -379,37 +391,48 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                             windowManager.removeView(containerWrapperView);
                             containerWrapperView = null;
                             pageContainerView = null;
-
                             params.dimAmount = 0.0f;
                             windowManager.updateViewLayout(overlayView, params);
                         }
                     }
-            );
+                   );
         }
 
         private void animate(
                 int startX, int endX,
                 int startY, int endY,
-                float startAlpha, float endAlpha,
+                boolean isAppearing,
                 final WindowManager.LayoutParams params,
                 Animator.AnimatorListener listener
         ) {
             PropertyValuesHolder x = PropertyValuesHolder.ofInt("x", startX, endX);
             PropertyValuesHolder y = PropertyValuesHolder.ofInt("y", startY, endY);
-            PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat("alpha", startAlpha, endAlpha);
-            ValueAnimator valueAnimator = ValueAnimator.ofPropertyValuesHolder(x, y, alpha);
+            ValueAnimator valueAnimator = ValueAnimator.ofPropertyValuesHolder(x, y);
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     params.x = (int) animation.getAnimatedValue("x");
                     params.y = (int) animation.getAnimatedValue("y");
-                    containerWrapperView.setAlpha((float) animation.getAnimatedValue("alpha"));
                     windowManager.updateViewLayout(overlayView, params);
                 }
             });
-            valueAnimator.setDuration(300);
-            valueAnimator.addListener(listener);
-            valueAnimator.start();
+            valueAnimator.setDuration(100);
+
+            AnimatorFactory factory = AnimatorFactory.createFactory(overlayView);
+            AnimatorSet animator = new AnimatorSet();
+            if (isAppearing) {
+                valueAnimator.addListener(listener);
+                Animator appearAnimator = factory.createAppearAnimator(containerWrapperView);
+                appearAnimator.setDuration(200);
+                animator.play(valueAnimator).before(appearAnimator);
+            } else {
+                Animator disappearAnimator = factory.createDisappearAnimator(containerWrapperView);
+                disappearAnimator.addListener(listener);
+                disappearAnimator.setDuration(200);
+                animator.play(valueAnimator).after(disappearAnimator);
+            }
+
+            animator.start();
         }
 
     };
