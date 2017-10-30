@@ -1,5 +1,14 @@
 apply plugin: 'com.android.application'
 
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
@@ -21,7 +30,8 @@ android {
 
     productFlavors {
         qa {
-
+            buildConfigField "long", "BUILD_TIMESTAMP", "${new Date().time}L"
+            buildConfigField "String", "GIT_HASH", "\"${getGitHash()}\""
         }
 
         prod {

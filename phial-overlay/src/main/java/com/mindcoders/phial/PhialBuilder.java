@@ -2,7 +2,10 @@ package com.mindcoders.phial;
 
 import android.app.Application;
 
-import com.mindcoders.phial.internal.PhialCore;
+import com.mindcoders.phial.internal.keyvalue.BuildInfoWriter;
+import com.mindcoders.phial.internal.keyvalue.InfoWriter;
+import com.mindcoders.phial.internal.keyvalue.SystemInfoWriter;
+import com.mindcoders.phial.internal.util.Precondition;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,13 +22,16 @@ public class PhialBuilder {
     private final List<Page> pages = new ArrayList<>();
     private boolean attachScreenshots = true;
     private boolean attachKeyValues = true;
-    private boolean applySystemInfo = true;
+    private InfoWriter systemInfoWriter;
+    private InfoWriter buildInfoWriter;
     private boolean enableKeyValueView = true;
     private boolean enableShareView = true;
     private String shareDataFilePattern = "'data_M'MM'D'dd_'H'HH_mm_ss";
 
     public PhialBuilder(Application application) {
         this.application = application;
+        this.systemInfoWriter = new SystemInfoWriter(application);
+        this.buildInfoWriter = new BuildInfoWriter(application);
     }
 
     public PhialBuilder addShareable(Shareable shareable) {
@@ -44,7 +50,25 @@ public class PhialBuilder {
     }
 
     public PhialBuilder applySystemInfo(boolean applySystemInfo) {
-        this.applySystemInfo = applySystemInfo;
+        if (applySystemInfo) {
+            this.systemInfoWriter = new SystemInfoWriter(application);
+        } else {
+            systemInfoWriter = null;
+        }
+        return this;
+    }
+
+    public PhialBuilder applyBuildInfo(boolean applyBuildInfo) {
+        if (applyBuildInfo) {
+            this.buildInfoWriter = new BuildInfoWriter(application);
+        } else {
+            buildInfoWriter = null;
+        }
+        return this;
+    }
+
+    public PhialBuilder applyBuildInfo(long buildTime, String commit) {
+        this.buildInfoWriter = new BuildInfoWriter(application, buildTime, commit);
         return this;
     }
 
@@ -97,8 +121,15 @@ public class PhialBuilder {
         return attachScreenshots;
     }
 
-    public boolean applySystemInfo() {
-        return applySystemInfo;
+    public List<InfoWriter> getInfoWriters() {
+        final List<InfoWriter> writers = new ArrayList<>(2);
+        if (buildInfoWriter != null) {
+            writers.add(buildInfoWriter);
+        }
+        if (systemInfoWriter != null) {
+            writers.add(systemInfoWriter);
+        }
+        return writers;
     }
 
     public boolean attachKeyValues() {

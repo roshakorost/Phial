@@ -4,22 +4,20 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
-import com.mindcoders.phial.keyvalue.Phial;
 import com.mindcoders.phial.PhialBuilder;
+import com.mindcoders.phial.internal.keyvalue.InfoWriter;
 import com.mindcoders.phial.internal.keyvalue.KVAttacher;
 import com.mindcoders.phial.internal.keyvalue.KVSaver;
-import com.mindcoders.phial.internal.keyvalue.SystemInfoWriter;
 import com.mindcoders.phial.internal.share.ShareManager;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.share.attachment.ScreenShotAttacher;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
-
+import com.mindcoders.phial.keyvalue.Phial;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mindcoders.phial.internal.InternalPhialConfig.DEFAULT_SHARE_IMAGE_QUALITY;
-import static com.mindcoders.phial.internal.InternalPhialConfig.SYSTEM_INFO_CATEGORY;
 
 /**
  * Created by rost on 10/23/17.
@@ -60,8 +58,10 @@ public final class PhialCore {
         Phial.addSaver(kvSaver);
         phialNotifier.addListener(attachmentManager);
         application.registerActivityLifecycleCallbacks(activityProvider);
-        if (phialBuilder.applySystemInfo()) {
-            SystemInfoWriter.writeSystemInfo(Phial.category(SYSTEM_INFO_CATEGORY), application);
+
+        final List<InfoWriter> writers = phialBuilder.getInfoWriters();
+        for (InfoWriter writer : writers) {
+            writer.writeInfo();
         }
 
         return new PhialCore(application, shareManager, attachmentManager, kvSaver, phialNotifier, activityProvider);

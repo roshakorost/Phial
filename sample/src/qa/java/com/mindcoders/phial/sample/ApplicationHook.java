@@ -25,6 +25,9 @@ final class ApplicationHook {
 
         PhialOverlay.builder(app)
                 .addAttachmentProvider(logger)
+                // adds build time stamp and git hash to build info section.
+                // see sample build.gradle how to create these variables.
+                .applyBuildInfo(BuildConfig.BUILD_TIMESTAMP, BuildConfig.GIT_HASH)
                 .addShareable(jiraSharable)
                 .initPhial();
 

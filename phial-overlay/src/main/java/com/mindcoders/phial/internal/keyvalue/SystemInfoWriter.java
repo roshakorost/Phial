@@ -8,6 +8,10 @@ import android.util.DisplayMetrics;
 import com.mindcoders.phial.BuildConfig;
 import com.mindcoders.phial.keyvalue.Category;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import static android.os.Build.MANUFACTURER;
 
 
@@ -15,15 +19,13 @@ import static android.os.Build.MANUFACTURER;
  * Created by rost on 10/22/17.
  */
 
-public final class SystemInfoWriter {
-    private SystemInfoWriter() {
-        //to hide
+public final class SystemInfoWriter extends InfoWriter {
+    public SystemInfoWriter(Context context) {
+        super(context, "System");
     }
 
-    public static void writeSystemInfo(Category saver, Context context) {
-        saver.setKey("Package", context.getPackageName());
-        saver.setKey("Version", BuildConfig.VERSION_NAME);
-        saver.setKey("Build Type", BuildConfig.BUILD_TYPE);
+    @Override
+    protected void writeInfo(Category saver) {
         saver.setKey("Board", Build.BOARD);
         saver.setKey("Brand", Build.BRAND);
         saver.setKey("Device", Build.DEVICE);
@@ -34,10 +36,9 @@ public final class SystemInfoWriter {
         saver.setKey("OS Version", System.getProperty("os.version") + " (" + Build.VERSION.INCREMENTAL + ")");
         saver.setKey("SDCard state", Environment.getExternalStorageState());
 
-        final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        final DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
         saver.setKey("Density", displayMetrics.density);
         saver.setKey("Width", displayMetrics.widthPixels);
         saver.setKey("Height", displayMetrics.heightPixels);
     }
-
 }
