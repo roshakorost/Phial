@@ -36,7 +36,7 @@ final class PageContainerView extends LinearLayout {
         int topBottomPadding = dpToPx(context, 8);
 
         pageTitleTextView.setPadding(leftPadding, topBottomPadding, leftPadding, topBottomPadding);
-        pageTitleTextView.setBackgroundColor(getResources().getColor(R.color.phial_background_dark));
+        pageTitleTextView.setBackgroundResource(R.drawable.bg_page_title);
         pageTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         pageTitleTextView.setTextColor(getResources().getColor(R.color.phial_title_color));
         pageTitleTextView.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
