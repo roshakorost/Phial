@@ -147,7 +147,14 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         if (containerWrapperView != null) {
             containerWrapperView.setVisibility(View.GONE);
         }
-        positionStorage.savePosition(overlayViewPosition);
+
+        if (isOverlayPositionPointSet(overlayViewPosition)) {
+            positionStorage.savePosition(overlayViewPosition);
+        }
+    }
+
+    private boolean isOverlayPositionPointSet(Point point) {
+        return point.x != 0 && point.y != 0;
     }
 
     public void destroy() {
