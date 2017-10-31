@@ -9,7 +9,10 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.support.annotation.ColorInt;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
+
+import com.mindcoders.phial.internal.util.Precondition;
 
 class HandleButton extends View {
     private static final int SHADOW_SIZE = 14;
@@ -20,6 +23,12 @@ class HandleButton extends View {
     private int fgColor;
 
     private Bitmap iconBitmap;
+
+    @VisibleForTesting
+    public HandleButton(Context context) {
+        super(context);
+        Precondition.calledFromTools(this);
+    }
 
     public HandleButton(Context context, int iconResource, @ColorInt int bgColor, @ColorInt int fgColor) {
         super(context);

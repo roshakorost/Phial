@@ -42,8 +42,8 @@ public class ShareView extends FrameLayout implements PageView {
     private ViewShareContext shareContext;
 
     @VisibleForTesting
-    public ShareView(@NonNull Context context, OverlayCallback overlayCallback) {
-        this(context, null, null, overlayCallback);
+    public ShareView(@NonNull Context context) {
+        this(context, null, null, null);
         Precondition.calledFromTools(this);
     }
 

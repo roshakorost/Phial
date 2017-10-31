@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/jira.background">
+    android:background="@color/jira.background"
+    tools:ignore="Overdraw">
 
     <ImageView
         android:id="@+id/close_button"
@@ -13,6 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="@dimen/jira.padding.horizontal.normal"
         android:background="@drawable/circle_dark_background"
+        android:contentDescription="@string/jira.close"
         android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
     <LinearLayout
@@ -33,7 +36,8 @@
             android:fontFamily="@string/jira.font.medium"
             android:text="@string/jira.login_to_your_jira_account"
             android:textColor="@color/jira.textColor.primary"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:ignore="UnusedAttribute" />
 
         <EditText
             android:id="@+id/login"
