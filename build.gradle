@@ -4,6 +4,7 @@ buildscript {
     repositories {
         jcenter()
         google()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
@@ -19,7 +20,7 @@ allprojects {
         google()
     }
     project.ext {
-        GIT_HUB_GROUP = 'com.github.roshakorost'
+        GIT_HUB_GROUP = 'com.github.roshakorost.Phial'
     }
 }
 
