@@ -6,4 +6,5 @@
     <string name="jira.login_share">Login &amp; Share</string>
     <string name="jira.password">Password</string>
     <string name="jira.issue_created">Created issue: %1$s</string>
+    <string name="jira.close">Close</string>
 </resources>
