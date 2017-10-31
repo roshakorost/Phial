@@ -416,19 +416,19 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                     windowManager.updateViewLayout(overlayView, params);
                 }
             });
-            valueAnimator.setDuration(100);
+            valueAnimator.setDuration(300);
 
             AnimatorFactory factory = AnimatorFactory.createFactory(overlayView);
             AnimatorSet animator = new AnimatorSet();
             if (isAppearing) {
                 valueAnimator.addListener(listener);
                 Animator appearAnimator = factory.createAppearAnimator(containerWrapperView);
-                appearAnimator.setDuration(200);
+                appearAnimator.setDuration(300);
                 animator.play(valueAnimator).before(appearAnimator);
             } else {
                 Animator disappearAnimator = factory.createDisappearAnimator(containerWrapperView);
                 disappearAnimator.addListener(listener);
-                disappearAnimator.setDuration(200);
+                disappearAnimator.setDuration(300);
                 animator.play(valueAnimator).after(disappearAnimator);
             }
 
