@@ -1,6 +1,7 @@
 package com.mindcoders.phial;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.view.View;
 
 /**
@@ -19,4 +20,6 @@ public interface ShareContext {
     void presentView(View view);
 
     void setProgressBarVisibility(boolean isVisible);
+
+    View inflate(@LayoutRes int layoutId);
 }

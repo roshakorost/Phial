@@ -18,9 +18,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/jira.padding.horizontal.big"
         android:layout_marginRight="@dimen/jira.padding.horizontal.big"
+        android:layout_marginTop="@dimen/jira.padding.horizontal.big"
         android:orientation="vertical">
 
         <TextView

@@ -3,6 +3,7 @@ package com.mindcoders.phial.internal.share;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
@@ -194,6 +195,12 @@ public class ShareView extends FrameLayout implements PageView {
         @Override
         public void setProgressBarVisibility(boolean isVisible) {
             progressBar.setVisibility(isVisible ? VISIBLE : GONE);
+        }
+
+        @Override
+        public View inflate(@LayoutRes int layoutId) {
+            final LayoutInflater inflater = LayoutInflater.from(getContext());
+            return inflater.inflate(layoutId, ShareView.this, false);
         }
 
         private void showSharePicker() {

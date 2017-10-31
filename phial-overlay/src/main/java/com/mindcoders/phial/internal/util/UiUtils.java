@@ -2,7 +2,6 @@ package com.mindcoders.phial.internal.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;

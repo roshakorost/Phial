@@ -2,7 +2,6 @@ package com.mindcoders.phial.jira;
 
 import android.content.Context;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -38,9 +37,9 @@ class JiraShareable implements Shareable {
     }
 
     private void presentLoginDialog(final ShareContext shareContext, final File attachment, final String message) {
-        final LayoutInflater inflater = LayoutInflater.from(shareContext.getAndroidContext());
-        final View view = inflater.inflate(R.layout.jira_login_view, null, false);
+        final View view = shareContext.inflate(R.layout.jira_login_view);
         final EditText loginTV = view.findViewById(R.id.login);
+
         final EditText passwordTV = view.findViewById(R.id.password);
         view.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
             @Override
