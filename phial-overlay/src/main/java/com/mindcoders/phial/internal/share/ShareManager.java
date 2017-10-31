@@ -42,7 +42,7 @@ public class ShareManager {
 
     void share(ShareItem shareItem, ShareContext shareContext, File attachment, String message) {
         if (shareItem instanceof SystemShareItem) {
-            share((SystemShareItem) shareItem, attachment, message);
+            share((SystemShareItem) shareItem, shareContext, attachment, message);
         } else if (shareItem instanceof UserShareItem) {
             share((UserShareItem) shareItem, shareContext, attachment, message);
         } else {
@@ -50,11 +50,12 @@ public class ShareManager {
         }
     }
 
-    void share(SystemShareItem shareItem, File attachment, String message) {
+    void share(SystemShareItem shareItem, ShareContext shareContext, File attachment, String message) {
         final Uri uri = FileUtil.getUri(context, attachment);
         final Intent shareIntent = createShareIntent(uri, message);
         shareIntent.setComponent(shareItem.getComponentName());
         context.startActivity(shareIntent);
+        shareContext.onSuccess();
     }
 
     void share(UserShareItem shareItem, ShareContext shareContext, File attachment, String message) {

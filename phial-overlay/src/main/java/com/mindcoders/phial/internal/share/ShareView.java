@@ -36,6 +36,7 @@ public class ShareView extends FrameLayout implements PageView {
     private final AttachmentManager attachmentManager;
     private final View sharePickerView;
     private final View progressBar;
+    private ViewShareContext shareContext;
 
     @VisibleForTesting
     public ShareView(@NonNull Context context) {
@@ -79,6 +80,11 @@ public class ShareView extends FrameLayout implements PageView {
 
     @Override
     public boolean onBackPressed() {
+        if (shareContext != null) {
+            shareContext.showSharePicker();
+            return true;
+        }
+
         return false;
     }
 
@@ -87,7 +93,9 @@ public class ShareView extends FrameLayout implements PageView {
             final File attachment = attachmentManager.createAttachment();
             final String message = messageTV.getText().toString();
             final AnimatorFactory factory = AnimatorFactory.createFactory(view);
-            shareManager.share(shareItem, new ViewShareContext(factory), attachment, message);
+
+            shareContext = new ViewShareContext(factory);
+            shareManager.share(shareItem, shareContext, attachment, message);
         } catch (Exception e) {
             PhialErrorPlugins.onError(e);
             Toast.makeText(getContext(), R.string.share_error_attachment, Toast.LENGTH_SHORT).show();
@@ -96,12 +104,12 @@ public class ShareView extends FrameLayout implements PageView {
 
     private void close() {
         Precondition.notImplemented("Close", getContext());
+        shareContext = null;
     }
 
-
     private class ViewShareContext implements ShareContext {
-        private final AnimatorFactory animatorFactory;
         private View presentView;
+        private final AnimatorFactory animatorFactory;
 
         private ViewShareContext(AnimatorFactory animatorFactory) {
             this.animatorFactory = animatorFactory;
@@ -200,6 +208,7 @@ public class ShareView extends FrameLayout implements PageView {
                 });
                 appearAnimator.start();
             }
+            shareContext = null;
         }
 
         private void removeSubViews() {
