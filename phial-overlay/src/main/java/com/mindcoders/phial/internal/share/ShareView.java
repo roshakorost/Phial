@@ -107,7 +107,7 @@ public class ShareView extends FrameLayout implements PageView {
     }
 
     private void close() {
-        Precondition.notImplemented("Close", getContext());
+        overlayCallback.finish();
         shareContext = null;
     }
 
