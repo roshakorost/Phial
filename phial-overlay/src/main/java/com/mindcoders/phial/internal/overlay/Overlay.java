@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.PhialNotifier;
@@ -292,7 +293,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         @Override
         public void onPageSelectionChanged(Page page, int position) {
-            pageContainerView.showPage(page.getPageViewFactory().createPageView(context));
+            pageContainerView.showPage(page.getPageViewFactory().createPageView(context, overlayCallback));
             pageContainerView.setPageTitle(page.getTitle());
 
             updateSelectedPageIndicator(position);
@@ -327,7 +328,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                                 public void onAnimationEnd(Animator animation) {
                                     containerWrapperView.setVisibility(View.VISIBLE);
                                     pageContainerView.showPage(
-                                            page.getPageViewFactory().createPageView(context)
+                                            page.getPageViewFactory().createPageView(context, overlayCallback)
                                                               );
                                     pageContainerView.setPageTitle(page.getTitle());
                                     params.dimAmount = 0.5f;
@@ -433,6 +434,15 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             }
 
             animator.start();
+        }
+
+    };
+
+    private final OverlayCallback overlayCallback = new OverlayCallback() {
+
+        @Override
+        public void finish() {
+            overlayView.toggle();
         }
 
     };

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.R;
@@ -69,7 +70,7 @@ public final class OverlayFactory {
         }
 
         @Override
-        public KeyValueView createPageView(Context context) {
+        public KeyValueView createPageView(Context context, OverlayCallback overlayCallback) {
             return new KeyValueView(context, phialCore.getKvSaver());
         }
     }
@@ -82,7 +83,7 @@ public final class OverlayFactory {
         }
 
         @Override
-        public ShareView createPageView(Context context) {
+        public ShareView createPageView(Context context, OverlayCallback overlayCallback) {
             return new ShareView(context, phialCore.getShareManager(), phialCore.getAttachmentManager());
         }
     }

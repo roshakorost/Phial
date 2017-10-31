@@ -7,7 +7,7 @@ public final class Page {
 
     public interface PageViewFactory<T extends View & PageView> {
 
-        T createPageView(Context context);
+        T createPageView(Context context, OverlayCallback overlayCallback);
 
     }
 

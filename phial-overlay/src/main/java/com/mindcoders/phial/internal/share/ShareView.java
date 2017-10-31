@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.PageView;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.ShareContext;
@@ -34,20 +35,23 @@ public class ShareView extends FrameLayout implements PageView {
     private final EditText messageTV;
     private final ShareManager shareManager;
     private final AttachmentManager attachmentManager;
+    private final OverlayCallback overlayCallback;
     private final View sharePickerView;
     private final View progressBar;
     private ViewShareContext shareContext;
 
     @VisibleForTesting
-    public ShareView(@NonNull Context context) {
-        this(context, null, null);
+    public ShareView(@NonNull Context context, OverlayCallback overlayCallback) {
+        this(context, null, null, overlayCallback);
         Precondition.calledFromTools(this);
     }
 
-    public ShareView(@NonNull Context context, ShareManager shareManager, AttachmentManager attachmentManager) {
+    public ShareView(@NonNull Context context, ShareManager shareManager, AttachmentManager attachmentManager,
+                     OverlayCallback overlayCallback) {
         super(context);
         this.shareManager = shareManager;
         this.attachmentManager = attachmentManager;
+        this.overlayCallback = overlayCallback;
 
         LayoutInflater.from(context).inflate(R.layout.view_share, this, true);
         LayoutInflater.from(context).inflate(R.layout.progressbar_horizontal, this, true);
