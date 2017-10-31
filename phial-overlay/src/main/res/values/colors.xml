@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="phial.background.title">#27ae60</color>
+    <color name="phial.title.background">#24292e</color>
+    <color name="phial.title.color">#d3d4d5</color>
     <color name="phial.button.background">#ffffff</color>
-    <color name="phial.button.foreground">#27ae60</color>
+    <color name="phial.button.foreground">#24292e</color>
 
-    <color name="phial.background.light">#f6faf7</color>
-    <color name="phial.title.color">#ffffff</color>
+    <color name="phial.background.light">#f4f4f4</color>
 </resources>

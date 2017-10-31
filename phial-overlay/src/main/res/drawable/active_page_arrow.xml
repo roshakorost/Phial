@@ -8,7 +8,7 @@
             android:pivotY="87%"
             android:toDegrees="45">
             <shape android:shape="rectangle">
-                <solid android:color="@color/phial.background.title" />
+                <solid android:color="@color/phial.title.background" />
             </shape>
         </rotate>
     </item>
