@@ -84,7 +84,7 @@ public final class OverlayFactory {
 
         @Override
         public ShareView createPageView(Context context, OverlayCallback overlayCallback) {
-            return new ShareView(context, phialCore.getShareManager(), phialCore.getAttachmentManager());
+            return new ShareView(context, phialCore.getShareManager(), phialCore.getAttachmentManager(), overlayCallback);
         }
     }
 }
