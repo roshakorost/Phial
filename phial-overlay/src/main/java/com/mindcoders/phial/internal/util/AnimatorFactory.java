@@ -19,7 +19,7 @@ public abstract class AnimatorFactory {
     AnimatorFactory(View startView) {
         final int width = startView.getWidth();
         final int height = startView.getHeight();
-        startRadius = calcRadius(width, height);
+        startRadius = Math.min(width, height) / 2;
 
         int[] location = new int[2];
         startView.getLocationOnScreen(location);
