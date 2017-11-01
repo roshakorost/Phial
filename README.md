@@ -131,7 +131,7 @@ This can be achieved by creating multiple flavors or build types.
 Here is an example with product flavors.
 * Create your flavors in `build.gradle` of your application module:
 * Create `ApplicationHook` class with same interface in all flavors and put it in the respective source directories for each source set.
-* Init Phial in the debug version of `ApplicationHook`. Refer to the sample app for an example[3].
+* Init Phial in the debug version of `ApplicationHook`. Refer to the sample app for an [example][3].
 
 ##Download
 * Add Jitpack maven repository in your root build.gradle file
