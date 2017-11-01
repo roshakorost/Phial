@@ -42,7 +42,6 @@ You can do that by implementing `Saver` interface and adding it using `Phial.add
 
 ## Logging
 You can include your application logs into share attachment. If you don’t save your log on disk you can user phial-logging in order to attach html formatted logs with your debug data.
-![Logs Screenshot][3]
 
 #### Integration
 1. Add phial-logger to your dependencies.
@@ -55,13 +54,12 @@ PhialOverlay.builder(app)
 ```
 `phialLogger.log(priority, tag, message,throwable)` will dump log to the file that will be included into share attachment.
 
-**Note:** it is recommended to use some logging facade instead of calling phialLogger.log(priority, tag, message,throwable) manually. Check [Timber Integration Example.][4]
+**Note:** it is recommended to use some logging facade instead of calling phialLogger.log(priority, tag, message,throwable) manually. Check [Timber Integration Example.][3]
 
 If you already store your logs on dive you can use attachers in order to add them to share attachement. See next section on how to implement custom attachers.
 
 
 
 [1]:https://raw.githubusercontent.com/roshakorost/Phial/develop/art/screenshot_demo.gif
-[2]:https://github.com/roshakorost/Phial/tree/develop/art/data_M11D01_H15_58_53
-[3]:https://raw.githubusercontent.com/roshakorost/Phial/develop/art/screenshot_log.png
-[4]:sample/src/qa/java/com/mindcoders/phial/sample/ApplicationHook.java
+[2]:art/data_M11D01_H15_58_53/
+[3]:sample/src/qa/java/com/mindcoders/phial/sample/ApplicationHook.java
