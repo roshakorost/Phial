@@ -43,15 +43,14 @@ android {
         }
     }
 }
-
 dependencies {
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.jakewharton.timber:timber:4.5.1'
+    implementation "com.android.support:appcompat-v7:26.1.0"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.jakewharton.timber:timber:4.5.1'
 
-    qaCompile project(':phial-overlay')
-    qaCompile project(':phial-logging')
-    qaCompile project(':phial-jira')
-    qaCompile project(':phial-key-value')
-    prodCompile project(':phial-key-value')
+    qaImplementation project(':phial-overlay')
+    qaImplementation project(':phial-logging')
+    qaImplementation project(':phial-jira')
+    qaImplementation project(':phial-key-value')
+    prodImplementation project(':phial-key-value')
 }
