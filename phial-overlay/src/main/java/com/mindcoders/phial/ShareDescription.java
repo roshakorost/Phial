@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
+
+import com.mindcoders.phial.internal.util.support.ContextCompat;
+
 
 /**
  * Created by rost on 10/22/17.

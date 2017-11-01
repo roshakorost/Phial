@@ -11,7 +11,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -25,6 +24,7 @@ import com.mindcoders.phial.internal.overlay.OverlayView.OnPageSelectedListener;
 import com.mindcoders.phial.internal.util.AnimatorFactory;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
 import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
+import com.mindcoders.phial.internal.util.support.ViewCompat;
 
 import java.util.List;
 
@@ -213,6 +213,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         pageContainer.setLayoutParams(params);
 
         pageContainer.setBackgroundResource(R.drawable.bg_page_container);
+
 
         ViewCompat.setElevation(pageContainer, 5f);
 

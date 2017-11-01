@@ -9,12 +9,14 @@ import java.io.File;
  */
 
 class InternalPhialConfig {
-    //should match value in res/path.xml
+    //should match value in res/phial_share_paths.xml
     private static final String PHIAL_DATA = "PhialData";
+    //should match authority in Manifest
+    static final String PHIAL_AUTHORITY = "com.mindcoders.phial.fileprovider";
+
     private static final String SCREEN_SHOT_FILE_NAME = "screenshot.jpg";
     private static final String KEY_VALUE_FILE_NAME = "keyValues.json";
     static final int DEFAULT_SHARE_IMAGE_QUALITY = 95;
-    static final String SYSTEM_INFO_CATEGORY = "System";
     static final String PREFERENCES_FILE_NAME = "phial";
 
 

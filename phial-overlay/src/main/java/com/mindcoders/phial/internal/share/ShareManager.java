@@ -21,10 +21,12 @@ import java.util.List;
 
 public class ShareManager {
     private final Context context;
+    private final String authority;
     private final List<ShareItem> userShareItems;
 
-    public ShareManager(Context context, List<Shareable> userShareables) {
+    public ShareManager(Context context, String authority, List<Shareable> userShareables) {
         this.context = context;
+        this.authority = authority;
         this.userShareItems = createUserShareItem(userShareables);
     }
 
@@ -51,7 +53,7 @@ public class ShareManager {
     }
 
     void share(SystemShareItem shareItem, ShareContext shareContext, File attachment, String message) {
-        final Uri uri = FileUtil.getUri(context, attachment);
+        final Uri uri = FileUtil.getUri(context, authority, attachment);
         final Intent shareIntent = createShareIntent(uri, message);
         shareIntent.setComponent(shareItem.getComponentName());
         context.startActivity(shareIntent);

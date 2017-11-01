@@ -52,7 +52,11 @@ public final class PhialCore {
         final CurrentActivityProvider activityProvider = new CurrentActivityProvider();
         final PhialNotifier phialNotifier = new PhialNotifier();
         final KVSaver kvSaver = new KVSaver();
-        final ShareManager shareManager = new ShareManager(application, phialBuilder.getShareables());
+        final ShareManager shareManager = new ShareManager(
+                application,
+                InternalPhialConfig.PHIAL_AUTHORITY,
+                phialBuilder.getShareables()
+        );
         final AttachmentManager attachmentManager = createAttachmentManager(phialBuilder, kvSaver, activityProvider);
 
         Phial.addSaver(kvSaver);

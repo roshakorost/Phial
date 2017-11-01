@@ -1,5 +1,4 @@
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mindcoders.phial">
 
@@ -7,15 +6,13 @@
 
     <application>
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name=".internal.util.support.FileProvider"
             android:authorities="com.mindcoders.phial.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            tools:replace="android:authorities">
+            android:grantUriPermissions="true">
             <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/paths"
-                tools:replace="android:resource" />
+                android:name="com.mindcoders.phial.internal.util.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/phial_share_paths" />
         </provider>
 
     </application>

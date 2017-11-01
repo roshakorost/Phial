@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,6 +11,7 @@ import android.widget.LinearLayout;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.util.Precondition;
+import com.mindcoders.phial.internal.util.support.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.List;
