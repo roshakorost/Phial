@@ -1,18 +1,19 @@
 package com.mindcoders.phial.sample;
 
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
-import com.mindcoders.phial.Attacher;
 import com.mindcoders.phial.PhialOverlay;
 import com.mindcoders.phial.Shareable;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
-import com.mindcoders.phial.internal.util.Precondition;
-import com.mindcoders.phial.jira.JiraSharableBuilder;
+import com.mindcoders.phial.jira.JiraShareableBuilder;
 import com.mindcoders.phial.logging.PhialLogger;
 
-import java.io.File;
+import org.json.JSONObject;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -28,10 +29,12 @@ final class ApplicationHook {
         // Jira integration example
         // It will add extra Jira to share window.
         // Sharing to Jira will create new issue with DebugInfo as attachment
-        final Shareable jiraShareable = new JiraSharableBuilder(app)
+        final Shareable jiraShareable = new JiraShareableBuilder(app)
                 .setBaseUrl("https://roshakorst.atlassian.net/")
                 .setProjectKey("TES")
+                .setFixVersions("testversion")
                 .build();
+
 
         PhialOverlay.builder(app)
                 // By default Phial includes key-values and screenshots as attachment to share

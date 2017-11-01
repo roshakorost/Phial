@@ -4,6 +4,7 @@ import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -30,12 +31,8 @@ class JiraApi {
         this.projectKey = projectKey;
     }
 
-    CreatedIssueResponse createIssue(String summary) throws IOException, JSONException {
-        return createIssue(summary, null);
-    }
-
-    CreatedIssueResponse createIssue(String summary, String description) throws IOException, JSONException {
-        final String jsonBody = RestModelConverter.createIssueModel(projectKey, summary, description).toString();
+    CreatedIssueResponse createIssue(Map<String, Object> properties) throws IOException, JSONException {
+        final String jsonBody = RestModelConverter.createIssueModel(projectKey, properties).toString();
         final RequestBody requestBody = RequestBody.create(JSON, jsonBody);
 
         final Request request = new Request.Builder()
