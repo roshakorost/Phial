@@ -5,6 +5,7 @@ import android.app.Application;
 import com.mindcoders.phial.internal.keyvalue.BuildInfoWriter;
 import com.mindcoders.phial.internal.keyvalue.InfoWriter;
 import com.mindcoders.phial.internal.keyvalue.SystemInfoWriter;
+import com.mindcoders.phial.internal.share.attachment.AttacherAdaptor;
 import com.mindcoders.phial.internal.util.Precondition;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 public class PhialBuilder {
     private final Application application;
     private final List<Shareable> shareables = new ArrayList<>();
-    private final List<Attacher> attachers = new ArrayList<>();
+    private final List<ListAttacher> attachers = new ArrayList<>();
     private final List<Page> pages = new ArrayList<>();
     private boolean attachScreenshots = true;
     private boolean attachKeyValues = true;
@@ -40,6 +41,11 @@ public class PhialBuilder {
     }
 
     public PhialBuilder addAttachmentProvider(Attacher attacher) {
+        this.attachers.add(AttacherAdaptor.adapt(attacher));
+        return this;
+    }
+
+    public PhialBuilder addAttachmentProvider(ListAttacher attacher) {
         this.attachers.add(attacher);
         return this;
     }
@@ -109,7 +115,7 @@ public class PhialBuilder {
         return Collections.unmodifiableList(shareables);
     }
 
-    public List<Attacher> getAttachers() {
+    public List<ListAttacher> getAttachers() {
         return Collections.unmodifiableList(attachers);
     }
 

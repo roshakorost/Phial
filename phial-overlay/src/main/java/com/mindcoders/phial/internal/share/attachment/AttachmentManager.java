@@ -1,6 +1,6 @@
 package com.mindcoders.phial.internal.share.attachment;
 
-import com.mindcoders.phial.Attacher;
+import com.mindcoders.phial.ListAttacher;
 import com.mindcoders.phial.PhialListener;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.internal.util.FileUtil;
@@ -19,11 +19,11 @@ import java.util.Locale;
  */
 public class AttachmentManager implements PhialListener {
     private static final String ZIP_EXTENTION = ".zip";
-    private final List<Attacher> providers;
+    private final List<ListAttacher> providers;
     private final File targetDir;
     private final DateFormat nameDateFormat;
 
-    public AttachmentManager(List<Attacher> providers, File targetDir, String namePattern) {
+    public AttachmentManager(List<ListAttacher> providers, File targetDir, String namePattern) {
         this.providers = providers;
         this.targetDir = targetDir;
         nameDateFormat = new SimpleDateFormat(namePattern, Locale.US);
@@ -44,9 +44,10 @@ public class AttachmentManager implements PhialListener {
     private List<File> prepareAttachments() {
         final List<File> result = new ArrayList<>(providers.size());
 
-        for (Attacher provider : providers) {
+        for (ListAttacher provider : providers) {
             try {
-                result.add(provider.provideAttachment());
+                final List<File> files = provider.provideAttachment();
+                result.addAll(files);
             } catch (Exception ex) {
                 PhialErrorPlugins.onError(ex);
             }
@@ -58,14 +59,14 @@ public class AttachmentManager implements PhialListener {
 
     @Override
     public void onDebugWindowShow() {
-        for (Attacher provider : providers) {
+        for (ListAttacher provider : providers) {
             provider.onPreDebugWindowCreated();
         }
     }
 
     @Override
     public void onDebugWindowHide() {
-        for (Attacher provider : providers) {
+        for (ListAttacher provider : providers) {
             provider.onAttachmentNotNeeded();
         }
     }
