@@ -129,3 +129,28 @@ Your page view should be implemented as a subclass of `android.view.View` and im
 
 Currently `PageView` is only used for overriding back navigation.
 If your page view needs more than a common navigation flow (device back button minimized the overlay) you can implement this logic in `PageView#onBackPressed` method.
+
+##Download
+* Add Jitpack maven repository in your root build.gradle file
+```groovy
+allprojects {
+	repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+
+```
+* Add dependencies
+```groovy
+def phialVersion = '<latest-version>'
+dependencies {
+    qaImplementation "com.github.roshakorost.Phial:phial-overlay:$phialVersion"
+    //if you use jira integration
+	qaImplementation "com.github.roshakorost.Phial:phial-jira:$phialVersion"
+    //if you use html logging 
+	qaImplementation "com.github.roshakorost.Phial:phial-logging:$phialVersion"
+    //if you use key values.
+	implementation "com.github.roshakorost.Phial:phial-key-value:$phialVersion"
+}
+```
+*Note:* key-values are included into all flavors, because you might have a lot of calls `Phial.setKey()` across your application, but without phial-overlay thay will be no operational.
