@@ -28,11 +28,11 @@ android {
 }
 
 dependencies {
-    compileOnly 'com.android.support:support-annotations:27.0.0'
-    implementation project(':phial-overlay')
+    implementation 'com.android.support:support-annotations:27.0.0'
+    api project(':phial-overlay')
 
-    implementation 'org.slf4j:slf4j-api:1.7.22'
-    implementation('com.github.tony19:logback-android-classic:1.1.1-4') {
+    api 'org.slf4j:slf4j-api:1.7.22'
+    api('com.github.tony19:logback-android-classic:1.1.1-4') {
         exclude group: 'com.google.android'
     }
 }
