@@ -1,13 +1,18 @@
 package com.mindcoders.phial.sample;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
+import com.mindcoders.phial.Attacher;
 import com.mindcoders.phial.PhialOverlay;
 import com.mindcoders.phial.Shareable;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
+import com.mindcoders.phial.internal.util.Precondition;
 import com.mindcoders.phial.jira.JiraSharableBuilder;
 import com.mindcoders.phial.logging.PhialLogger;
+
+import java.io.File;
 
 import timber.log.Timber;
 
@@ -34,6 +39,14 @@ final class ApplicationHook {
                 // which will be zipped and shared to selected target.
                 // Here we add provider that will include log file.
                 .addAttachmentProvider(phialLogger)
+
+                // adding custom attaches that will include shared preferences from device.
+                // see SharedPreferencesAttacher about how implement custom attacher.
+
+                // you can also use SimpleFileAttacher(File), SimpleFileAttacher(List<File>) in order to
+                // include some files in share attachment.
+                .addAttachmentProvider(new SharedPreferencesAttacher(app))
+
                 // adds build time stamp and git hash to build info section.
                 // see sample build.gradle how to create these variables.
                 .applyBuildInfo(BuildConfig.BUILD_TIMESTAMP, BuildConfig.GIT_HASH)
