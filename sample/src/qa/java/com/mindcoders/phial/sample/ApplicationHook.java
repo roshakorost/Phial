@@ -33,6 +33,7 @@ final class ApplicationHook {
                 .setBaseUrl("https://roshakorst.atlassian.net/")
                 .setProjectKey("TES")
                 .setFixVersions("testversion")
+                //.setCustomField(key, object) in order to add extra fields to created item
                 .build();
 
 
