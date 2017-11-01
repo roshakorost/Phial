@@ -1,0 +1,94 @@
+[
+  {
+    "name": "Build",
+    "entries": [
+      {
+        "name": "Package",
+        "value": "com.mindcoders.phial.sample"
+      },
+      {
+        "name": "Version",
+        "value": "1.0"
+      },
+      {
+        "name": "BuildTime",
+        "value": "1 Nov 2017 15:59 +0200"
+      },
+      {
+        "name": "BuildCommit",
+        "value": "d959e69"
+      }
+    ]
+  },
+  {
+    "name": "System",
+    "entries": [
+      {
+        "name": "Board",
+        "value": "unknown"
+      },
+      {
+        "name": "Brand",
+        "value": "Android"
+      },
+      {
+        "name": "Device",
+        "value": "generic_x86"
+      },
+      {
+        "name": "Model",
+        "value": "Android SDK built for x86"
+      },
+      {
+        "name": "Manufacturer",
+        "value": "unknown"
+      },
+      {
+        "name": "Product",
+        "value": "sdk_google_phone_x86"
+      },
+      {
+        "name": "SDK",
+        "value": "25"
+      },
+      {
+        "name": "OS Version",
+        "value": "3.10.0+ (4175177)"
+      },
+      {
+        "name": "SDCard state",
+        "value": "mounted"
+      },
+      {
+        "name": "Density",
+        "value": "2.625"
+      },
+      {
+        "name": "Width",
+        "value": "1080"
+      },
+      {
+        "name": "Height",
+        "value": "1794"
+      }
+    ]
+  },
+  {
+    "name": "Button",
+    "entries": [
+      {
+        "name": "clicked",
+        "value": "5"
+      }
+    ]
+  },
+  {
+    "name": "Default",
+    "entries": [
+      {
+        "name": "currentActivity",
+        "value": "SampleActivity"
+      }
+    ]
+  }
+]
