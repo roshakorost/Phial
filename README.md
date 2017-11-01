@@ -59,11 +59,6 @@ PhialOverlay.builder(app)
 If you already store your logs on dive you can use attachers in order to add them to share attachement. See next section on how to implement custom attachers.
 
 
-
-[1]:https://raw.githubusercontent.com/roshakorost/Phial/develop/art/screenshot_demo.gif
-[2]:art/data_M11D01_H15_58_53/
-[3]:sample/src/qa/java/com/mindcoders/phial/sample/ApplicationHook.java
-
 ## Custom attachers
 
 Phial allows to include your custom data into share attachments. For example,  you might want to include SQLite database, logs or SharedPreferences files  from the device in order to investigate an issue.
@@ -130,6 +125,14 @@ Your page view should be implemented as a subclass of `android.view.View` and im
 Currently `PageView` is only used for overriding back navigation.
 If your page view needs more than a common navigation flow (device back button minimized the overlay) you can implement this logic in `PageView#onBackPressed` method.
 
+##Integration.
+Usually phial should only be integrated into your internal / debug build .
+This can be achieved by creating multiple flavors or build types.
+Here is an example with product flavors.
+* Create your flavors in `build.gradle` of your application module:
+* Create `ApplicationHook` class with same interface in all flavors and put it in the respective source directories for each source set.
+* Init Phial in the debug version of `ApplicationHook`. Refer to the sample app for an example[3].
+
 ##Download
 * Add Jitpack maven repository in your root build.gradle file
 ```groovy
@@ -154,3 +157,7 @@ dependencies {
 }
 ```
 *Note:* key-values are included into all flavors, because you might have a lot of calls `Phial.setKey()` across your application, but without phial-overlay thay will be no operational.
+
+[1]:https://raw.githubusercontent.com/roshakorost/Phial/develop/art/screenshot_demo.gif
+[2]:art/data_M11D01_H15_58_53/
+[3]:sample/src/qa/java/com/mindcoders/phial/sample/ApplicationHook.java
