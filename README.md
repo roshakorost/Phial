@@ -107,3 +107,25 @@ When user selects your share option `void share(ShareContext shareContext, File 
 You should call either `shareContext.onSuccess()`, `shareContext.onFail(message)` or `shareContext.onCancel()` when share is finished.
 `ShareContext` also provides interface for adding your UI elements in case you need authorization or some extra fields. See `JiraShareable` from `phial-jira` as an example implementation.
 
+## Custom overlay pages
+You can add custom pages that will be available in the overlay.
+To do this provide your instance of Page class to the PhialOverlay.Builder
+
+```java
+PhialOverlay.Builder(app)
+.addPage(customPage)
+```
+```java
+Page customPage = new Page(
+“customPage”, // unique page id
+R.drawable.ic_custom_page, // page icon resource
+“Custom page”, // page title
+customPageFactory, // implementation of PageViewFactory 
+);
+```
+
+`PageViewFactory` is responsible for instantiating your page view.
+Your page view should be implemented as a subclass of `android.view.View` and implement `PageView` interface.
+
+Currently `PageView` is only used for overriding back navigation.
+If your page view needs more than a common navigation flow (device back button minimized the overlay) you can implement this logic in `PageView#onBackPressed` method.
