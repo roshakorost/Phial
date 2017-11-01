@@ -28,14 +28,18 @@ android {
         }
     }
 
+    flavorDimensions "distribution"
+
     productFlavors {
         qa {
             buildConfigField "long", "BUILD_TIMESTAMP", "${new Date().time}L"
             buildConfigField "String", "GIT_HASH", "\"${getGitHash()}\""
+
+            dimension "distribution"
         }
 
         prod {
-
+            dimension "distribution"
         }
     }
 }
