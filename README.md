@@ -20,8 +20,8 @@ Why use it:
 [1]:https://raw.githubusercontent.com/roshakorost/Phial/develop/art/screenshot_demo.gif
 [2]:https://github.com/roshakorost/Phial/tree/develop/art/data_M11D01_H15_58_53
 
-## Enhance Your Attachments
-### Custom Keys
+# Enhance Your Attachments
+## Custom Keys
 Phial allows you to associate arbitrary key/value pairs which are viewable right from the Debug Overlay. These key values pairs are included as JSON with the attachment to be shared.
 
 Setting key is done by calling `Phial.setKey(key, value)`. 
