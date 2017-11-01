@@ -52,5 +52,6 @@ dependencies {
     qaCompile project(':phial-overlay')
     qaCompile project(':phial-logging')
     qaCompile project(':phial-jira')
+    qaCompile project(':phial-key-value')
     prodCompile project(':phial-key-value')
 }
