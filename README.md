@@ -81,3 +81,29 @@ In case you want to include some information that is not persisted to file, you 
 Attacher or ListAttacher.
 
 Currently Attacher API works only with files so when `provideAttachment` is called you should dump data to the temporary file and return it. When `onAttachmentNotNeeded` is called the temporary file can be deleted (see SharedPreferencesAttacher in the sample app or KVAttacher for an example).
+
+## Share
+By default Phial’s share menu only shows installed applications that can handle zip attachments. However you might want to include your own share options e.g. creating Jira Issue or posting to specific slack channel.
+
+### Phial-Jira
+Phial-jira allows you to login to your Jira and create an issue with debug data attached to it.
+Login page will be shown only the first time. After that saved credentials will be used.
+```java
+final Shareable jiraShareable = new JiraShareableBuilder(app)
+       .setBaseUrl(url) //Jira url
+       .setProjectKey(projectKey)	//project key
+       .build();
+
+PhialOverlay.builder(app)
+	.addShareable(jiraShareable)
+	.initPhial();
+
+```
+**Note:** since credentials are not stored securely  it’s recommended to use Phial only in internal/debug builds.
+
+### Shareable
+You can add your own share options by implementing `Shareable`.
+When user selects your share option `void share(ShareContext shareContext, File zippedAttachment, String message);` will be called.
+You should call either `shareContext.onSuccess()`, `shareContext.onFail(message)` or `shareContext.onCancel()` when share is finished.
+`ShareContext` also provides interface for adding your UI elements in case you need authorization or some extra fields. See `JiraShareable` from `phial-jira` as an example implementation.
+
