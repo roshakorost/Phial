@@ -1,8 +1,10 @@
 package com.mindcoders.phial.sample;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
 
 import com.mindcoders.phial.keyvalue.Phial;
 
@@ -11,17 +13,28 @@ import timber.log.Timber;
 
 public class SampleActivity extends AppCompatActivity {
 
-    private final ItemRepository itemRepository = new ItemRepository();
-    private TextView itemNameTV;
+    public static final String CLICKED_KEY = "clicked_key";
+    private int clickCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Timber.d("onCreate");
-
         setContentView(R.layout.activity_main);
-        itemNameTV = findViewById(R.id.text);
-        showCurrentItem();
+        final Button button = findViewById(R.id.button);
+
+        final SharedPreferences sp = getSharedPreferences("ClicksSharedPreferences", MODE_PRIVATE);
+        clickCount = sp.getInt(CLICKED_KEY, 0);
+
+        showClickCount(button, clickCount);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickCount++;
+                sp.edit().putInt(CLICKED_KEY, clickCount).apply();
+                showClickCount(button, clickCount);
+            }
+        });
     }
 
     @Override
@@ -42,15 +55,11 @@ public class SampleActivity extends AppCompatActivity {
         Timber.d("onDestroy");
     }
 
-    private void showCurrentItem() {
-        final ItemRepository.Item item = itemRepository.loadItem();
-
-        //log will get information about every click
-        // and about clicks from previous app start
-        Timber.d("item loaded %s", item);
-        //when KeyValue will have information only about last item.
-        Phial.setKey("currentItem", item);
-
-        itemNameTV.setText(item.getName());
+    private void showClickCount(Button view, int count) {
+        // in log you will see log entry every time button is clicked
+        Timber.d("showClickCount %d", count);
+        // only last value will be associated with key. Every time these method is called value will be updated.
+        Phial.category("Button").setKey("clicked", count);
+        view.setText(getString(R.string.clicked, count));
     }
 }
