@@ -63,3 +63,21 @@ If you already store your logs on dive you can use attachers in order to add the
 [1]:https://raw.githubusercontent.com/roshakorost/Phial/develop/art/screenshot_demo.gif
 [2]:art/data_M11D01_H15_58_53/
 [3]:sample/src/qa/java/com/mindcoders/phial/sample/ApplicationHook.java
+
+## Custom attachers
+
+Phial allows to include your custom data into share attachments. For example,  you might want to include SQLite database, logs or SharedPreferences files  from the device in order to investigate an issue.
+
+If you need to include a file to share with the attachment you can use `SimpleFileAttacher(File file)` or `SimpleFileAttacher(Collection<File> files).
+If the file is a directory all files from it will be attached as well.
+
+Example:
+```java
+PhialOverlay.builder(app)
+.addAttachmentProvider(new SimpleFileAttacher(sqlLiteFile))
+.initPhial();
+```
+In case you want to include some information that is not persisted to file, you can use 
+Attacher or ListAttacher.
+
+Currently Attacher API works only with files so when `provideAttachment` is called you should dump data to the temporary file and return it. When `onAttachmentNotNeeded` is called the temporary file can be deleted (see SharedPreferencesAttacher in the sample app or KVAttacher for an example).
