@@ -7,7 +7,7 @@ import java.io.File;
  */
 
 public interface Shareable {
-    void share(ShareContext shareContext, File attachment, String message);
+    void share(ShareContext shareContext, File zippedAttachment, String message);
 
     ShareDescription getDescription();
 }

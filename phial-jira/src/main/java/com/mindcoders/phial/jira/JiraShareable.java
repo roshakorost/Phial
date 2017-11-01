@@ -28,11 +28,11 @@ class JiraShareable implements Shareable {
     }
 
     @Override
-    public void share(final ShareContext shareContext, File attachment, String message) {
+    public void share(final ShareContext shareContext, File zippedAttachment, String message) {
         if (shareManager.isAuthorized()) {
-            internalShare(shareContext, attachment, message);
+            internalShare(shareContext, zippedAttachment, message);
         } else {
-            presentLoginDialog(shareContext, attachment, message);
+            presentLoginDialog(shareContext, zippedAttachment, message);
         }
     }
 
