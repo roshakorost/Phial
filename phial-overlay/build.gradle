@@ -23,5 +23,5 @@ android {
 dependencies {
     implementation 'com.android.support:support-annotations:27.0.0'
 
-    api project(':phial-key-value')
+    compile project(':phial-key-value')
 }
