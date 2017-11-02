@@ -2,6 +2,7 @@ package com.mindcoders.phial.keyvalue;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,9 +10,16 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Created by rost on 10/24/17.
+ * Facade for associating keys with values.
+ * e.g. Phial.setKey("applicationName", "some app") will create new key value association
+ * second calling with same key will update it Phial.setKey("applicationName", "new app")
+ * <p>
+ * by default Phial.setKey(), Phial.removeKey() doesn't do any operation these calls are delegated to
+ * list of savers {@link Saver} and {@link #addSaver(Saver)}
+ * <p>
+ * Phial overlay automatically adds it's saver to Phial so key values can be captured to share attachment
+ * or can be viewed in debug section of Phial
  */
-
 public class Phial {
     private static final List<Saver> SAVERS = new CopyOnWriteArrayList<>();
     private static final String DEFAULT_CATEGORY_NAME = "Default";
@@ -61,18 +69,26 @@ public class Phial {
     }
 
     /**
-     * Set's category name that will be associated with Key.
+     * Creates category that can be used for adding key values
      */
     public static Category category(String name) {
         CATEGORIES.putIfAbsent(name, new Category(name, SAVERS));
         return CATEGORIES.get(name);
     }
 
+    /**
+     * @param saver
+     */
     public static void addSaver(Saver saver) {
         SAVERS.add(saver);
     }
 
     public static void removeSaver(Saver saver) {
         SAVERS.remove(saver);
+    }
+
+    @VisibleForTesting
+    static void cleanSavers() {
+        SAVERS.clear();
     }
 }

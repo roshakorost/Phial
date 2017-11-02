@@ -39,7 +39,8 @@ public final class BuildInfoWriter extends InfoWriter {
         category.setKey("Package", packageName);
 
         try {
-            final PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA);
+            final PackageInfo packageInfo = getContext().getPackageManager()
+                    .getPackageInfo(packageName, PackageManager.GET_META_DATA);
             category.setKey("Version", packageInfo.versionName);
         } catch (PackageManager.NameNotFoundException e) {
             PhialErrorPlugins.onError(e);

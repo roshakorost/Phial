@@ -12,7 +12,7 @@ class CredentialStore {
     private static final String CREDENTIALS_NAME = "credentials";
     private final SharedPreferences sharedPreferences;
 
-    public CredentialStore(Context context) {
+    CredentialStore(Context context) {
         sharedPreferences = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
     }
 

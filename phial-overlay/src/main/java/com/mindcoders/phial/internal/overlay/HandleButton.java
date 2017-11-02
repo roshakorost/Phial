@@ -25,12 +25,12 @@ class HandleButton extends View {
     private Bitmap iconBitmap;
 
     @VisibleForTesting
-    public HandleButton(Context context) {
+    HandleButton(Context context) {
         super(context);
         Precondition.calledFromTools(this);
     }
 
-    public HandleButton(Context context, int iconResource, @ColorInt int bgColor, @ColorInt int fgColor) {
+    HandleButton(Context context, int iconResource, @ColorInt int bgColor, @ColorInt int fgColor) {
         super(context);
         this.bgColor = bgColor;
         this.fgColor = fgColor;

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Phial</string>
+    <string name="clicked">Clicked %1$d</string>
 </resources>

@@ -4,7 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.content.FileProvider;
+
+import com.mindcoders.phial.internal.util.support.FileProvider;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -42,9 +43,9 @@ public final class FileUtil {
         }
     }
 
-    public static Uri getUri(Context context, File file) {
+    public static Uri getUri(Context context, String authority, File file) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return FileProvider.getUriForFile(context, "com.wsitrader.fileprovider", file);
+            return FileProvider.getUriForFile(context, authority, file);
         } else {
             return Uri.fromFile(file);
         }

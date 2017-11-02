@@ -11,7 +11,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -25,6 +24,7 @@ import com.mindcoders.phial.internal.overlay.OverlayView.OnPageSelectedListener;
 import com.mindcoders.phial.internal.util.AnimatorFactory;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
 import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
+import com.mindcoders.phial.internal.util.support.ViewCompat;
 
 import java.util.List;
 
@@ -65,7 +65,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             CurrentActivityProvider activityProvider,
             OverlayPositionStorage positionStorage,
             SelectedPageStorage selectedPageStorage
-                  ) {
+    ) {
         this.context = context;
         this.pages = pages;
         this.notifier = notifier;
@@ -86,13 +86,13 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         overlayViewPosition = positionStorage.getPosition(
                 displaySize.x / 2,
                 (int) ((displaySize.y / 2) * -0.3)
-                                                         );
+        );
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 btnSizePx,
                 getType(),
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+                        | WindowManager.LayoutParams.FLAG_DIM_BEHIND,
                 PixelFormat.TRANSLUCENT
         );
 
@@ -214,6 +214,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         pageContainer.setBackgroundResource(R.drawable.bg_page_container);
 
+
         ViewCompat.setElevation(pageContainer, 5f);
 
         return pageContainer;
@@ -317,7 +318,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
             showSelectedPageIndicator(position);
 
-            // TODO: 10/30/17 figure out a way to avoid post() 
+            // TODO: 10/30/17 figure out a way to avoid post()
             containerWrapperView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -329,13 +330,13 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                                     containerWrapperView.setVisibility(View.VISIBLE);
                                     pageContainerView.showPage(
                                             page.getPageViewFactory().createPageView(context, overlayCallback)
-                                                              );
+                                    );
                                     pageContainerView.setPageTitle(page.getTitle());
                                     params.dimAmount = 0.5f;
                                     windowManager.updateViewLayout(overlayView, params);
                                 }
                             }
-                           );
+                    );
                 }
             });
         }
@@ -396,7 +397,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                             windowManager.updateViewLayout(overlayView, params);
                         }
                     }
-                   );
+            );
         }
 
         private void animate(

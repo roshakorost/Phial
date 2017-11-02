@@ -4,11 +4,13 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
+import com.mindcoders.phial.ListAttacher;
 import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.internal.keyvalue.InfoWriter;
 import com.mindcoders.phial.internal.keyvalue.KVAttacher;
 import com.mindcoders.phial.internal.keyvalue.KVSaver;
 import com.mindcoders.phial.internal.share.ShareManager;
+import com.mindcoders.phial.internal.share.attachment.AttacherAdaptor;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.share.attachment.ScreenShotAttacher;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
@@ -52,7 +54,11 @@ public final class PhialCore {
         final CurrentActivityProvider activityProvider = new CurrentActivityProvider();
         final PhialNotifier phialNotifier = new PhialNotifier();
         final KVSaver kvSaver = new KVSaver();
-        final ShareManager shareManager = new ShareManager(application, phialBuilder.getShareables());
+        final ShareManager shareManager = new ShareManager(
+                application,
+                InternalPhialConfig.getPhialAuthority(application),
+                phialBuilder.getShareables()
+        );
         final AttachmentManager attachmentManager = createAttachmentManager(phialBuilder, kvSaver, activityProvider);
 
         Phial.addSaver(kvSaver);
@@ -77,7 +83,7 @@ public final class PhialCore {
     private static AttachmentManager createAttachmentManager(PhialBuilder phialBuilder,
                                                              KVSaver kvSaver,
                                                              CurrentActivityProvider activityProvider) {
-        final List<Attacher> attachers = prepareAttachers(phialBuilder, kvSaver, activityProvider);
+        final List<ListAttacher> attachers = prepareAttachers(phialBuilder, kvSaver, activityProvider);
         return new AttachmentManager(
                 attachers,
                 InternalPhialConfig.getWorkingDirectory(phialBuilder.getApplication()),
@@ -85,17 +91,17 @@ public final class PhialCore {
         );
     }
 
-    private static List<Attacher> prepareAttachers(PhialBuilder phialBuilder,
-                                                   KVSaver kvSaver,
-                                                   CurrentActivityProvider activityProvider) {
-        final List<Attacher> attachers = new ArrayList<>(phialBuilder.getAttachers());
+    private static List<ListAttacher> prepareAttachers(PhialBuilder phialBuilder,
+                                                       KVSaver kvSaver,
+                                                       CurrentActivityProvider activityProvider) {
+        final List<ListAttacher> attachers = new ArrayList<>(phialBuilder.getAttachers());
 
         if (phialBuilder.attachKeyValues()) {
             final KVAttacher attacher = new KVAttacher(
                     kvSaver,
                     InternalPhialConfig.getKeyValueFile(phialBuilder.getApplication())
             );
-            attachers.add(attacher);
+            attachers.add(AttacherAdaptor.adapt(attacher));
         }
 
         if (phialBuilder.attachScreenshots()) {
@@ -104,7 +110,7 @@ public final class PhialCore {
                     InternalPhialConfig.getScreenShotFile(phialBuilder.getApplication()),
                     DEFAULT_SHARE_IMAGE_QUALITY
             );
-            attachers.add(screenShotAttacher);
+            attachers.add(AttacherAdaptor.adapt(screenShotAttacher));
         }
 
         return attachers;

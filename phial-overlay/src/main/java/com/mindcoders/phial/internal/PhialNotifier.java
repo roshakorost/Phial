@@ -1,7 +1,5 @@
 package com.mindcoders.phial.internal;
 
-import com.mindcoders.phial.PhialListener;
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 

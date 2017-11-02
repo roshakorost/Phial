@@ -22,7 +22,7 @@ final class PageContainerView extends LinearLayout {
 
     private View currentPageView;
 
-    public PageContainerView(Context context) {
+    PageContainerView(Context context) {
         super(context);
         setOrientation(VERTICAL);
 
@@ -56,17 +56,17 @@ final class PageContainerView extends LinearLayout {
         addView(pageContainer, pageContainerParams);
     }
 
-    public void showPage(View pageView) {
+    void showPage(View pageView) {
         currentPageView = pageView;
         pageContainer.removeAllViews();
         pageContainer.addView(pageView);
     }
 
-    public void setPageTitle(CharSequence title) {
+    void setPageTitle(CharSequence title) {
         pageTitleTextView.setText(title);
     }
 
-    public boolean onBackPressed() {
+    boolean onBackPressed() {
         return currentPageView != null && ((PageView) currentPageView).onBackPressed();
     }
 

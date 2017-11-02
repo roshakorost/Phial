@@ -25,7 +25,10 @@ abstract class ShareItem {
         final Drawable drawable = resolveInfo.loadIcon(pm);
 
         final ShareDescription shareDescription = new ShareDescription(drawable, label);
-        final ComponentName componentName = new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
+        final ComponentName componentName = new ComponentName(
+                resolveInfo.activityInfo.packageName,
+                resolveInfo.activityInfo.name
+        );
         return new SystemShareItem(shareDescription, componentName);
     }
 

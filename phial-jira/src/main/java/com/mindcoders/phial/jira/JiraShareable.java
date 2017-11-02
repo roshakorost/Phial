@@ -28,11 +28,11 @@ class JiraShareable implements Shareable {
     }
 
     @Override
-    public void share(final ShareContext shareContext, File attachment, String message) {
+    public void share(final ShareContext shareContext, File zippedAttachment, String message) {
         if (shareManager.isAuthorized()) {
-            internalShare(shareContext, attachment, message);
+            internalShare(shareContext, zippedAttachment, message);
         } else {
-            presentLoginDialog(shareContext, attachment, message);
+            presentLoginDialog(shareContext, zippedAttachment, message);
         }
     }
 
@@ -74,7 +74,8 @@ class JiraShareable implements Shareable {
 
     private void internalShare(ShareContext shareContext, File attachment, String message) {
         shareContext.setProgressBarVisibility(true);
-        final JiraShareManager.ResultCallback callback = ResultCalbackMainThreadWrapper.wrap(new ShareResult(shareContext));
+        final JiraShareManager.ResultCallback callback =
+                ResultCalbackMainThreadWrapper.wrap(new ShareResult(shareContext));
         shareManager.share(attachment, message, callback);
     }
 
