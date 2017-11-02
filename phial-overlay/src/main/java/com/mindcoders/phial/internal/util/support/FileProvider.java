@@ -323,8 +323,7 @@ import java.util.Map;
  * </p>
  */
 public class FileProvider extends ContentProvider {
-    private static final String[] COLUMNS = {
-            OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE};
+    private static final String[] COLUMNS = {OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE};
 
     //should match value in manifest
     private static final String
@@ -644,12 +643,12 @@ public class FileProvider extends ContentProvider {
         /**
          * Return a {@link Uri} that represents the given {@link File}.
          */
-        public Uri getUriForFile(File file);
+        Uri getUriForFile(File file);
 
         /**
          * Return a {@link File} that represents the given {@link Uri}.
          */
-        public File getFileForUri(Uri uri);
+        File getFileForUri(Uri uri);
     }
 
     /**
@@ -666,7 +665,7 @@ public class FileProvider extends ContentProvider {
         private final String mAuthority;
         private final HashMap<String, File> mRoots = new HashMap<String, File>();
 
-        public SimplePathStrategy(String authority) {
+        SimplePathStrategy(String authority) {
             mAuthority = authority;
         }
 
@@ -674,7 +673,7 @@ public class FileProvider extends ContentProvider {
          * Add a mapping from a name to a filesystem root. The provider only offers
          * access to files that live under configured roots.
          */
-        public void addRoot(String name, File root) {
+        void addRoot(String name, File root) {
             if (TextUtils.isEmpty(name)) {
                 throw new IllegalArgumentException("Name must not be empty");
             }

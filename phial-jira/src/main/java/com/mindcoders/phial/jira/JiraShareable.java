@@ -74,7 +74,8 @@ class JiraShareable implements Shareable {
 
     private void internalShare(ShareContext shareContext, File attachment, String message) {
         shareContext.setProgressBarVisibility(true);
-        final JiraShareManager.ResultCallback callback = ResultCalbackMainThreadWrapper.wrap(new ShareResult(shareContext));
+        final JiraShareManager.ResultCallback callback =
+                ResultCalbackMainThreadWrapper.wrap(new ShareResult(shareContext));
         shareManager.share(attachment, message, callback);
     }
 

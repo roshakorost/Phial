@@ -58,7 +58,7 @@ class OverlayView extends LinearLayout {
     private Page selectedPage;
 
     @VisibleForTesting
-    public OverlayView(Context context) {
+    OverlayView(Context context) {
         super(context);
         Precondition.calledFromTools(this);
         btnSize = 64;
@@ -66,7 +66,7 @@ class OverlayView extends LinearLayout {
         selectedPageStorage = null;
     }
 
-    public OverlayView(
+    OverlayView(
             Context context,
             int btnSize,
             SelectedPageStorage selectedPageStorage
@@ -214,6 +214,8 @@ class OverlayView extends LinearLayout {
                 case MotionEvent.ACTION_UP:
                     onHandleMoveListener.onMoveEnd();
                     break;
+                default:
+                    return false;
             }
 
             return false;

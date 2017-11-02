@@ -28,7 +28,8 @@ public class UiUtils {
 
     public static void hideKeyBoard(View focusedChild) {
         if (focusedChild != null) {
-            InputMethodManager imm = (InputMethodManager) focusedChild.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) focusedChild.getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(focusedChild.getWindowToken(), 0);
         }
     }

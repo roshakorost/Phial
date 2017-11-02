@@ -23,9 +23,9 @@ class CreatedIssueResponse {
 
     @Override
     public String toString() {
-        return "CreatedIssueResponse{" +
-                "id='" + id + '\'' +
-                ", key='" + key + '\'' +
-                '}';
+        return "CreatedIssueResponse{"
+                + "id='" + id + '\''
+                + ", key='" + key + '\''
+                + '}';
     }
 }

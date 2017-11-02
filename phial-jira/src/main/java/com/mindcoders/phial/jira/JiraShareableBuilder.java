@@ -139,7 +139,13 @@ public class JiraShareableBuilder {
      */
     public Shareable build() {
         final CredentialStore store = new CredentialStore(context);
-        final JiraShareManager shareManager = new JiraShareManager(store, new OkHttpFactory(), baseUrl, projectKey, extraProperties);
+        final JiraShareManager shareManager = new JiraShareManager(
+                store,
+                new OkHttpFactory(),
+                baseUrl,
+                projectKey,
+                extraProperties
+        );
         return new JiraShareable(shareDescription, shareManager);
     }
 }

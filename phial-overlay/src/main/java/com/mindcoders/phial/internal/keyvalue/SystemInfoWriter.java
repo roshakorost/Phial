@@ -5,12 +5,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 
-import com.mindcoders.phial.BuildConfig;
 import com.mindcoders.phial.keyvalue.Category;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import static android.os.Build.MANUFACTURER;
 

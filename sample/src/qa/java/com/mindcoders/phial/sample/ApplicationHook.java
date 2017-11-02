@@ -9,12 +9,6 @@ import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.jira.JiraShareableBuilder;
 import com.mindcoders.phial.logging.PhialLogger;
 
-import org.json.JSONObject;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import timber.log.Timber;
 
 final class ApplicationHook {

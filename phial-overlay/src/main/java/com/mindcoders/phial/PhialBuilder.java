@@ -6,7 +6,6 @@ import com.mindcoders.phial.internal.keyvalue.BuildInfoWriter;
 import com.mindcoders.phial.internal.keyvalue.InfoWriter;
 import com.mindcoders.phial.internal.keyvalue.SystemInfoWriter;
 import com.mindcoders.phial.internal.share.attachment.AttacherAdaptor;
-import com.mindcoders.phial.internal.util.Precondition;
 
 import java.util.ArrayList;
 import java.util.Collections;
