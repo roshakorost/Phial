@@ -6,8 +6,8 @@ Debug data can be easily extended by using `Key-Values` or providing custom `Att
 
 Why use it: 
 - Quickly dump all needed debug data from the device and share it with developers.
-- No need to manually capture screenshots.
 - The more recent the snapshot the more valuable the data is.
+- Easy review your application state.
 
 ### Screenshots
 
