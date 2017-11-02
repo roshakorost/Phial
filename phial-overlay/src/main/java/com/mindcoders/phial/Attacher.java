@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 import java.io.File;
 
 /**
- * Is used in order to include some files in Phial Share attachment.
+ * Attacher can be used in order to include some files in Phial Share attachment.
  * <p>
  * When user selects some share option Phial iterates through attachers and requests creation of attachment
+ * <p>
+ * use {@link PhialBuilder#addAttachmentProvider(Attacher)} in order to add
  */
 public interface Attacher {
     /**
