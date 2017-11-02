@@ -125,7 +125,7 @@ Your page view should be implemented as a subclass of `android.view.View` and im
 Currently `PageView` is only used for overriding back navigation.
 If your page view needs more than a common navigation flow (device back button minimized the overlay) you can implement this logic in `PageView#onBackPressed` method.
 
-## Integration.
+## Integration
 Usually phial should only be integrated into your internal / debug build .
 This can be achieved by creating multiple flavors or build types.
 Here is an example with product flavors.
