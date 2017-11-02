@@ -7,7 +7,7 @@
     <application>
         <provider
             android:name=".internal.util.support.FileProvider"
-            android:authorities="com.mindcoders.phial.fileprovider"
+            android:authorities="${applicationId}.phial.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
