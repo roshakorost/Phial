@@ -31,24 +31,65 @@ public class JiraShareableBuilder {
         );
     }
 
-    public JiraShareableBuilder setShareDescription(ShareDescription shareDescription) {
-        Precondition.notNull(shareDescription, "shareDescription should not be null");
-        this.shareDescription = shareDescription;
-        return this;
-    }
-
+    /**
+     * Set the URL of Jira.
+     * <p>
+     * Required
+     *
+     * @param baseUrl jira base url
+     * @return same instance of builder
+     */
     public JiraShareableBuilder setBaseUrl(String baseUrl) {
         Precondition.notNull(baseUrl, "baseUrl should not be null");
         this.baseUrl = baseUrl;
         return this;
     }
 
+    /**
+     * Set project key. Issues will be created in project with specified key.
+     * <p>
+     * Required
+     *
+     * @param projectKey project key of Jira project.
+     * @return
+     */
     public JiraShareableBuilder setProjectKey(String projectKey) {
         Precondition.notNull(projectKey, "projectKey should not be null");
         this.projectKey = projectKey;
         return this;
     }
 
+    /**
+     * Changes icon and title for Jira item in ShareSection.
+     * <p>
+     * Optional
+     *
+     * @param shareDescription title and icon that should be used
+     * @return same instance of builder
+     */
+    public JiraShareableBuilder setShareDescription(ShareDescription shareDescription) {
+        Precondition.notNull(shareDescription, "shareDescription should not be null");
+        this.shareDescription = shareDescription;
+        return this;
+    }
+
+    /**
+     * Set extra fields for created issue.
+     * Fields will be created under fields section.
+     * <p>
+     * See https://docs.atlassian.com/jira/REST/cloud/#api/2/issue-createIssue
+     * e.g. You want to add `description` field so you can use
+     * setCustomField("description", "your description")
+     * <p>
+     * In case you need to include complex JSON object to fields, you may create JSONObject or Map
+     * and pass it as value
+     * <p>
+     * Optioanl
+     *
+     * @param key   Jira fields key
+     * @param value associated value
+     * @return same instance of builder
+     */
     public JiraShareableBuilder setCustomField(String key, Object value) {
         Precondition.notNull(key, "key should not be null");
         Precondition.notNull(value, "value should not be null");
@@ -56,12 +97,14 @@ public class JiraShareableBuilder {
         return this;
     }
 
-    public Shareable build() {
-        final CredentialStore store = new CredentialStore(context);
-        final JiraShareManager shareManager = new JiraShareManager(store, new OkHttpFactory(), baseUrl, projectKey, extraProperties);
-        return new JiraShareable(shareDescription, shareManager);
-    }
-
+    /**
+     * Sets fixVersions for create issue
+     * <p>
+     * Optioanl
+     *
+     * @param versions valid Jira versions
+     * @return same instance of builder
+     */
     public JiraShareableBuilder setFixVersions(String... versions) {
         final List<Map> objects = new ArrayList<>(versions.length);
         for (String version : versions) {
@@ -71,6 +114,14 @@ public class JiraShareableBuilder {
         return setCustomField("fixVersions", objects);
     }
 
+    /**
+     * Sets fixVersions for create issue
+     * <p>
+     * Optioanl
+     *
+     * @param versions valid Jira versions
+     * @return same instance of builder
+     */
     public JiraShareableBuilder setAffectsVersions(String... versions) {
         final List<Map> objects = new ArrayList<>(versions.length);
         for (String version : versions) {
@@ -78,5 +129,17 @@ public class JiraShareableBuilder {
             objects.add(versionObj);
         }
         return setCustomField("versions", objects);
+    }
+
+    /**
+     * Creates Shareable that should be included in PhialOverlay
+     * {@link com.mindcoders.phial.PhialBuilder#addShareable(Shareable)}
+     *
+     * @return Sharable that provides Jira share option
+     */
+    public Shareable build() {
+        final CredentialStore store = new CredentialStore(context);
+        final JiraShareManager shareManager = new JiraShareManager(store, new OkHttpFactory(), baseUrl, projectKey, extraProperties);
+        return new JiraShareable(shareDescription, shareManager);
     }
 }
