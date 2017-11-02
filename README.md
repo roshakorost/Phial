@@ -149,11 +149,11 @@ def phialVersion = '<latest-version>'
 dependencies {
     qaImplementation "com.github.roshakorost.Phial:phial-overlay:$phialVersion"
     //if you use jira integration
-	qaImplementation "com.github.roshakorost.Phial:phial-jira:$phialVersion"
+    qaImplementation "com.github.roshakorost.Phial:phial-jira:$phialVersion"
     //if you use html logging 
-	qaImplementation "com.github.roshakorost.Phial:phial-logging:$phialVersion"
+    qaImplementation "com.github.roshakorost.Phial:phial-logging:$phialVersion"
     //if you use key values.
-	implementation "com.github.roshakorost.Phial:phial-key-value:$phialVersion"
+    implementation "com.github.roshakorost.Phial:phial-key-value:$phialVersion"
 }
 ```
 **Note:** key-values are included into all flavors, because you might have a lot of calls `Phial.setKey()` across your application, but without phial-overlay thay will be no operational.
