@@ -12,7 +12,7 @@ import com.mindcoders.phial.logging.PhialLogger;
 import timber.log.Timber;
 
 final class ApplicationHook {
-     static void onApplicationCreate(Application app) {
+    static void onApplicationCreate(Application app) {
         // logs integration example
         final PhialLogger phialLogger = new PhialLogger(app);
         // logs written by timber will be saved in HTML file and attached to DebugInfo
