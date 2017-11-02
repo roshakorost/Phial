@@ -21,8 +21,8 @@ public class CurrentActivityProvider extends SimpleActivityLifecycleCallbacks {
     }
 
     @Override
-    public void onActivityResumed(Activity activity) {
-        super.onActivityResumed(activity);
+    public void onActivityStarted(Activity activity) {
+        super.onActivityStarted(activity);
         this.activity = activity;
         activeActivityCount++;
         if (activeActivityCount == 1) {
@@ -33,8 +33,8 @@ public class CurrentActivityProvider extends SimpleActivityLifecycleCallbacks {
     }
 
     @Override
-    public void onActivityPaused(Activity activity) {
-        super.onActivityPaused(activity);
+    public void onActivityStopped(Activity activity) {
+        super.onActivityStopped(activity);
         if (activity == this.activity) {
             activity = null;
         }
