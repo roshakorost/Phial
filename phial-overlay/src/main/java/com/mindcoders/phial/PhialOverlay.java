@@ -8,15 +8,20 @@ import com.mindcoders.phial.internal.PhialCore;
 import com.mindcoders.phial.internal.overlay.Overlay;
 
 /**
- * Created by rost on 10/22/17.
+ * Creates PhialOverlay button and pages
+ * <p>
+ * Use {@link PhialBuilder} to setup
  */
-
 public final class PhialOverlay {
     @SuppressLint("StaticFieldLeak")
     private static PhialCore phialCore;
     @SuppressLint("StaticFieldLeak")
     private static Overlay overlay;
 
+    /**
+     * @param application your application
+     * @return builder that configures overlays
+     */
     public static PhialBuilder builder(Application application) {
         return new PhialBuilder(application);
     }
@@ -27,6 +32,9 @@ public final class PhialOverlay {
         PhialOverlay.overlay = OverlayFactory.createOverlay(builder, phialCore);
     }
 
+    /**
+     * removes overlay button and pages
+     */
     public static void destroy() {
         if (phialCore != null) {
             phialCore.destroy();
