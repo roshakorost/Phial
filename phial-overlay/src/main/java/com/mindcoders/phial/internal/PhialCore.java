@@ -56,7 +56,7 @@ public final class PhialCore {
         final KVSaver kvSaver = new KVSaver();
         final ShareManager shareManager = new ShareManager(
                 application,
-                InternalPhialConfig.PHIAL_AUTHORITY,
+                InternalPhialConfig.getPhialAuthority(application),
                 phialBuilder.getShareables()
         );
         final AttachmentManager attachmentManager = createAttachmentManager(phialBuilder, kvSaver, activityProvider);
