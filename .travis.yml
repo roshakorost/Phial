@@ -12,7 +12,7 @@ branches:
 
 
 script:
-  - ./gradlew build --no-daemon
+  - ./gradlew check --no-daemon
 
 notifications:
   email: false
