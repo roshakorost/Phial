@@ -20,6 +20,12 @@ import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.util.StatusPrinter;
 
+/**
+ * Log Attacher. It writes logs using slf4j and logback to html log files, which will be included in Phial share attachment
+ * <p>
+ * You should not directly write logs in PhialLogger, because in these case both release and debug version
+ * will be dependent on phial. Use some logging facade (e.g. Timber) and add PhialLogger to it only in debug build
+ */
 public class PhialLogger implements Attacher {
     private static final String LOG_PREFIX = "Log";
     private static final String PATTERN = "%d{HH:mm:ss.SSS}%thread%-5level%logger{36}%msg";
@@ -29,6 +35,12 @@ public class PhialLogger implements Attacher {
 
     private final File logDir;
 
+    /**
+     * Creates Logger that will write logs in html file using slf4j and logback.
+     * The logs will be included in Phial Attachment
+     *
+     * @param context application context
+     */
     public PhialLogger(Context context) {
         logDir = createLogDir(context);
         final String logDirectory = logDir.getAbsolutePath();
@@ -77,6 +89,17 @@ public class PhialLogger implements Attacher {
         StatusPrinter.print(loggerContext);
     }
 
+    /**
+     * Create new log entry in file.
+     * <p>
+     * You should not call it directly from your application build some facade (or use Timber) and set it to write to
+     * PhialLogger.
+     *
+     * @param priority Log level. See {@link Log} for constants.
+     * @param tag      Explicit or inferred tag. May be {@code null}.
+     * @param message  Formatted log message. May be {@code null}.
+     * @param t        Accompanying exceptions. May be {@code null}.
+     */
     public void log(int priority, String tag, String message, Throwable t) {
         final org.slf4j.Logger logger = LoggerFactory.getLogger(tag);
 
