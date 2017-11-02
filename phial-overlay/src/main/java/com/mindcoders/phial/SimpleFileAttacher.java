@@ -1,6 +1,4 @@
-package com.mindcoders.phial.internal;
-
-import com.mindcoders.phial.ListAttacher;
+package com.mindcoders.phial;
 
 import java.io.File;
 import java.util.ArrayList;
