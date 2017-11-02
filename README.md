@@ -159,7 +159,7 @@ dependencies {
 
 **Note:** in exampel key-values are included into all build types, because you might have a lot of calls `Phial.setKey()` across your application, but without phial-overlay thay will be no operational.
 
-## Feel Free to Contuct us
+## Feel Free to Contact us
 * Rostyslav Roshak - <roshak.rostyslav@gmail.com>
 * Andriy Matkovsky - <andriymatkovsky@gmail.com>
 
