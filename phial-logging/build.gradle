@@ -29,7 +29,7 @@ android {
 
 dependencies {
     compileOnly 'com.android.support:support-annotations:27.0.0'
-    implementation project(':phial-overlay')
+    api project(':phial-overlay')
 
     api 'org.slf4j:slf4j-api:1.7.22'
     api('com.github.tony19:logback-android-classic:1.1.1-4') {
