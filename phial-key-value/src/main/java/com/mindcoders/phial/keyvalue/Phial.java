@@ -2,6 +2,7 @@ package com.mindcoders.phial.keyvalue;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -84,5 +85,10 @@ public class Phial {
 
     public static void removeSaver(Saver saver) {
         SAVERS.remove(saver);
+    }
+
+    @VisibleForTesting
+    static void cleanSavers() {
+        SAVERS.clear();
     }
 }
