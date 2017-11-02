@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 /**
- * Created by rost on 10/24/17.
+ * Category that will be used for adding key values
  */
 public class Category {
     private final String name;
