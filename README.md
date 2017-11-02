@@ -133,30 +133,31 @@ Here is an example with product flavors.
 * Init Phial in the debug version of `ApplicationHook`. Refer to the sample app for an [example][3].
 
 ## Download
-* Add Jitpack maven repository in your root build.gradle file
+1. Add Jitpack maven repository in your root build.gradle file
 ```groovy
 allprojects {
 	repositories {
         maven { url "https://jitpack.io" }
     }
 }
-
 ```
-* Add dependencies
+
+2. Add dependencies (Assuming that you want to add Phial only to debug build type)
 ```groovy
 def phialVersion = '<latest-version>'
 dependencies {
-    implementation "com.github.roshakorost.Phial:phial-overlay:$phialVersion"
+    debugImplementation "com.github.roshakorost.Phial:phial-overlay:$phialVersion"
     //if you use jira integration
-    implementation "com.github.roshakorost.Phial:phial-jira:$phialVersion"
+    debugImplementation "com.github.roshakorost.Phial:phial-jira:$phialVersion"
     //if you use html logging 
-    implementation "com.github.roshakorost.Phial:phial-logging:$phialVersion"
+    debugImplementation "com.github.roshakorost.Phial:phial-logging:$phialVersion"
     //if you use key values.
     implementation "com.github.roshakorost.Phial:phial-key-value:$phialVersion"
 }
 ```
+If your use older Android Gradle Plugin change `implementation` to `compile`
 
-**Note:** key-values are included into all flavors, because you might have a lot of calls `Phial.setKey()` across your application, but without phial-overlay thay will be no operational.
+**Note:** in exampel key-values are included into all build types, because you might have a lot of calls `Phial.setKey()` across your application, but without phial-overlay thay will be no operational.
 
 [1]:/art/screenshot_demo.gif
 [2]:art/data_M11D01_H15_58_53/
