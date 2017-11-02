@@ -49,8 +49,8 @@ You can include your application logs into share attachment. If you don’t save
 ```java
 final PhialLogger phialLogger = new PhialLogger(app);
 PhialOverlay.builder(app)
-  .addAttachmentProvider(phialLogger)
-  .initPhial();
+    .addAttachmentProvider(phialLogger)
+    .initPhial();
 ```
 `phialLogger.log(priority, tag, message,throwable)` will dump log to the file that will be included into share attachment.
 
@@ -69,8 +69,8 @@ If the file is a directory all files from it will be attached as well.
 Example:
 ```java
 PhialOverlay.builder(app)
-.addAttachmentProvider(new SimpleFileAttacher(sqlLiteFile))
-.initPhial();
+    .addAttachmentProvider(new SimpleFileAttacher(sqlLiteFile))
+    .initPhial();
 ```
 In case you want to include some information that is not persisted to file, you can use 
 Attacher or ListAttacher.
@@ -85,14 +85,13 @@ Phial-jira allows you to login to your Jira and create an issue with debug data 
 Login page will be shown only the first time. After that saved credentials will be used.
 ```java
 final Shareable jiraShareable = new JiraShareableBuilder(app)
-       .setBaseUrl(url) //Jira url
-       .setProjectKey(projectKey)	//project key
-       .build();
+    .setBaseUrl(url) //Jira url
+    .setProjectKey(projectKey)	//project key
+    .build();
 
 PhialOverlay.builder(app)
-	.addShareable(jiraShareable)
-	.initPhial();
-
+    .addShareable(jiraShareable)
+    .initPhial();
 ```
 **Note:** since credentials are not stored securely  it’s recommended to use Phial only in internal/debug builds.
 
@@ -108,14 +107,14 @@ To do this provide your instance of Page class to the PhialOverlay.Builder
 
 ```java
 PhialOverlay.Builder(app)
-.addPage(customPage)
+    .addPage(customPage)
 ```
 ```java
 Page customPage = new Page(
-“customPage”, // unique page id
-R.drawable.ic_custom_page, // page icon resource
-“Custom page”, // page title
-customPageFactory, // implementation of PageViewFactory 
+    "customPage", // unique page id
+    R.drawable.ic_custom_page, // page icon resource
+    "Custom page", // page title
+    customPageFactory // implementation of PageViewFactory 
 );
 ```
 
