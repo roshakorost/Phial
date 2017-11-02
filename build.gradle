@@ -21,7 +21,32 @@ allprojects {
     project.ext {
         GIT_HUB_GROUP = 'com.github.roshakorost'
     }
+
+
 }
+
+subprojects {
+    apply plugin: 'checkstyle'
+
+    task checkstyleE(type: Checkstyle) {
+        showViolations = true
+        configFile rootProject.file('checkstyle.xml')
+
+        source 'src/main/java'
+        include '**/*.java'
+        exclude '**/gen/**'
+        exclude '**/R.java'
+        exclude '**/BuildConfig.java'
+
+        // empty classpath
+        classpath = files()
+    }
+    println "yoba"
+    print project.getTasksByName("check", false).find()
+    println "yoba2!!"
+    print project.check
+}
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir
