@@ -4,8 +4,18 @@ android:
     - build-tools-26.0.2
     - android-26
 
+# safelist
+branches:
+  only:
+    - master
+    - develop
+
+
 script:
   - ./gradlew build --no-daemon
+
+notifications:
+  email: false
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
