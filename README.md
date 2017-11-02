@@ -155,7 +155,7 @@ dependencies {
     implementation "com.github.roshakorost.Phial:phial-key-value:$phialVersion"
 }
 ```
-If your use older Android Gradle Plugin change `implementation` to `compile`
+*If you use older Android Gradle Plugin change `implementation` to `compile`*
 
 **Note:** in exampel key-values are included into all build types, because you might have a lot of calls `Phial.setKey()` across your application, but without phial-overlay thay will be no operational.
 
