@@ -70,4 +70,13 @@ public class JiraShareableBuilder {
         }
         return setCustomField("fixVersions", objects);
     }
+
+    public JiraShareableBuilder setAffectsVersions(String... versions) {
+        final List<Map> objects = new ArrayList<>(versions.length);
+        for (String version : versions) {
+            Map versionObj = Collections.singletonMap("name", version);
+            objects.add(versionObj);
+        }
+        return setCustomField("versions", objects);
+    }
 }

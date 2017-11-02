@@ -32,7 +32,9 @@ final class ApplicationHook {
         final Shareable jiraShareable = new JiraShareableBuilder(app)
                 .setBaseUrl("https://roshakorst.atlassian.net/")
                 .setProjectKey("TES")
+                //Optional extra fields to be included in Jira issue
                 .setFixVersions("testversion")
+                .setAffectsVersions("testversion")
                 //.setCustomField(key, object) in order to add extra fields to created item
                 .build();
 
