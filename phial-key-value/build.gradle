@@ -30,8 +30,8 @@ android {
 
 dependencies {
     compileOnly 'com.android.support:support-annotations:27.0.0'
-    compile 'junit:junit:4.12'
-    compile 'org.mockito:mockito-all:1.10.19'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-all:1.10.19'
 }
 
 // build a jar with source files
