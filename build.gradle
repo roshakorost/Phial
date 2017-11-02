@@ -27,12 +27,16 @@ allprojects {
 
 subprojects {
     apply plugin: 'checkstyle'
+    project.checkstyle {
+        toolVersion "7.6.1"
+        configFile rootProject.file('checkstyle.xml')
+    }
 
-    task checkstyleE(type: Checkstyle) {
+    task checkstyle(type: Checkstyle) {
         showViolations = true
         configFile rootProject.file('checkstyle.xml')
 
-        source 'src/main/java'
+        source 'src'
         include '**/*.java'
         exclude '**/gen/**'
         exclude '**/R.java'
@@ -41,10 +45,14 @@ subprojects {
         // empty classpath
         classpath = files()
     }
-    println "yoba"
-    print project.getTasksByName("check", false).find()
-    println "yoba2!!"
-    print project.check
+}
+
+subprojects.each { project ->
+    def checkStyleTask = project.getTasksByName("checkstyle", false).find()
+    def checkTask = project.getTasksByName("check", false).find()
+    if (checkTask != null && checkStyleTask != null) {
+        checkTask.dependsOn checkStyleTask
+    }
 }
 
 
