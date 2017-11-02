@@ -24,8 +24,8 @@ android {
 }
 
 dependencies {
-    implementation project(':phial-overlay')
-    api 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile project(':phial-overlay')
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
 }
 
 // build a jar with source files
