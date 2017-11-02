@@ -142,7 +142,7 @@ allprojects {
 }
 ```
 
-2. Add dependencies (Assuming that you want to add Phial only to debug build type)
+2. Add dependencies *(Assuming that you want to add Phial only to debug build type)*
 ```groovy
 def phialVersion = '<latest-version>'
 dependencies {
