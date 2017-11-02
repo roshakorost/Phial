@@ -1,7 +1,7 @@
 package com.mindcoders.phial.internal.share.attachment;
 
 import com.mindcoders.phial.ListAttacher;
-import com.mindcoders.phial.PhialListener;
+import com.mindcoders.phial.internal.PhialListener;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.internal.util.FileUtil;
 
