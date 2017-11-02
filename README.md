@@ -161,6 +161,7 @@ dependencies {
 
 ## Feel Free to Contuct us
 * Rostyslav Roshak - <roshak.rostyslav@gmail.com>
+* Andriy Matkovsky - <andriymatkovsky@gmail.com>
 
 [1]:/art/screenshot_demo.gif
 [2]:art/data_M11D01_H15_58_53/
