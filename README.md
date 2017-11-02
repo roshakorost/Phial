@@ -1,4 +1,4 @@
-# Phial [![Release](https://jitpack.io/v/roshakorost/Phial.svg)](https://jitpack.io/#roshakorost/Phial)
+# Phial [![Release](https://jitpack.io/v/roshakorost/Phial.svg)](https://jitpack.io/#roshakorost/Phial)  [![Build Status](https://travis-ci.org/roshakorost/Phial.svg?branch=master)](https://travis-ci.org/roshakorost/Phial)
 
 **Phial is an Android library created to simplify communication between QAs and developers.** When bug happens Phial allows to share logs, screenshot, system and build data from a device to developers for simplifying debugging and fixing.
 
