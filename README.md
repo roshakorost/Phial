@@ -159,6 +159,9 @@ dependencies {
 
 **Note:** in exampel key-values are included into all build types, because you might have a lot of calls `Phial.setKey()` across your application, but without phial-overlay thay will be no operational.
 
+## Feel Free to Contuct us
+* Rostyslav Roshak - <roshak.rostyslav@gmail.com>
+
 [1]:/art/screenshot_demo.gif
 [2]:art/data_M11D01_H15_58_53/
 [3]:sample/src/qa/java/com/mindcoders/phial/sample/ApplicationHook.java
