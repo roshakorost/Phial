@@ -36,7 +36,7 @@ public class CurrentActivityProvider extends SimpleActivityLifecycleCallbacks {
     public void onActivityStopped(Activity activity) {
         super.onActivityStopped(activity);
         if (activity == this.activity) {
-            activity = null;
+            this.activity = null;
         }
         activeActivityCount--;
         if (activeActivityCount == 0) {
