@@ -36,4 +36,16 @@ public final class Precondition {
             throw new IllegalArgumentException(message);
         }
     }
+
+    public static <T> void notEmpty(T[] array, String message) {
+        if (array == null || array.length == 0) {
+            throw new IllegalStateException(message);
+        }
+    }
+
+    public static void notEmpty(int[] array, String message) {
+        if (array == null || array.length == 0) {
+            throw new IllegalStateException(message);
+        }
+    }
 }

@@ -1,1 +1,1 @@
-include ':sample', ':phial-overlay', ':phial-key-value', ':phial-logging', ':phial-jira'
+include ':sample', ':phial-overlay', ':phial-key-value', ':phial-logging', ':phial-jira', ':phial-autofill'
