@@ -10,4 +10,22 @@ public class FillOption {
         this.name = name;
         this.dataToFill = dataToFill;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FillOption that = (FillOption) o;
+
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return dataToFill.equals(that.dataToFill);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + dataToFill.hashCode();
+        return result;
+    }
 }
