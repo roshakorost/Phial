@@ -15,7 +15,7 @@ public final class Precondition {
 
     public static <T> T notNull(T item, String message) {
         if (item == null) {
-            throw new IllegalStateException(message);
+            throw new IllegalArgumentException(message);
         }
 
         return item;
@@ -39,13 +39,13 @@ public final class Precondition {
 
     public static <T> void notEmpty(T[] array, String message) {
         if (array == null || array.length == 0) {
-            throw new IllegalStateException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
     public static void notEmpty(int[] array, String message) {
         if (array == null || array.length == 0) {
-            throw new IllegalStateException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 }
