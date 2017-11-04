@@ -22,7 +22,7 @@ public class AutoFiller {
     }
 
     public static AutoFillerBuilder forActivity(Class<? extends Activity> target) {
-        return new AutoFillerBuilder(Screen.from(target));
+        return new AutoFillerBuilder(TargetScreen.from(target));
     }
 
     public static FillOption option(String name, String... dataToFill) {

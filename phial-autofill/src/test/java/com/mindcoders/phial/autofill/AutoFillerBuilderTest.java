@@ -8,18 +8,19 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by rost on 11/3/17.
  */
 public class AutoFillerBuilderTest {
 
-    private Screen screen;
+    private TargetScreen screen;
     private AutoFillerBuilder builder;
 
     @Before
     public void setUp() throws Exception {
-        screen = Screen.from(null);
+        screen = TargetScreen.from(null);
         builder = new AutoFillerBuilder(screen);
     }
 
@@ -47,18 +48,19 @@ public class AutoFillerBuilderTest {
 
     @Test
     public void build_returns_correct_FillConfig() {
-        final FillOption fillOption = Mockito.mock(FillOption.class);
-        final FillConfig fillConfig = builder.fill(1, 2)
-                .withOptions(fillOption)
+        final FillOption opt1 = new FillOption("1", Collections.emptyList());
+        final FillOption opt2 = new FillOption("1", Collections.emptyList());
+
+        final FillConfig actual = builder.fill(1, 2)
+                .withOptions(opt1, opt2)
                 .build();
 
+        final List<Integer> ids = Arrays.asList(1, 2);
         final FillConfig expected = new FillConfig(
                 screen,
-                Arrays.asList(1, 2),
-                Collections.singletonList(fillOption)
+                Arrays.asList(opt1.withIds(ids), opt2.withIds(ids))
         );
-
-        Assert.assertEquals("Bad FillConfig is build", expected, fillConfig);
+        Assert.assertEquals("Bad FillConfig is build", expected, actual);
     }
 
 }

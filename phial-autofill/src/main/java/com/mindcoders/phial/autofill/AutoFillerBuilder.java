@@ -6,15 +6,16 @@ import android.support.annotation.NonNull;
 import com.mindcoders.phial.internal.util.CollectionUtils;
 import com.mindcoders.phial.internal.util.Precondition;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class AutoFillerBuilder {
-    private final Screen screenToFill;
+    private final TargetScreen screenToFill;
     private List<Integer> targetIds;
     private List<FillOption> options;
 
-    AutoFillerBuilder(@NonNull Screen screenToFill) {
+    AutoFillerBuilder(@NonNull TargetScreen screenToFill) {
         this.screenToFill = screenToFill;
     }
 
@@ -34,6 +35,10 @@ public class AutoFillerBuilder {
         Precondition.notNull(targetIds, "fill target is not set");
         Precondition.notNull(options, "options are not set");
 
-        return new FillConfig(screenToFill, targetIds, options);
+        final List<FillOption> optionsWithTargets = new ArrayList<>(options.size());
+        for (FillOption option : options) {
+            optionsWithTargets.add(option.withIds(targetIds));
+        }
+        return new FillConfig(screenToFill, optionsWithTargets);
     }
 }
