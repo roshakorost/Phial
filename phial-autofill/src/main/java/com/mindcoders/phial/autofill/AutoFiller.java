@@ -1,9 +1,11 @@
 package com.mindcoders.phial.autofill;
 
 import android.app.Activity;
+import android.app.Application;
 
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.internal.util.Precondition;
+import com.mindcoders.phial_autofill.R;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,12 +15,17 @@ import java.util.List;
  */
 
 public class AutoFiller {
-    public static Page createPhialPage(List<FillConfig> autoFillers) {
-        return null;
+    public static Page createPhialPage(Application application, List<FillConfig> autoFillers) {
+        final ScreenTracker screenTracker = new ScreenTracker();
+        application.registerActivityLifecycleCallbacks(screenTracker);
+
+        AutoFillPageFactory pageFactory = new AutoFillPageFactory(autoFillers, screenTracker);
+
+        return new Page("autofill", R.drawable.ic_paste, "Autofill", pageFactory);
     }
 
-    public static Page createPhialPage(FillConfig... autoFillers) {
-        return null;
+    public static Page createPhialPage(Application application, FillConfig... autoFillers) {
+        return createPhialPage(application, Arrays.asList(autoFillers));
     }
 
     public static AutoFillerBuilder forActivity(Class<? extends Activity> target) {

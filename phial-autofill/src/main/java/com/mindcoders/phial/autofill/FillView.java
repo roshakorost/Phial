@@ -19,13 +19,13 @@ import java.util.List;
  * Created by rost on 11/3/17.
  */
 
-public class FillView extends FrameLayout implements PageView, ScreenTracker.ScreenListener, Adapter.onItemClickedListener {
+class FillView extends FrameLayout implements PageView, ScreenTracker.ScreenListener, Adapter.onItemClickedListener {
     private final ScreenTracker tracker;
     private final List<FillConfig> configs;
     private final OverlayCallback overlayCallback;
     private final Adapter adapter;
 
-    public FillView(@NonNull Context context, ScreenTracker tracker, List<FillConfig> configs, OverlayCallback overlayCallback) {
+    FillView(@NonNull Context context, List<FillConfig> configs, ScreenTracker tracker, OverlayCallback overlayCallback) {
         super(context);
         this.tracker = tracker;
         this.configs = configs;
