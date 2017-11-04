@@ -2,12 +2,15 @@ package com.mindcoders.phial.autofill;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.PageView;
+import com.mindcoders.phial_autofill.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +19,24 @@ import java.util.List;
  * Created by rost on 11/3/17.
  */
 
-public class FillView extends FrameLayout implements PageView, ScreenTracker.ScreenListener {
+public class FillView extends FrameLayout implements PageView, ScreenTracker.ScreenListener, Adapter.onItemClickedListener {
     private final ScreenTracker tracker;
     private final List<FillConfig> configs;
     private final OverlayCallback overlayCallback;
+    private final Adapter adapter;
 
     public FillView(@NonNull Context context, ScreenTracker tracker, List<FillConfig> configs, OverlayCallback overlayCallback) {
         super(context);
         this.tracker = tracker;
         this.configs = configs;
         this.overlayCallback = overlayCallback;
+        this.adapter = new Adapter(context, this);
+
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        inflater.inflate(R.layout.view_autofill, this, true);
+
+        final ListView listView = findViewById(R.id.list_view);
+        listView.setAdapter(adapter);
     }
 
     @Override
@@ -57,10 +68,11 @@ public class FillView extends FrameLayout implements PageView, ScreenTracker.Scr
     }
 
     private void presentOptions(List<FillOption> options) {
-
+        adapter.swapData(options);
     }
 
-    void onOptionSelected(FillOption option) {
+    @Override
+    public void onItemClicked(FillOption option) {
         final List<String> dataToFill = option.getDataToFill();
         final List<Integer> ids = option.getIds();
         final Screen currentScreen = tracker.getCurrentScreen();
