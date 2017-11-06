@@ -111,18 +111,31 @@ class OverlayView extends LinearLayout {
         this.onHandleMoveListener = onHandleMoveListener;
     }
 
-    public void toggle() {
-        if (pages.size() > 0) {
-            isExpanded = !isExpanded;
-            setPageButtonsVisible(isExpanded);
-            if (isExpanded) {
-                selectedPage = getPreviouslySelectedPage();
-                onPageSelectedListener.onFirstPageSelected(selectedPage, pages.indexOf(selectedPage));
-            } else {
-                selectedPage = null;
-                onPageSelectedListener.onNothingSelected();
-            }
-            setPageButtonsColors(isExpanded);
+    public void show() {
+        if (pages.size() > 0 && !isExpanded) {
+            isExpanded = true;
+            setPageButtonsVisible(true);
+            selectedPage = getPreviouslySelectedPage();
+            onPageSelectedListener.onFirstPageSelected(selectedPage, pages.indexOf(selectedPage));
+            setPageButtonsColors(true);
+        }
+    }
+
+    public void hide() {
+        if (pages.size() > 0 && isExpanded) {
+            isExpanded = false;
+            setPageButtonsVisible(false);
+            selectedPage = null;
+            onPageSelectedListener.onNothingSelected();
+            setPageButtonsColors(false);
+        }
+    }
+
+    private void toggle() {
+        if (isExpanded) {
+            hide();
+        } else {
+            show();
         }
     }
 

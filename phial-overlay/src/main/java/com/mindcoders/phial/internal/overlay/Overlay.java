@@ -225,7 +225,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         @Override
         public void onBackPressed() {
             if (!pageContainerView.onBackPressed()) {
-                overlayView.toggle();
+                overlayView.hide();
             }
         }
 
@@ -443,7 +443,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         @Override
         public void finish() {
-            overlayView.toggle();
+            overlayView.hide();
         }
 
     };
