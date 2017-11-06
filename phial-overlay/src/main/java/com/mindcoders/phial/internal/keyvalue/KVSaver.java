@@ -41,6 +41,14 @@ public class KVSaver extends Observable implements Saver {
         notifyObservers();
     }
 
+    @Override
+    public void remove(String category) {
+        synchronized (items) {
+            items.remove(category);
+        }
+        notifyObservers();
+    }
+
     List<KVCategory> getData() {
         final List<KVCategory> categories = new ArrayList<>();
         synchronized (items) {

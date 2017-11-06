@@ -76,6 +76,11 @@ public class Phial {
         return CATEGORIES.get(name);
     }
 
+    public static void removeCategory(String name) {
+        Category category = CATEGORIES.remove(name);
+        category.clear();
+    }
+
     /**
      * @param saver
      */
