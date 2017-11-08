@@ -77,9 +77,7 @@ public class PhialTest {
     @Test
     public void clearCategory() {
         Phial.category("category").setKey("key", "value").clear();
-        savers.forEach(saver ->
-                verify(saver).remove(eq("category"))
-                      );
+        savers.forEach(saver -> verify(saver).remove(eq("category")));
     }
 
     private List<Saver> createSavers() {
