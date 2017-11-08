@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="top"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="@color/phial.key.text"
         tools:text="Name" />
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:gravity="top"
-        android:textColor="?android:textColorSecondary"
+        android:textColor="@color/phial.value.text"
         tools:text="Value" />
 
 </LinearLayout>

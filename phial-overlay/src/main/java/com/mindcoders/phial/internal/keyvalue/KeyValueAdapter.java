@@ -83,7 +83,7 @@ final class KeyValueAdapter extends BaseAdapter implements ExpandableListAdapter
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = layoutInflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false);
+            convertView = layoutInflater.inflate(R.layout.listitem_keyvalue_category, parent, false);
         }
 
         KVCategory category = getGroup(groupPosition);
@@ -98,7 +98,7 @@ final class KeyValueAdapter extends BaseAdapter implements ExpandableListAdapter
         final KeyValueViewHolder holder;
 
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.listitem_keyvalue, parent, false);
+            convertView = layoutInflater.inflate(R.layout.listitem_keyvalue_child, parent, false);
             holder = KeyValueViewHolder.fromRootView(convertView);
             convertView.setTag(holder);
         } else {
@@ -146,7 +146,7 @@ final class KeyValueAdapter extends BaseAdapter implements ExpandableListAdapter
             this.value = value;
         }
 
-        public static KeyValueViewHolder fromRootView(View view) {
+        static KeyValueViewHolder fromRootView(View view) {
             final TextView keyTV = view.findViewById(android.R.id.text1);
             final TextView valueTV = view.findViewById(android.R.id.text2);
             return new KeyValueViewHolder(keyTV, valueTV);
