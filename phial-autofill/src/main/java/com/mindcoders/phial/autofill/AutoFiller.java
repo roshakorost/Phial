@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 public class AutoFiller {
-    public static String EMPTY_FIELD = null;
+    public static final String EMPTY_FIELD = null;
 
     public static Page createPhialPage(Application application, List<FillConfig> autoFillers) {
         final ScreenTracker screenTracker = new ScreenTracker();

@@ -2,7 +2,6 @@ package com.mindcoders.phial.autofill;
 
 import android.app.Activity;
 import android.view.View;
-import android.widget.TextView;
 
 import com.mindcoders.phial.internal.util.ObjectUtil;
 

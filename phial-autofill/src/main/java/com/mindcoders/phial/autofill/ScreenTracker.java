@@ -1,7 +1,6 @@
 package com.mindcoders.phial.autofill;
 
 import android.app.Activity;
-import android.app.Application;
 
 import com.mindcoders.phial.internal.util.ObjectUtil;
 import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;

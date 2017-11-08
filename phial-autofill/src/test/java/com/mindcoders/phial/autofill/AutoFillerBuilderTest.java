@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,5 +62,4 @@ public class AutoFillerBuilderTest {
         );
         Assert.assertEquals("Bad FillConfig is build", expected, actual);
     }
-
 }

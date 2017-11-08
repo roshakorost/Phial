@@ -17,24 +17,24 @@ import java.util.List;
  */
 
 class Adapter extends BaseAdapter {
-    interface onItemClickedListener {
+    interface OnItemClickedListener {
         void onItemClicked(FillOption option);
     }
 
     private List<FillOption> options = new ArrayList<>();
     private final LayoutInflater inflater;
-    private onItemClickedListener listener;
+    private OnItemClickedListener listener;
 
     Adapter(Context context) {
         this(context, null);
     }
 
-    Adapter(Context context, onItemClickedListener listener) {
+    Adapter(Context context, OnItemClickedListener listener) {
         this.inflater = LayoutInflater.from(context);
         this.listener = listener;
     }
 
-    public void setListener(onItemClickedListener listener) {
+    public void setListener(OnItemClickedListener listener) {
         this.listener = listener;
     }
 
