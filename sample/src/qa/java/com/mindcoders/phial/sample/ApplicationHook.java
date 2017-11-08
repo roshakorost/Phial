@@ -3,6 +3,7 @@ package com.mindcoders.phial.sample;
 import android.app.Application;
 import android.util.Log;
 
+import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialOverlay;
 import com.mindcoders.phial.Shareable;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
@@ -10,6 +11,12 @@ import com.mindcoders.phial.jira.JiraShareableBuilder;
 import com.mindcoders.phial.logging.PhialLogger;
 
 import timber.log.Timber;
+
+import static com.mindcoders.phial.autofill.AutoFiller.createPhialPage;
+import static com.mindcoders.phial.autofill.AutoFiller.forActivity;
+import static com.mindcoders.phial.autofill.AutoFiller.forScope;
+import static com.mindcoders.phial.autofill.AutoFiller.leaveEmpty;
+import static com.mindcoders.phial.autofill.AutoFiller.option;
 
 final class ApplicationHook {
     static void onApplicationCreate(Application app) {
@@ -33,6 +40,27 @@ final class ApplicationHook {
                 .build();
 
 
+        final Page autoFillPage = createPhialPage(app,
+                forActivity(AutoFillActivity.class)
+                        .fill(R.id.login, R.id.password)
+                        .withOptions(
+                                option("user Q", "QQQQQQ", "Qpwdpwd1"),
+                                option("user W", "WWWWWW", leaveEmpty()),
+                                option("user E", "EEEEEE", "Epwdpwd3"),
+                                option("user R", "RRRRRR", "Rpwdpwd4")
+                        ),
+
+                forScope("Login")
+                        .fill(R.id.login, R.id.password)
+                        .withOptions(
+                                option("user R", "RRRRRR", "Rpwdpwd4"),
+                                option("user T", "TTTTTT", "Tpwdpwd1"),
+                                option("user Y", "YYYYYY", leaveEmpty()),
+                                option("user U", "UUUUUU", "Upwdpwd3"),
+                                option("user I", "IIIIII", "Ipwdpwd4")
+                        )
+        );
+
         PhialOverlay.builder(app)
                 // By default Phial includes key-values and screenshots as attachment to share
                 // When user selects share Phial requests all AttachmentProviders to prepare debug data
@@ -55,6 +83,7 @@ final class ApplicationHook {
                 // The list of options might be extended by providing custom Shareables.
                 // Here we add extra JiraShareable that will add create Jira Issue option in Share Tab
                 .addShareable(jiraShareable)
+                .addPage(autoFillPage)
                 .initPhial();
 
         //In case you would like to see Phial errors in logcat.
