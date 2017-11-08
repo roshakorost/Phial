@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Phial</string>
     <string name="clicked">Clicked %1$d</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="main">Main Sample</string>
+    <string name="autofill_sample">AutoFill Sample</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

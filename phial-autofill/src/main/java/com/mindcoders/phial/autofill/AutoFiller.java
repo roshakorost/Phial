@@ -15,13 +15,15 @@ import java.util.List;
  */
 
 public class AutoFiller {
+    public static String EMPTY_FIELD = null;
+
     public static Page createPhialPage(Application application, List<FillConfig> autoFillers) {
         final ScreenTracker screenTracker = new ScreenTracker();
         application.registerActivityLifecycleCallbacks(screenTracker);
 
         AutoFillPageFactory pageFactory = new AutoFillPageFactory(autoFillers, screenTracker);
 
-        return new Page("autofill", R.drawable.ic_paste, "Autofill", pageFactory);
+        return new Page("autofill", R.drawable.ic_paste, "AutoFill", pageFactory);
     }
 
     public static Page createPhialPage(Application application, FillConfig... autoFillers) {
@@ -35,5 +37,9 @@ public class AutoFiller {
     public static FillOption option(String name, String... dataToFill) {
         Precondition.notEmpty(dataToFill, "dataToFill should not be empty");
         return new FillOption(name, Arrays.asList(dataToFill));
+    }
+
+    public static String leaveEmpty() {
+        return EMPTY_FIELD;
     }
 }

@@ -35,25 +35,26 @@ public class AutoFillerBuilderTest {
     }
 
     @Test(expected = Exception.class)
-    public void build_without_calling_fill_rises_exception() {
+    public void withOptions_without_calling_fill_rises_exception() {
         builder.withOptions(Mockito.mock(FillOption.class));
-        builder.build();
     }
 
     @Test(expected = Exception.class)
-    public void build_without_calling_withOptions_rises_exception() {
-        builder.fill(1, 2);
-        builder.build();
+    public void withOptions_whits_size_of_option_that_not_match_rises_exception() {
+        final FillOption opt1 = new FillOption("A", Arrays.asList("1", "2"));
+        final FillOption opt2 = new FillOption("B", Arrays.asList("2", "3", "4"));
+
+        builder.fill(1, 2)
+                .withOptions(opt1, opt2);
     }
 
     @Test
-    public void build_returns_correct_FillConfig() {
-        final FillOption opt1 = new FillOption("1", Collections.emptyList());
-        final FillOption opt2 = new FillOption("1", Collections.emptyList());
+    public void withOptions_returns_correct_FillConfig() {
+        final FillOption opt1 = new FillOption("A", Arrays.asList("1", "2"));
+        final FillOption opt2 = new FillOption("B", Arrays.asList("2", "3"));
 
         final FillConfig actual = builder.fill(1, 2)
-                .withOptions(opt1, opt2)
-                .build();
+                .withOptions(opt1, opt2);
 
         final List<Integer> ids = Arrays.asList(1, 2);
         final FillConfig expected = new FillConfig(

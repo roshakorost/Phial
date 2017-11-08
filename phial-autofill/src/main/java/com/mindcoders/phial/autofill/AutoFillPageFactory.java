@@ -16,7 +16,7 @@ class AutoFillPageFactory implements Page.PageViewFactory<FillView> {
     private final ScreenTracker screenTracker;
 
 
-    public AutoFillPageFactory(List<FillConfig> configs, ScreenTracker screenTracker) {
+    AutoFillPageFactory(List<FillConfig> configs, ScreenTracker screenTracker) {
         this.configs = configs;
         this.screenTracker = screenTracker;
     }

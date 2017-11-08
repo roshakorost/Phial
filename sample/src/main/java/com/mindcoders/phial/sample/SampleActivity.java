@@ -11,7 +11,7 @@ import com.mindcoders.phial.keyvalue.Phial;
 import timber.log.Timber;
 
 
-public class SampleActivity extends AppCompatActivity {
+public class SampleActivity extends DrawerActivity {
 
     public static final String CLICKED_KEY = "clicked_key";
     private int clickCount;

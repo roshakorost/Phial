@@ -64,7 +64,7 @@ class Adapter extends BaseAdapter {
         if (convertView != null) {
             button = (Button) convertView;
         } else {
-            button = (Button) inflater.inflate(R.layout.listitem_keyvalue, parent, false);
+            button = (Button) inflater.inflate(R.layout.listview_button_item, parent, false);
         }
         final FillOption item = getItem(position);
         button.setText(item.getName());

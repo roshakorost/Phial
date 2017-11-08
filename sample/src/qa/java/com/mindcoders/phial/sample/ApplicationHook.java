@@ -3,13 +3,20 @@ package com.mindcoders.phial.sample;
 import android.app.Application;
 import android.util.Log;
 
+import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialOverlay;
 import com.mindcoders.phial.Shareable;
+import com.mindcoders.phial.autofill.AutoFiller;
 import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.jira.JiraShareableBuilder;
 import com.mindcoders.phial.logging.PhialLogger;
 
 import timber.log.Timber;
+
+import static com.mindcoders.phial.autofill.AutoFiller.createPhialPage;
+import static com.mindcoders.phial.autofill.AutoFiller.forActivity;
+import static com.mindcoders.phial.autofill.AutoFiller.leaveEmpty;
+import static com.mindcoders.phial.autofill.AutoFiller.option;
 
 final class ApplicationHook {
     static void onApplicationCreate(Application app) {
@@ -33,6 +40,17 @@ final class ApplicationHook {
                 .build();
 
 
+        final Page autoFillPage = createPhialPage(app,
+                forActivity(LoginActivity.class)
+                        .fill(R.id.login, R.id.password)
+                        .withOptions(
+                                option("user A", "AAAAAA", "Apwdpwd1"),
+                                option("user B", "BBBBBB", leaveEmpty()),
+                                option("user C", "CCCCCC", "Cpwdpwd3"),
+                                option("user D", "DDDDDD", "Dpwdpwd4")
+                        )
+        );
+
         PhialOverlay.builder(app)
                 // By default Phial includes key-values and screenshots as attachment to share
                 // When user selects share Phial requests all AttachmentProviders to prepare debug data
@@ -55,6 +73,7 @@ final class ApplicationHook {
                 // The list of options might be extended by providing custom Shareables.
                 // Here we add extra JiraShareable that will add create Jira Issue option in Share Tab
                 .addShareable(jiraShareable)
+                .addPage(autoFillPage)
                 .initPhial();
 
         //In case you would like to see Phial errors in logcat.
