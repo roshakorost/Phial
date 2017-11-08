@@ -6,10 +6,10 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/main"
-            android:title="@string/main" />
+            android:title="@string/drawer.main" />
         <item
             android:id="@+id/auto_fill"
-            android:title="@string/autofill_sample" />
+            android:title="@string/drawer.autofill" />
     </group>
 
 

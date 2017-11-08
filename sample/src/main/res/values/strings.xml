@@ -3,8 +3,11 @@
     <string name="clicked">Clicked %1$d</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
-    <string name="main">Main Sample</string>
-    <string name="autofill_sample">AutoFill Sample</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="login_and_back">Login &amp; Back</string>
+    <string name="show_sample_login_activity">Go AutoFill Activity</string>
+
+    <string name="drawer.main">Main Sample</string>
+    <string name="drawer.autofill">AutoFill Sample</string>
+    <string name="drawer.open">Open navigation drawer</string>
+    <string name="drawer.close">Close navigation drawer</string>
 </resources>

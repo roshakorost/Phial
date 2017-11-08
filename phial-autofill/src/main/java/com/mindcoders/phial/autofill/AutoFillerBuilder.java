@@ -1,23 +1,51 @@
 package com.mindcoders.phial.autofill;
 
 
-import android.support.annotation.NonNull;
+import android.app.Activity;
 import android.text.TextUtils;
 
 import com.mindcoders.phial.internal.util.CollectionUtils;
 import com.mindcoders.phial.internal.util.Precondition;
+import com.mindcoders.phial.keyvalue.Phial;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class AutoFillerBuilder {
-    private final TargetScreen screenToFill;
+    private Class<? extends Activity> activity;
+    private String group, key, value;
     private List<Integer> targetIds;
     private List<FillOption> options;
 
-    AutoFillerBuilder(@NonNull TargetScreen screenToFill) {
-        this.screenToFill = screenToFill;
+    AutoFillerBuilder(Class<? extends Activity> activity) {
+        setTargetActivity(activity);
+    }
+
+    AutoFillerBuilder(String group, String key, String value) {
+        setKeyValue(group, key, value);
+    }
+
+    AutoFillerBuilder(String key, String value) {
+        setKeyValue(key, value);
+    }
+
+    public AutoFillerBuilder setTargetActivity(Class<? extends Activity> activity) {
+        Precondition.notNull(activity, "activity should not be empty");
+        this.activity = activity;
+        return this;
+    }
+
+    public AutoFillerBuilder setKeyValue(String group, String key, String value) {
+        Precondition.notNull(key, "key should not be empty");
+        this.group = group;
+        this.key = key;
+        this.value = value;
+        return this;
+    }
+
+    public AutoFillerBuilder setKeyValue(String key, String value) {
+        return setKeyValue(Phial.DEFAULT_CATEGORY_NAME, key, value);
     }
 
     public AutoFillerBuilder fill(int... ids) {
@@ -44,7 +72,7 @@ public class AutoFillerBuilder {
             verifySizeMatches(expectedSize, option, dataToFill);
             optionsWithTargets.add(option.withIds(targetIds));
         }
-        return new FillConfig(screenToFill, optionsWithTargets);
+        return new FillConfig(new TargetScreen(activity, group, key, value), optionsWithTargets);
     }
 
     private static void verifySizeMatches(int expectedSize, FillOption option, List<String> dataToFill) {

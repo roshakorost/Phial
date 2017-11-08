@@ -14,6 +14,7 @@ import timber.log.Timber;
 
 import static com.mindcoders.phial.autofill.AutoFiller.createPhialPage;
 import static com.mindcoders.phial.autofill.AutoFiller.forActivity;
+import static com.mindcoders.phial.autofill.AutoFiller.forKeyValue;
 import static com.mindcoders.phial.autofill.AutoFiller.leaveEmpty;
 import static com.mindcoders.phial.autofill.AutoFiller.option;
 
@@ -40,13 +41,25 @@ final class ApplicationHook {
 
 
         final Page autoFillPage = createPhialPage(app,
-                forActivity(LoginActivity.class)
+                forActivity(AutoFillActivity.class)
                         .fill(R.id.login, R.id.password)
                         .withOptions(
-                                option("user A", "AAAAAA", "Apwdpwd1"),
-                                option("user B", "BBBBBB", leaveEmpty()),
-                                option("user C", "CCCCCC", "Cpwdpwd3"),
-                                option("user D", "DDDDDD", "Dpwdpwd4")
+                                option("user Q", "QQQQQQ", "Qpwdpwd1"),
+                                option("user W", "WWWWWW", leaveEmpty()),
+                                option("user E", "EEEEEE", "Epwdpwd3"),
+                                option("user R", "RRRRRR", "Rpwdpwd4")
+                        ),
+
+                forKeyValue("currentFragment", AutoFillFragment.class.getSimpleName())
+                        //optional will show options only if we match activity and key value par in Phial
+                        .setTargetActivity(HomeActivity.class)
+                        .fill(R.id.login, R.id.password)
+                        .withOptions(
+                                option("user R", "RRRRRR", "Rpwdpwd4"),
+                                option("user T", "TTTTTT", "Tpwdpwd1"),
+                                option("user Y", "YYYYYY", leaveEmpty()),
+                                option("user U", "UUUUUU", "Upwdpwd3"),
+                                option("user I", "IIIIII", "Ipwdpwd4")
                         )
         );
 
