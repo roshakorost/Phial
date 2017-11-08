@@ -22,13 +22,6 @@ public class MainFragment extends Fragment {
     public static final String CLICKED_KEY = "clicked_key";
     private int clickCount;
 
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Phial.setKey("currentFragment", getClass().getSimpleName());
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,6 +34,7 @@ public class MainFragment extends Fragment {
         Timber.d("onCreate");
 
         final Button button = view.findViewById(R.id.button);
+        ((ShareElementManager) getActivity()).addSharedElement(button, R.string.transition_button);
 
         final SharedPreferences sp = getContext().getSharedPreferences("ClicksSharedPreferences", Context.MODE_PRIVATE);
         clickCount = sp.getInt(CLICKED_KEY, 0);

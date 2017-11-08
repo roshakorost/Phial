@@ -14,7 +14,7 @@ import timber.log.Timber;
 
 import static com.mindcoders.phial.autofill.AutoFiller.createPhialPage;
 import static com.mindcoders.phial.autofill.AutoFiller.forActivity;
-import static com.mindcoders.phial.autofill.AutoFiller.forKeyValue;
+import static com.mindcoders.phial.autofill.AutoFiller.forScope;
 import static com.mindcoders.phial.autofill.AutoFiller.leaveEmpty;
 import static com.mindcoders.phial.autofill.AutoFiller.option;
 
@@ -50,9 +50,7 @@ final class ApplicationHook {
                                 option("user R", "RRRRRR", "Rpwdpwd4")
                         ),
 
-                forKeyValue("currentFragment", AutoFillFragment.class.getSimpleName())
-                        //optional will show options only if we match activity and key value par in Phial
-                        .setTargetActivity(HomeActivity.class)
+                forScope("Login")
                         .fill(R.id.login, R.id.password)
                         .withOptions(
                                 option("user R", "RRRRRR", "Rpwdpwd4"),

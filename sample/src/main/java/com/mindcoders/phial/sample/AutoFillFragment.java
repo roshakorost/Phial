@@ -7,20 +7,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-import com.mindcoders.phial.keyvalue.Phial;
+import com.mindcoders.phial.autofill.AutoFiller;
 
 /**
  * Created by rost on 11/8/17.
  */
 
 public class AutoFillFragment extends Fragment {
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Phial.setKey("currentFragment", getClass().getSimpleName());
-    }
 
     @Nullable
     @Override
@@ -30,6 +25,9 @@ public class AutoFillFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        final Button button = view.findViewById(R.id.button_login);
+        ((ShareElementManager) getActivity()).addSharedElement(button, R.string.transition_button);
+
         view.findViewById(R.id.go_auto_fill).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,6 +39,12 @@ public class AutoFillFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Phial.setKey("currentFragment", getClass().getSimpleName());
+        AutoFiller.enterScope("Login");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AutoFiller.exitScope("Login");
     }
 }

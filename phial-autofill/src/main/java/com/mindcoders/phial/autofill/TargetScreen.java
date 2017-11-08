@@ -1,13 +1,13 @@
 package com.mindcoders.phial.autofill;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.mindcoders.phial.internal.util.ObjectUtil;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class is used to abstract from activity,
@@ -15,26 +15,29 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 class TargetScreen {
     private final Class<? extends Activity> target;
+    private final String scope;
 
-    private final String key;
-    private final String value;
 
-    TargetScreen(Class<? extends Activity> target, String group, String key, String value) {
+    TargetScreen(Class<? extends Activity> target, String scope) {
         this.target = target;
-        this.key = createKey(group, key);
-        this.value = value;
+        this.scope = scope;
     }
+
+    static TargetScreen forActivity(Class<? extends Activity> target) {
+        return new TargetScreen(target, null);
+    }
+
+    static TargetScreen forScope(String scope) {
+        return new TargetScreen(null, scope);
+    }
+
 
     Class<? extends Activity> getTargetActivity() {
         return target;
     }
 
-    String getTargetKey() {
-        return key;
-    }
-
-    String getTargetValue() {
-        return value;
+    String getScope() {
+        return scope;
     }
 
     @Override
@@ -45,46 +48,39 @@ class TargetScreen {
         TargetScreen that = (TargetScreen) o;
 
         if (target != null ? !target.equals(that.target) : that.target != null) return false;
-        if (key != null ? !key.equals(that.key) : that.key != null) return false;
-        return value != null ? value.equals(that.value) : that.value == null;
+        return scope != null ? scope.equals(that.scope) : that.scope == null;
     }
 
     @Override
     public int hashCode() {
         int result = target != null ? target.hashCode() : 0;
-        result = 31 * result + (key != null ? key.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (scope != null ? scope.hashCode() : 0);
         return result;
-    }
-
-    @NonNull
-    static String createKey(String category, String key) {
-        return category + ":" + key;
     }
 }
 
 class Screen {
     private Activity activity;
-    private final Map<String, String> keyValues = new ConcurrentHashMap<>();
+    private Set<String> scopes = Collections.synchronizedSet(new HashSet<>());
 
-    Screen(Activity activity) {
+    Screen(Activity activity, String scope) {
         this.activity = activity;
     }
 
     static Screen empty() {
-        return new Screen(null);
-    }
-
-    void saveKeyValue(String key, String value) {
-        keyValues.put(key, value);
-    }
-
-    void removeKey(String key) {
-        keyValues.remove(key);
+        return new Screen(null, null);
     }
 
     void setActivity(Activity activity) {
         this.activity = activity;
+    }
+
+    void enterScope(String scope) {
+        this.scopes.add(scope);
+    }
+
+    void exitScope(String scope) {
+        this.scopes.remove(scope);
     }
 
     void clearActivity() {
@@ -96,10 +92,9 @@ class Screen {
             return false;
         }
 
-        final String targetKey = screen.getTargetKey();
-        if (targetKey != null) {
-            final boolean sameKeyValues = ObjectUtil.equals(screen.getTargetValue(), keyValues.get(targetKey));
-            if (!sameKeyValues) {
+        if (screen.getScope() != null) {
+            final boolean sameScope = scopes.contains(screen.getScope());
+            if (!sameScope) {
                 return false;
             }
         }

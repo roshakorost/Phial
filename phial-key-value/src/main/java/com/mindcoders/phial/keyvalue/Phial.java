@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Phial {
     private static final List<Saver> SAVERS = new CopyOnWriteArrayList<>();
-    public static final String DEFAULT_CATEGORY_NAME = "Default";
+    private static final String DEFAULT_CATEGORY_NAME = "Default";
     private static final Category DEFAULT_CATEGORY = new Category(DEFAULT_CATEGORY_NAME, SAVERS);
     private static final ConcurrentMap<String, Category> CATEGORIES = new ConcurrentHashMap<>();
 

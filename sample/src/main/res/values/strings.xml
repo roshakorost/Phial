@@ -10,4 +10,6 @@
     <string name="drawer.autofill">AutoFill Sample</string>
     <string name="drawer.open">Open navigation drawer</string>
     <string name="drawer.close">Close navigation drawer</string>
+
+    <string name="transition.button" translatable="false">transition_button</string>
 </resources>

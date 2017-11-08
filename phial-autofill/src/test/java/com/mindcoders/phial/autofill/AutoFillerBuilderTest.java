@@ -19,7 +19,7 @@ public class AutoFillerBuilderTest {
 
     @Before
     public void setUp() throws Exception {
-        screen = TargetScreen.from(null);
+        screen = TargetScreen.forScope("Test");
         builder = new AutoFillerBuilder(screen);
     }
 

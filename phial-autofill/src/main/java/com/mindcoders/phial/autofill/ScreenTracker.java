@@ -1,33 +1,25 @@
 package com.mindcoders.phial.autofill;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.internal.util.ObjectUtil;
 import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;
-import com.mindcoders.phial.keyvalue.Saver;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by rost on 11/3/17.
  */
 
-class ScreenTracker extends SimpleActivityLifecycleCallbacks implements Saver {
+class ScreenTracker extends SimpleActivityLifecycleCallbacks {
     interface ScreenListener {
         void onScreenChanged(Screen screen);
     }
 
     private final Screen currentScreen = Screen.empty();
-    private final Set<String> targetKeys;
     private final List<ScreenListener> listeners = new CopyOnWriteArrayList<>();
 
-    ScreenTracker(Set<String> targetKeys) {
-        this.targetKeys = Collections.unmodifiableSet(targetKeys);
-    }
 
     void addListener(ScreenListener listener) {
         listeners.add(listener);
@@ -56,19 +48,11 @@ class ScreenTracker extends SimpleActivityLifecycleCallbacks implements Saver {
         }
     }
 
-    @Override
-    public void save(String category, String key, String value) {
-        final String compositeKey = TargetScreen.createKey(category, key);
-        if (targetKeys.contains(compositeKey)) {
-            currentScreen.saveKeyValue(compositeKey, value);
-        }
+    void enterScope(String scope) {
+        currentScreen.enterScope(scope);
     }
 
-    @Override
-    public void remove(String category, String key) {
-        final String compositeKey = TargetScreen.createKey(category, key);
-        if (targetKeys.contains(compositeKey)) {
-            currentScreen.removeKey(compositeKey);
-        }
+    void exitScope(String scope) {
+        currentScreen.exitScope(scope);
     }
 }

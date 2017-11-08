@@ -55,4 +55,5 @@ dependencies {
     qaImplementation project(':phial-key-value')
     qaImplementation project (':phial-autofill')
     prodImplementation project(':phial-key-value')
+    prodImplementation project(':phial-autofill-no-op')
 }

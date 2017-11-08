@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/password"
         android:imeOptions="actionGo"
-        app:layout_constraintBottom_toTopOf="@id/login_button"
+        app:layout_constraintBottom_toTopOf="@id/button_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -48,12 +48,12 @@
         tools:ignore="TextFields" />
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/login_and_back"
+        android:text="@string/login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
