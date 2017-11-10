@@ -1,12 +1,17 @@
 # Phial [![Release](https://jitpack.io/v/roshakorost/Phial.svg)](https://jitpack.io/#roshakorost/Phial)  [![Build Status](https://travis-ci.org/roshakorost/Phial.svg?branch=master)](https://travis-ci.org/roshakorost/Phial)
 
-**Phial is an Android library that captures your bug data directly to Jira or other services.** When a bug is found, Phial allows the Tester to export logs, screenshot, system, build and many more data from a device to the Developers. Thats will help you a lot in debugging and fixing issue as well it saves QAs time.
+**Phial is an Android library that captures your bug data directly to Jira or other services.** When a bug is found, Phial allows the Tester to export logs, screenshot, system, build and many more data from a device to a JIRA bug report. 
 
-**Why use it:** 
-- Phial captures all necery information about the bug: build version, commit, extended device information, screenshot, logs. If it is not enought you can extend it even more :smiley:. So you my include your SQLite database or SharedPreferences as well
+Automated bug capture on demand increases the amount of time Developers can spend building new features by ensuring they have all the relevant data needed to reproduce a bug the first time.  This also reduces the time QA spends documenting bugs.
+
+
+**Feature summary** 
+- Phial captures all necessary information about the bug: build version, commit, extended device information, screenshot, logs.
+- Developers can easily extend Phial to add additional data types, so you may include your SQLite database or SharedPreferences as well.
 - Provides debug view to monitor your app state.
-- Easy export of bug Data to Jira and other options.
-- The more recent the snapshot the more valuable the data is.
+- Creating own debug views, that will be in debug app is simple with Phial.
+- Easy export of bug Data to Jira and other options. *The more recent the snapshot the more valuable the data is.*
+
 
 You can easily include Phial into `internal`/`debug` builds, without adding to `release` build.
 
