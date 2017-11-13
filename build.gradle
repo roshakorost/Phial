@@ -19,11 +19,6 @@ allprojects {
         jcenter()
         google()
     }
-    project.ext {
-        GIT_HUB_GROUP = 'com.github.roshakorost'
-    }
-
-
 }
 
 subprojects {
@@ -46,6 +41,11 @@ subprojects {
         // empty classpath
         classpath = files()
     }
+}
+
+configure(subprojects.findAll { it.name != 'sample' }) {
+    apply plugin: 'com.github.dcendents.android-maven'
+    group = 'com.github.roshakorost'
 }
 
 subprojects.each { project ->

@@ -1,19 +1,49 @@
 # Phial [![Release](https://jitpack.io/v/roshakorost/Phial.svg)](https://jitpack.io/#roshakorost/Phial)  [![Build Status](https://travis-ci.org/roshakorost/Phial.svg?branch=master)](https://travis-ci.org/roshakorost/Phial)
 
-**Phial is an Android library that was created to make communication between QAs and developers easier.** When bug happens Phial allows to share logs, screenshot and system and build data from a device to the evelopers for simplifying debugging and fixing.
+**Phial is an Android library that captures your bug data directly to Jira or other services.** When a bug is found, Phial allows the Tester to export logs, screenshot, system, build and many more data from a device to a JIRA bug report. 
 
-Debug data can be easily extended by using `Key-Values` or providing custom `Attachers`.
+Automated bug capture on demand increases the amount of time Developers can spend building new features by ensuring they have all the relevant data needed to reproduce a bug.  This also reduces the time QA spends documenting bugs.
 
-Why use it: 
-- Quickly dump all needed debug data from the device and share it with developers.
-- The more recent the snapshot the more valuable the data is.
-- Monitor your application state easily.
+
+**Feature summary** 
+- Phial captures all necessary information about the bug: build version, commit, extended device information, screenshot, logs.
+- Developers can easily extend Phial to add additional data types, so you can include your SQLite database or SharedPreferences as well.
+- Provides debug view to monitor your app state.
+- Ability to create your own debug views, that will be in debug app.
+- Easy export of bug Data to Jira and other options. *The more recent the snapshot the more valuable the data is.*
+
+
+You can easily include Phial into `internal`/`debug` builds, without adding to `release` build.
 
 ### Screenshots
 
 ![DemoScreenshot][1]
 
 ### [Example of attachment][2]
+
+## Share
+By default Phial’s share menu only shows installed applications that can handle zip attachments. However you might want to include your own share options e.g. creating Jira Issue or posting to a specific slack channel.
+
+### Phial-Jira
+Phial-jira allows you to login to your Jira and create an issue with debug data attached to it.
+Login page will be shown only the first time. After that the saved credentials will be used.
+```java
+final Shareable jiraShareable = new JiraShareableBuilder(app)
+    .setBaseUrl(url) //Jira url
+    .setProjectKey(projectKey)	//project key
+    .build();
+
+PhialOverlay.builder(app)
+    .addShareable(jiraShareable)
+    .initPhial();
+```
+**Note:** since credentials are not stored securely  it’s recommended to use Phial only in internal/debug builds.
+
+### Shareable
+You can add your own share options by implementing `Shareable`.
+When user selects your share option `void share(ShareContext shareContext, File zippedAttachment, String message);` will be called.
+You should call either `shareContext.onSuccess()`, `shareContext.onFail(message)` or `shareContext.onCancel()` when share is finished.
+`ShareContext` also provides interface for adding your UI elements in case you need authorization or some extra fields. See `JiraShareable` from `phial-jira` as an example implementation.
 
 # Enhance Your Attachments
 ## Custom Keys
@@ -76,30 +106,6 @@ In case you want to include some information that is not persisted to file, you 
 `Attacher` or `ListAttacher`.
 
 Currently Attacher API works only with files, so when `provideAttachment` is called you should dump the data to a temporary file and return it. When `onAttachmentNotNeeded` is called the temporary file can be deleted (see SharedPreferencesAttacher in the sample app or KVAttacher for an example).
-
-## Share
-By default Phial’s share menu only shows installed applications that can handle zip attachments. However you might want to include your own share options e.g. creating Jira Issue or posting to a specific slack channel.
-
-### Phial-Jira
-Phial-jira allows you to login to your Jira and create an issue with debug data attached to it.
-Login page will be shown only the first time. After that saved credentials will be used.
-```java
-final Shareable jiraShareable = new JiraShareableBuilder(app)
-    .setBaseUrl(url) //Jira url
-    .setProjectKey(projectKey)	//project key
-    .build();
-
-PhialOverlay.builder(app)
-    .addShareable(jiraShareable)
-    .initPhial();
-```
-**Note:** since credentials are not stored securely  it’s recommended to use Phial only in internal/debug builds.
-
-### Shareable
-You can add your own share options by implementing `Shareable`.
-When user selects your share option `void share(ShareContext shareContext, File zippedAttachment, String message);` will be called.
-You should call either `shareContext.onSuccess()`, `shareContext.onFail(message)` or `shareContext.onCancel()` when share is finished.
-`ShareContext` also provides interface for adding your UI elements in case you need authorization or some extra fields. See `JiraShareable` from `phial-jira` as an example implementation.
 
 ## Custom overlay pages
 You can add custom pages that will be available in the overlay.

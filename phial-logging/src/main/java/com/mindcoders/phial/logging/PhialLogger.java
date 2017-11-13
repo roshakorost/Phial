@@ -8,6 +8,7 @@ import com.mindcoders.phial.Attacher;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -32,6 +33,7 @@ public class PhialLogger implements Attacher {
     private static final String HISTORY_FILE_NAME_PATTERN = ".%d{yyyy-MM-dd}.%i.html";
     private static final String LOG_DIR_NAME = "logs";
     private static final String MAX_FILE_SIZE = "5MB";
+    private static final long CLEAR_LOGS_OLDER_THEN_MS = TimeUnit.DAYS.toMillis(1);
 
     private final File logDir;
 
@@ -43,6 +45,8 @@ public class PhialLogger implements Attacher {
      */
     public PhialLogger(Context context) {
         logDir = createLogDir(context);
+        clearOldLogs(logDir);
+
         final String logDirectory = logDir.getAbsolutePath();
         // reset the default context (which may already have been initialized)
         // since we want to reconfigure it
@@ -129,6 +133,17 @@ public class PhialLogger implements Attacher {
         final File directory = new File(context.getExternalFilesDir(null), LOG_DIR_NAME);
         directory.mkdir();
         return directory;
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static void clearOldLogs(File dir) {
+        final File[] files = dir.listFiles();
+        final long maxAge = System.currentTimeMillis() - CLEAR_LOGS_OLDER_THEN_MS;
+        for (File file : files) {
+            if (file.lastModified() < maxAge) {
+                file.delete();
+            }
+        }
     }
 
     @Override
