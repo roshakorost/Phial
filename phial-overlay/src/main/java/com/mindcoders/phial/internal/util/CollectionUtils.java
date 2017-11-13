@@ -1,7 +1,9 @@
 package com.mindcoders.phial.internal.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,5 +59,11 @@ public final class CollectionUtils {
             result.add(id);
         }
         return result;
+    }
+
+    public static <T> Set<T> asSet(T... items) {
+        final HashSet<T> result = new HashSet<>(items.length);
+        result.addAll(Arrays.asList(items));
+        return Collections.unmodifiableSet(result);
     }
 }

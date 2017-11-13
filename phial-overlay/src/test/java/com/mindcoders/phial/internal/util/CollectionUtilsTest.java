@@ -4,15 +4,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import edu.emory.mathcs.backport.java.util.Collections;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by rost on 11/13/17.
@@ -60,6 +58,12 @@ public class CollectionUtilsTest {
         final int[] ints = IntStream.range(0, 5).toArray();
         final List<Integer> expected = IntStream.range(0, 5).boxed().collect(Collectors.toList());
         Assert.assertEquals(expected, CollectionUtils.asList(ints));
+    }
+
+    @Test
+    public void asSet() throws Exception {
+        final Set<Integer> expected = IntStream.range(0, 5).boxed().collect(Collectors.toSet());
+        Assert.assertEquals(expected, CollectionUtils.asSet(0, 1, 2, 3, 4));
     }
 
 }
