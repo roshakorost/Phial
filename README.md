@@ -2,14 +2,14 @@
 
 **Phial is an Android library that captures your bug data directly to Jira or other services.** When a bug is found, Phial allows the Tester to export logs, screenshot, system, build and many more data from a device to a JIRA bug report. 
 
-Automated bug capture on demand increases the amount of time Developers can spend building new features by ensuring they have all the relevant data needed to reproduce a bug the first time.  This also reduces the time QA spends documenting bugs.
+Automated bug capture on demand increases the amount of time Developers can spend building new features by ensuring they have all the relevant data needed to reproduce a bug.  This also reduces the time QA spends documenting bugs.
 
 
 **Feature summary** 
 - Phial captures all necessary information about the bug: build version, commit, extended device information, screenshot, logs.
-- Developers can easily extend Phial to add additional data types, so you may include your SQLite database or SharedPreferences as well.
+- Developers can easily extend Phial to add additional data types, so you can include your SQLite database or SharedPreferences as well.
 - Provides debug view to monitor your app state.
-- Creating own debug views, that will be in debug app is simple with Phial.
+- Ability to create your own debug views, that will be in debug app.
 - Easy export of bug Data to Jira and other options. *The more recent the snapshot the more valuable the data is.*
 
 
@@ -26,7 +26,7 @@ By default Phial’s share menu only shows installed applications that can handl
 
 ### Phial-Jira
 Phial-jira allows you to login to your Jira and create an issue with debug data attached to it.
-Login page will be shown only the first time. After that saved credentials will be used.
+Login page will be shown only the first time. After that the saved credentials will be used.
 ```java
 final Shareable jiraShareable = new JiraShareableBuilder(app)
     .setBaseUrl(url) //Jira url
