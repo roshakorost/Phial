@@ -1,6 +1,5 @@
 package com.mindcoders.phial.internal.overlay;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.VisibleForTesting;
@@ -11,13 +10,14 @@ import android.widget.LinearLayout;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.util.Precondition;
+import com.mindcoders.phial.internal.util.ViewUtil;
 import com.mindcoders.phial.internal.util.support.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class OverlayView extends LinearLayout {
-
+    private static final long CLICK_MAX_DURATION_MS = 300L;
     private final HandleButton btnHandle;
 
     interface OnPageSelectedListener {
@@ -206,9 +206,9 @@ class OverlayView extends LinearLayout {
     private final OnTouchListener handleOnTouchListener = new OnTouchListener() {
 
         private float initialTouchX, initialTouchY;
+        private long startTimeMS;
 
         @Override
-        @SuppressLint("ClickableViewAccessibility")
         public boolean onTouch(View v, MotionEvent event) {
             if (selectedPage != null) {
                 return false;
@@ -218,7 +218,7 @@ class OverlayView extends LinearLayout {
                 case MotionEvent.ACTION_DOWN:
                     initialTouchX = event.getRawX();
                     initialTouchY = event.getRawY();
-
+                    startTimeMS = event.getEventTime();
                     onHandleMoveListener.onMoveStart(initialTouchX, initialTouchY);
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -226,13 +226,18 @@ class OverlayView extends LinearLayout {
                     break;
                 case MotionEvent.ACTION_UP:
                     onHandleMoveListener.onMoveEnd();
+                    final long downTimeMS = event.getEventTime() - startTimeMS;
+                    final boolean wasClicked = downTimeMS < CLICK_MAX_DURATION_MS
+                            && ViewUtil.distance(initialTouchX, initialTouchY, event.getRawX(), event.getRawY()) < btnSize / 2;
+                    if (wasClicked) {
+                        v.performClick();
+                    }
                     break;
                 default:
-                    return false;
+                    return true;
             }
 
-            return false;
+            return true;
         }
     };
-
 }
