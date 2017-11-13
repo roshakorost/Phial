@@ -47,14 +47,6 @@ public final class CollectionUtils {
         return result;
     }
 
-    public static <T, G> List<T> map(Collection<G> input, Function1<T, G> function) {
-        List<T> result = new ArrayList<T>(input.size());
-        for (G item : input) {
-            result.add(function.call(item));
-        }
-        return result;
-    }
-
     public static boolean isNullOrEmpty(Collection<?> input) {
         return input == null || input.isEmpty();
     }
