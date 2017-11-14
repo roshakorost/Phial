@@ -3,6 +3,7 @@ package com.mindcoders.phial.autofill;
 
 import android.text.TextUtils;
 
+import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.util.CollectionUtils;
 import com.mindcoders.phial.internal.util.Precondition;
 

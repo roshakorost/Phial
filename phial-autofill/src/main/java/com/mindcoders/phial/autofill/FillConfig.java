@@ -1,5 +1,7 @@
 package com.mindcoders.phial.autofill;
 
+import com.mindcoders.phial.TargetScreen;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import java.util.List;
  */
 
 public class FillConfig {
+
     private final TargetScreen screen;
     private final List<FillOption> options;
 
@@ -41,4 +44,5 @@ public class FillConfig {
         result = 31 * result + options.hashCode();
         return result;
     }
+
 }

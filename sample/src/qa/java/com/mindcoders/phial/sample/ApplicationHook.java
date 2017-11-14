@@ -40,7 +40,7 @@ final class ApplicationHook {
                 .build();
 
 
-        final Page autoFillPage = createPhialPage(app,
+        final Page autoFillPage = createPhialPage(
                 forActivity(AutoFillActivity.class)
                         .fill(R.id.login, R.id.password)
                         .withOptions(

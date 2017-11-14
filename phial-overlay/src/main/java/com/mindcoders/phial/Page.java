@@ -3,6 +3,9 @@ package com.mindcoders.phial;
 import android.content.Context;
 import android.view.View;
 
+import java.util.Collections;
+import java.util.Set;
+
 /**
  * Phial allows adding custom pages as tabs using {@link PhialBuilder#addPage(Page)}
  * Description of page
@@ -29,18 +32,26 @@ public final class Page {
     private final int iconResourceId;
     private final CharSequence title;
     private final PageViewFactory pageViewFactory;
-
+    private final Set<TargetScreen> targetScreens;
     /**
      * @param id              unique pageId
      * @param iconResourceId  page icon
      * @param title           page title
      * @param pageViewFactory factory that will create view when page is selected
+     * @param targetScreens   screens to present this page on. Page will be present on all screens if this is empty.
      */
-    public Page(String id, int iconResourceId, String title, PageViewFactory pageViewFactory) {
+    public Page(
+            String id,
+            int iconResourceId,
+            String title,
+            PageViewFactory pageViewFactory,
+            Set<TargetScreen> targetScreens
+               ) {
         this.id = id;
         this.iconResourceId = iconResourceId;
         this.title = title;
         this.pageViewFactory = pageViewFactory;
+        this.targetScreens = targetScreens;
     }
 
     public String getId() {
@@ -58,4 +69,9 @@ public final class Page {
     public PageViewFactory getPageViewFactory() {
         return pageViewFactory;
     }
+
+    public Set<TargetScreen> getTargetScreens() {
+        return Collections.unmodifiableSet(targetScreens);
+    }
+
 }

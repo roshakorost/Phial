@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.PageView;
+import com.mindcoders.phial.Screen;
+import com.mindcoders.phial.ScreenTracker;
 import com.mindcoders.phial_autofill.R;
 
 import java.util.ArrayList;

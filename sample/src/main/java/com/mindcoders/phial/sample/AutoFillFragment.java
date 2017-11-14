@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.mindcoders.phial.ScreenTracker;
 import com.mindcoders.phial.autofill.AutoFiller;
 
 /**
@@ -39,12 +40,12 @@ public class AutoFillFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        AutoFiller.enterScope("Login");
+        ScreenTracker.enterScope("Login");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        AutoFiller.exitScope("Login");
+        ScreenTracker.exitScope("Login");
     }
 }

@@ -9,12 +9,16 @@ import android.widget.LinearLayout;
 
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.Screen;
+import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.util.Precondition;
 import com.mindcoders.phial.internal.util.ViewUtil;
 import com.mindcoders.phial.internal.util.support.ResourcesCompat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class OverlayView extends LinearLayout {
     private static final long CLICK_MAX_DURATION_MS = 300L;
@@ -45,6 +49,8 @@ class OverlayView extends LinearLayout {
     private final SelectedPageStorage selectedPageStorage;
 
     private final List<Page> pages = new ArrayList<>();
+
+    private final Map<Page, View> pageViewMap = new HashMap<>();
 
     private OnPageSelectedListener onPageSelectedListener;
 
@@ -91,15 +97,39 @@ class OverlayView extends LinearLayout {
         addView(btnHandle, params);
     }
 
-    public void addPage(Page page) {
-        pages.add(page);
-        addPageButton(page, 0);
+    public void updateVisiblePages(Screen screen) {
+        String selectedPageId = selectedPageStorage.getSelectedPage();
+
+        boolean shiftSelectedPage = false;
+        for (Page page : pages) {
+            if (shiftSelectedPage) {
+                selectedPageStorage.setSelectedPage(page.getId());
+                shiftSelectedPage = false;
+            }
+
+            boolean shouldShowPage = false;
+            for (TargetScreen targetScreen : page.getTargetScreens()) {
+                if (screen.matches(targetScreen)) {
+                    shouldShowPage = true;
+                    break;
+                }
+            }
+            if (shouldShowPage && !pageViewMap.containsKey(page)) {
+                addPageButton(page);
+            } else if (!shouldShowPage && pageViewMap.containsKey(page)) {
+                removeView(pageViewMap.remove(page));
+                if (page.getId().equals(selectedPageId)) {
+                    shiftSelectedPage = true;
+                    selectedPageStorage.removeSelectedPageId();
+                }
+            }
+        }
     }
 
     public void addPages(List<Page> pages) {
         this.pages.addAll(pages);
         for (Page page : this.pages) {
-            addPageButton(page, 0);
+            addPageButton(page);
         }
     }
 
@@ -167,12 +197,13 @@ class OverlayView extends LinearLayout {
         return pages.get(0);
     }
 
-    private void addPageButton(final Page page, int position) {
+    private void addPageButton(final Page page) {
         final HandleButton button = createButton(page.getIconResourceId());
 
         LinearLayout.LayoutParams params = new LayoutParams(btnSize, btnSize);
-        addView(button, position, params);
+        addView(button, 0, params);
         button.setVisibility(View.GONE);
+        button.setTag(page.getId());
 
         button.setOnClickListener(new OnClickListener() {
             @Override
@@ -195,6 +226,8 @@ class OverlayView extends LinearLayout {
                 }
             }
         });
+
+        pageViewMap.put(page, button);
     }
 
     private HandleButton createButton(@DrawableRes int iconResId) {

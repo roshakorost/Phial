@@ -1,3 +1,4 @@
+/*
 package com.mindcoders.phial.autofill;
 
 import android.app.Activity;
@@ -8,9 +9,11 @@ import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+*/
 /**
  * Created by rost on 11/3/17.
- */
+ *//*
+
 
 class ScreenTracker extends SimpleActivityLifecycleCallbacks {
     interface ScreenListener {
@@ -56,3 +59,4 @@ class ScreenTracker extends SimpleActivityLifecycleCallbacks {
         currentScreen.exitScope(scope);
     }
 }
+*/

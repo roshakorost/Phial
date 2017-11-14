@@ -19,6 +19,8 @@ import android.widget.FrameLayout;
 import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.Screen;
+import com.mindcoders.phial.ScreenTracker;
 import com.mindcoders.phial.internal.PhialNotifier;
 import com.mindcoders.phial.internal.overlay.OverlayView.OnPageSelectedListener;
 import com.mindcoders.phial.internal.util.AnimatorFactory;
@@ -30,7 +32,7 @@ import java.util.List;
 
 import static com.mindcoders.phial.internal.util.UiUtils.dpToPx;
 
-public final class Overlay implements CurrentActivityProvider.AppStateListener {
+public final class Overlay implements CurrentActivityProvider.AppStateListener, ScreenTracker.ScreenListener {
 
     private static final int BUTTON_SIZE_DP = 68;
     private static final int STATUSBAR_HEIGHT_DP = 25;
@@ -40,6 +42,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     private final List<Page> pages;
     private final OverlayPositionStorage positionStorage;
     private final CurrentActivityProvider activityProvider;
+    private final ScreenTracker screenTracker;
     private final WindowManager windowManager;
     private final OverlayView overlayView;
 
@@ -63,6 +66,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             List<Page> pages,
             PhialNotifier notifier,
             CurrentActivityProvider activityProvider,
+            ScreenTracker screenTracker,
             OverlayPositionStorage positionStorage,
             SelectedPageStorage selectedPageStorage
     ) {
@@ -70,6 +74,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         this.pages = pages;
         this.notifier = notifier;
         this.activityProvider = activityProvider;
+        this.screenTracker = screenTracker;
         this.positionStorage = positionStorage;
 
         this.windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -80,6 +85,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         overlayView = new OverlayView(context, btnSizePx, selectedPageStorage);
 
         activityProvider.addListener(this);
+        screenTracker.addListener(this);
     }
 
     private void setupOverlayView(List<Page> pages) {
@@ -163,6 +169,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     public void destroy() {
         activityProvider.removeListener(this);
+        screenTracker.removeListener(this);
         windowManager.removeView(overlayView);
         if (containerWrapperView != null) {
             windowManager.removeView(containerWrapperView);
@@ -457,4 +464,10 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     public void onAppBackground() {
         hide();
     }
+
+    @Override
+    public void onScreenChanged(Screen screen) {
+        overlayView.updateVisiblePages(screen);
+    }
+
 }

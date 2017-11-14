@@ -1,11 +1,13 @@
 package com.mindcoders.phial.internal;
 
+import android.app.Activity;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
 import com.mindcoders.phial.ListAttacher;
 import com.mindcoders.phial.PhialBuilder;
+import com.mindcoders.phial.ScreenTracker;
 import com.mindcoders.phial.internal.keyvalue.InfoWriter;
 import com.mindcoders.phial.internal.keyvalue.KVAttacher;
 import com.mindcoders.phial.internal.keyvalue.KVSaver;
@@ -14,6 +16,7 @@ import com.mindcoders.phial.internal.share.attachment.AttacherAdaptor;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.share.attachment.ScreenShotAttacher;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
+import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;
 import com.mindcoders.phial.keyvalue.Phial;
 
 import java.util.ArrayList;
@@ -32,26 +35,31 @@ public final class PhialCore {
     private final KVSaver kvSaver;
     private final PhialNotifier notifier;
     private final CurrentActivityProvider activityProvider;
+    private final ScreenTracker screenTracker;
 
-
-    private PhialCore(Application application,
-                      ShareManager shareManager,
-                      AttachmentManager attachmentManager,
-                      KVSaver kvSaver,
-                      PhialNotifier notifier,
-                      CurrentActivityProvider activityProvider) {
+    private PhialCore(
+            Application application,
+            ShareManager shareManager,
+            AttachmentManager attachmentManager,
+            KVSaver kvSaver,
+            PhialNotifier notifier,
+            CurrentActivityProvider activityProvider,
+            ScreenTracker screenTracker
+                     ) {
         this.application = application;
         this.shareManager = shareManager;
         this.attachmentManager = attachmentManager;
         this.kvSaver = kvSaver;
         this.notifier = notifier;
         this.activityProvider = activityProvider;
+        this.screenTracker = screenTracker;
     }
 
     public static PhialCore create(PhialBuilder phialBuilder) {
         final Application application = phialBuilder.getApplication();
 
         final CurrentActivityProvider activityProvider = new CurrentActivityProvider();
+        final ScreenTracker screenTracker = new ScreenTracker();
         final PhialNotifier phialNotifier = new PhialNotifier();
         final KVSaver kvSaver = new KVSaver();
         final ShareManager shareManager = new ShareManager(
@@ -64,13 +72,24 @@ public final class PhialCore {
         Phial.addSaver(kvSaver);
         phialNotifier.addListener(attachmentManager);
         application.registerActivityLifecycleCallbacks(activityProvider);
+        application.registerActivityLifecycleCallbacks(new SimpleActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityResumed(Activity activity) {
+                screenTracker.onActivityResumed(activity);
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                screenTracker.onActivityPaused(activity);
+            }
+        });
 
         final List<InfoWriter> writers = phialBuilder.getInfoWriters();
         for (InfoWriter writer : writers) {
             writer.writeInfo();
         }
 
-        return new PhialCore(application, shareManager, attachmentManager, kvSaver, phialNotifier, activityProvider);
+        return new PhialCore(application, shareManager, attachmentManager, kvSaver, phialNotifier, activityProvider, screenTracker);
     }
 
     public void destroy() {
@@ -139,4 +158,9 @@ public final class PhialCore {
     CurrentActivityProvider getActivityProvider() {
         return activityProvider;
     }
+
+    ScreenTracker getScreenTracker() {
+        return screenTracker;
+    }
+
 }

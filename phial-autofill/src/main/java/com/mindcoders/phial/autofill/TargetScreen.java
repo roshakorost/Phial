@@ -1,3 +1,4 @@
+/*
 package com.mindcoders.phial.autofill;
 
 import android.app.Activity;
@@ -9,10 +10,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+*/
 /**
  * Class is used to abstract from activity,
  * since in future we might provide functionality to show options for Fragment as well
- */
+ *//*
+
 class TargetScreen {
     private final Class<? extends Activity> target;
     private final String scope;
@@ -121,3 +124,4 @@ class Screen {
     }
 }
 
+*/
