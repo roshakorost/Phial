@@ -1,6 +1,7 @@
 package com.mindcoders.phial.internal.keyvalue;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.mindcoders.phial.internal.keyvalue.KVSaver.KVCategory;
 
@@ -15,7 +16,23 @@ import java.util.List;
  */
 
 class KVJsonSerializer {
+    @VisibleForTesting
+    static final int INDENT_SPACES = 2;
+    @VisibleForTesting
+    static final String NAME_KEY = "name";
+    @VisibleForTesting
+    static final String VALUE_KEY = "value";
+    @VisibleForTesting
+    static final String ENTRIES_KEY = "entries";
+
     String serializeToString(List<KVCategory> categories) throws JSONException {
+        final JSONArray categoriesJsonArray = createCategoriesArray(categories);
+        return categoriesJsonArray.toString(INDENT_SPACES);
+    }
+
+    @VisibleForTesting
+    @NonNull
+    JSONArray createCategoriesArray(List<KVCategory> categories) throws JSONException {
         final JSONArray categoriesJsonArray = new JSONArray();
         for (KVCategory category : categories) {
             if (category.isEmpty()) {
@@ -25,23 +42,24 @@ class KVJsonSerializer {
             final JSONObject categoryJsonObject = createCategoryObject(category);
             categoriesJsonArray.put(categoryJsonObject);
         }
-        return categoriesJsonArray.toString(2);
+        return categoriesJsonArray;
     }
 
+    @VisibleForTesting
     @NonNull
-    private JSONObject createCategoryObject(KVCategory category) throws JSONException {
+    JSONObject createCategoryObject(KVCategory category) throws JSONException {
         final JSONObject categoryJsonObject = new JSONObject();
-        categoryJsonObject.put("name", category.getName());
+        categoryJsonObject.put(NAME_KEY, category.getName());
 
         final JSONArray entriesJsonArray = new JSONArray();
         for (KVSaver.KVEntry entry : category.entries()) {
             final JSONObject entryJsonObject = new JSONObject();
-            entryJsonObject.put("name", entry.getName());
-            entryJsonObject.put("value", entry.getValue());
+            entryJsonObject.put(NAME_KEY, entry.getName());
+            entryJsonObject.put(VALUE_KEY, entry.getValue());
             entriesJsonArray.put(entryJsonObject);
         }
 
-        categoryJsonObject.put("entries", entriesJsonArray);
+        categoryJsonObject.put(ENTRIES_KEY, entriesJsonArray);
         return categoryJsonObject;
     }
 }
