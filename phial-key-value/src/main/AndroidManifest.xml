@@ -1,4 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mindcoders.phial.keyvalue">
-
-</manifest>
+<manifest package="com.mindcoders.phial.keyvalue" />

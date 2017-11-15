@@ -36,6 +36,7 @@ public final class Page {
     private final CharSequence title;
     private final PageViewFactory pageViewFactory;
     private final Set<TargetScreen> targetScreens;
+
     /**
      * @param id              unique pageId
      * @param iconResourceId  page icon
@@ -49,7 +50,7 @@ public final class Page {
             String title,
             PageViewFactory pageViewFactory,
             Set<TargetScreen> targetScreens
-               ) {
+    ) {
         this.id = id;
         this.iconResourceId = iconResourceId;
         this.title = title;

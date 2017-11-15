@@ -5,7 +5,6 @@ import android.app.Activity;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.util.Precondition;
-import com.mindcoders.phial_autofill.R;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -43,7 +43,7 @@ public final class PhialCore {
             PhialNotifier notifier,
             CurrentActivityProvider activityProvider,
             ScreenTracker screenTracker
-                     ) {
+    ) {
         this.application = application;
         this.shareManager = shareManager;
         this.attachmentManager = attachmentManager;
@@ -77,7 +77,15 @@ public final class PhialCore {
             writer.writeInfo();
         }
 
-        return new PhialCore(application, shareManager, attachmentManager, kvSaver, phialNotifier, activityProvider, screenTracker);
+        return new PhialCore(
+                application,
+                shareManager,
+                attachmentManager,
+                kvSaver,
+                phialNotifier,
+                activityProvider,
+                screenTracker
+        );
     }
 
     public void destroy() {
@@ -87,9 +95,11 @@ public final class PhialCore {
     }
 
     @NonNull
-    private static AttachmentManager createAttachmentManager(PhialBuilder phialBuilder,
-                                                             KVSaver kvSaver,
-                                                             CurrentActivityProvider activityProvider) {
+    private static AttachmentManager createAttachmentManager(
+            PhialBuilder phialBuilder,
+            KVSaver kvSaver,
+            CurrentActivityProvider activityProvider
+    ) {
         final List<ListAttacher> attachers = prepareAttachers(phialBuilder, kvSaver, activityProvider);
         return new AttachmentManager(
                 attachers,
@@ -98,9 +108,11 @@ public final class PhialCore {
         );
     }
 
-    private static List<ListAttacher> prepareAttachers(PhialBuilder phialBuilder,
-                                                       KVSaver kvSaver,
-                                                       CurrentActivityProvider activityProvider) {
+    private static List<ListAttacher> prepareAttachers(
+            PhialBuilder phialBuilder,
+            KVSaver kvSaver,
+            CurrentActivityProvider activityProvider
+    ) {
         final List<ListAttacher> attachers = new ArrayList<>(phialBuilder.getAttachers());
 
         if (phialBuilder.attachKeyValues()) {

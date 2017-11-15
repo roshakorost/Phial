@@ -86,7 +86,7 @@ public final class OverlayFactory {
                 Context context,
                 OverlayCallback overlayCallback,
                 ScreenTracker screenTracker
-                                          ) {
+        ) {
             return new KeyValueView(context, phialCore.getKvSaver());
         }
     }
@@ -103,7 +103,7 @@ public final class OverlayFactory {
                 Context context,
                 OverlayCallback overlayCallback,
                 ScreenTracker screenTracker
-                                       ) {
+        ) {
             return new ShareView(context, phialCore.getShareManager(), phialCore.getAttachmentManager(), overlayCallback);
         }
     }

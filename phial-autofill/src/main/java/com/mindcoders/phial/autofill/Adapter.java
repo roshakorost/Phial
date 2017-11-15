@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 
-import com.mindcoders.phial_autofill.R;
-
 import java.util.ArrayList;
 import java.util.List;
 

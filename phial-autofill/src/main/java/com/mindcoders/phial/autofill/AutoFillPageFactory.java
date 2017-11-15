@@ -25,7 +25,7 @@ class AutoFillPageFactory implements Page.PageViewFactory<FillView> {
             Context context,
             OverlayCallback overlayCallback,
             ScreenTracker screenTracker
-                                  ) {
+    ) {
         return new FillView(context, configs, screenTracker, overlayCallback);
     }
 

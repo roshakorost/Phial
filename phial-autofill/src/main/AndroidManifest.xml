@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mindcoders.phial_autofill" />
+<manifest package="com.mindcoders.phial.autofill" />
