@@ -1,6 +1,7 @@
 package com.mindcoders.phial;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.mindcoders.phial.internal.util.ObjectUtil;
@@ -64,6 +65,7 @@ public class Screen {
         this.activity = activity;
     }
 
+    @Nullable
     public View findTarget(int id) {
         if (activity != null) {
             return activity.findViewById(id);
