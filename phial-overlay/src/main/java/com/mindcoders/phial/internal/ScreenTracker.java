@@ -2,7 +2,6 @@ package com.mindcoders.phial.internal;
 
 import android.app.Activity;
 
-import com.mindcoders.phial.PhialScope;
 import com.mindcoders.phial.internal.util.ObjectUtil;
 import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;
 

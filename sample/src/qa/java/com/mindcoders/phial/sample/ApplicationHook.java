@@ -14,7 +14,6 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static com.mindcoders.phial.autofill.AutoFiller.createPhialPage;
 import static com.mindcoders.phial.autofill.AutoFiller.createPhialPages;
 import static com.mindcoders.phial.autofill.AutoFiller.forActivity;
 import static com.mindcoders.phial.autofill.AutoFiller.forScope;

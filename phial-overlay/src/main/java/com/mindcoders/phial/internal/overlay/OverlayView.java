@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.Screen;
-import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.util.Precondition;
 import com.mindcoders.phial.internal.util.ViewUtil;
 import com.mindcoders.phial.internal.util.support.ResourcesCompat;

@@ -11,11 +11,8 @@ import android.widget.TextView;
 
 import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.PageView;
-import com.mindcoders.phial.internal.Screen;
-import com.mindcoders.phial.internal.ScreenTracker;
 import com.mindcoders.phial.internal.util.Precondition;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +24,7 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
     private final OverlayCallback overlayCallback;
     private final Adapter adapter;
 
-    public FillView(@NonNull Context context) {
+    FillView(@NonNull Context context) {
         super(context);
         Precondition.calledFromTools(this);
         overlayCallback = null;

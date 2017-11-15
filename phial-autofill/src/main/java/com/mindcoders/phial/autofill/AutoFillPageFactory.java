@@ -6,8 +6,6 @@ import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.internal.ScreenTracker;
 
-import java.util.List;
-
 /**
  * Created by rost on 11/4/17.
  */
