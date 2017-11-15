@@ -112,7 +112,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener, 
         overlayView.setOnPageSelectedListener(onPageSelectedListener);
         overlayView.setOnHandleMoveListener(onHandleMoveListener);
 
-        overlayView.addPages(pages);
+        overlayView.addPages(pages, screenTracker.getCurrentScreen());
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -472,7 +472,9 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener, 
 
     @Override
     public void onScreenChanged(Screen screen) {
-        overlayView.updateVisiblePages(screen);
+        if (isOverlayViewSetup) {
+            overlayView.updateVisiblePages(screen);
+        }
     }
 
 }

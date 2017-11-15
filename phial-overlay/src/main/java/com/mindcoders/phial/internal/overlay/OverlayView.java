@@ -121,11 +121,12 @@ class OverlayView extends LinearLayout {
         }
     }
 
-    public void addPages(List<Page> pages) {
+    public void addPages(List<Page> pages, Screen screen) {
         this.pages.addAll(pages);
         for (Page page : this.pages) {
             addPageButton(page);
         }
+        updateVisiblePages(screen);
     }
 
     public void setOnPageSelectedListener(OnPageSelectedListener onPageSelectedListener) {

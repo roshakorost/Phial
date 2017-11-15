@@ -32,6 +32,10 @@ public final class ScreenTracker extends SimpleActivityLifecycleCallbacks implem
         listeners.remove(listener);
     }
 
+    public Screen getCurrentScreen() {
+        return currentScreen;
+    }
+
     @Override
     public void onActivityResumed(Activity activity) {
         currentScreen.setActivity(activity);
