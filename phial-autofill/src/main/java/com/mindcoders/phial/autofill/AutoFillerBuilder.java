@@ -52,7 +52,7 @@ public class AutoFillerBuilder {
             verifySizeMatches(expectedSize, option, dataToFill);
             optionsWithTargets.add(option.withIds(targetIds));
         }
-        return new FillConfig(targetScreen, optionsWithTargets);
+        return new FillConfig(targetScreen, optionsWithTargets, targetIds);
     }
 
     private static void verifySizeMatches(int expectedSize, FillOption option, List<String> dataToFill) {

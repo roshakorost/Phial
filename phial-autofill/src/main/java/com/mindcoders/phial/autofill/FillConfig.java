@@ -10,18 +10,14 @@ import java.util.List;
  */
 
 public class FillConfig {
-
     private final TargetScreen screen;
     private final List<FillOption> options;
+    private final List<Integer> targetIds;
 
-    /**
-     * Constructs a new FillConfig.
-     * @param screen screen where the specified options can be inserted.
-     * @param options options that provide values to be inserted.
-     */
-    public FillConfig(TargetScreen screen, List<FillOption> options) {
+    FillConfig(TargetScreen screen, List<FillOption> options, List<Integer> targetIds) {
         this.screen = screen;
         this.options = Collections.unmodifiableList(options);
+        this.targetIds = Collections.unmodifiableList(targetIds);
     }
 
     TargetScreen getScreen() {
@@ -30,6 +26,10 @@ public class FillConfig {
 
     List<FillOption> getOptions() {
         return options;
+    }
+
+    List<Integer> getTargetIds() {
+        return targetIds;
     }
 
     @Override

@@ -18,9 +18,9 @@ import java.util.List;
 
 public class AutoFiller {
 
-    private static final String EMPTY_FIELD = null;
+    static final String EMPTY_FIELD = "";
 
-    private static Page createPhialPage(FillConfig config) {
+    public static Page createPhialPage(FillConfig config) {
         final AutoFillPageFactory pageFactory = new AutoFillPageFactory(config);
         final TargetScreen screen = config.getScreen();
 
