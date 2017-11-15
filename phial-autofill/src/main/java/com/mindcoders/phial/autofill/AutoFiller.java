@@ -13,13 +13,20 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by rost on 11/3/17.
+ * Creates Phial Page that will fill views automatically
  */
-
 public class AutoFiller {
 
     static final String EMPTY_FIELD = "";
 
+    /**
+     * Creates Autofiller Page to be displayed in the overlay.
+     * {@link #forActivity(Class)} and {@link #forScope(String)} in order to get
+     * {@link AutoFillerBuilder} that will build config
+     *
+     * @param config specifies available autofill options and where to offer autofill.
+     * @return pages to be added to {@link PhialBuilder}
+     */
     public static Page createPhialPage(FillConfig config) {
         final AutoFillPageFactory pageFactory = new AutoFillPageFactory(config);
         final TargetScreen screen = config.getScreen();
@@ -40,9 +47,12 @@ public class AutoFiller {
     }
 
     /**
-     * Creates Autofiller Page to be displayed in the overlay.
+     * Creates Autofiller Pages to be displayed in the overlay.
+     * {@link #forActivity(Class)} and {@link #forScope(String)} in order to get
+     * {@link AutoFillerBuilder} that will build config
+     *
      * @param autoFillers specifies available autofill options and where to offer autofill.
-     * @return page to be added to {@link PhialBuilder}
+     * @return pages to be added to {@link PhialBuilder}
      */
     public static List<Page> createPhialPages(FillConfig... autoFillers) {
         return createPhialPages(Arrays.asList(autoFillers));
@@ -50,6 +60,7 @@ public class AutoFiller {
 
     /**
      * Creates {@link AutoFillerBuilder} for target activity.
+     *
      * @param target activity that when resumed will have {@link FillOption} available.
      * @return builder to set available {@link FillOption}.
      */
@@ -59,6 +70,7 @@ public class AutoFiller {
 
     /**
      * Creates {@link AutoFillerBuilder} for target scope.
+     *
      * @param scope unique scope name.
      * @return builder to set available {@link FillOption}.
      */
@@ -68,7 +80,8 @@ public class AutoFiller {
 
     /**
      * Factory method to construct {@link FillOption}.
-     * @param name option name to be displayed in the autofill page.
+     *
+     * @param name       option name to be displayed in the autofill page.
      * @param dataToFill strings that will be inserted into targets.
      */
     public static FillOption option(String name, String... dataToFill) {

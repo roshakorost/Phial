@@ -6,9 +6,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by rost on 11/3/17.
+ * Config for Phial AutoFiller. See  {@link AutoFillerBuilder} in order to build.
+ * <p>
+ * Use with {@link AutoFiller#createPhialPage(FillConfig) in order to get Phial Page}
  */
-
 public class FillConfig {
     private final TargetScreen screen;
     private final List<FillOption> options;
