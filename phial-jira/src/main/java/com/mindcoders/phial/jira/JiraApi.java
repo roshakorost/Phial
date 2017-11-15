@@ -27,7 +27,7 @@ class JiraApi {
 
     JiraApi(OkHttpClient client, String baseUrl, String projectKey) {
         this.client = client;
-        this.baseUrl = baseUrl;
+        this.baseUrl = prepareBaseUrl(baseUrl);
         this.projectKey = projectKey;
     }
 
@@ -81,4 +81,9 @@ class JiraApi {
             return null;
         }
     }
+
+    private String prepareBaseUrl(String baseUrl) {
+        return baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
+    }
+
 }
