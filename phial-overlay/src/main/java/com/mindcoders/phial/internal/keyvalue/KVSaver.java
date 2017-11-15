@@ -1,7 +1,6 @@
 package com.mindcoders.phial.internal.keyvalue;
 
 
-
 import com.mindcoders.phial.keyvalue.Saver;
 
 import java.util.ArrayList;
@@ -27,6 +26,8 @@ public class KVSaver extends Observable implements Saver {
             }
             keyValues.put(key, value);
         }
+
+        setChanged();
         notifyObservers();
     }
 
@@ -36,8 +37,14 @@ public class KVSaver extends Observable implements Saver {
             final Map<String, String> keyValues = items.get(category);
             if (keyValues != null) {
                 keyValues.remove(key);
+
+                if (keyValues.isEmpty()) {
+                    items.remove(category);
+                }
             }
         }
+
+        setChanged();
         notifyObservers();
     }
 
@@ -46,6 +53,8 @@ public class KVSaver extends Observable implements Saver {
         synchronized (items) {
             items.remove(category);
         }
+
+        setChanged();
         notifyObservers();
     }
 
@@ -84,6 +93,24 @@ public class KVSaver extends Observable implements Saver {
         String getValue() {
             return value;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            KVEntry kvEntry = (KVEntry) o;
+
+            if (name != null ? !name.equals(kvEntry.name) : kvEntry.name != null) return false;
+            return value != null ? value.equals(kvEntry.value) : kvEntry.value == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name != null ? name.hashCode() : 0;
+            result = 31 * result + (value != null ? value.hashCode() : 0);
+            return result;
+        }
     }
 
     static class KVCategory {
@@ -105,6 +132,24 @@ public class KVSaver extends Observable implements Saver {
 
         boolean isEmpty() {
             return entries.isEmpty();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            KVCategory that = (KVCategory) o;
+
+            if (name != null ? !name.equals(that.name) : that.name != null) return false;
+            return entries != null ? entries.equals(that.entries) : that.entries == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name != null ? name.hashCode() : 0;
+            result = 31 * result + (entries != null ? entries.hashCode() : 0);
+            return result;
         }
     }
 }

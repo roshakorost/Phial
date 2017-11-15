@@ -15,7 +15,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -71,9 +76,15 @@ public final class FileUtil {
         ZipOutputStream out = null;
         try {
             out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(target)));
-            for (File source : sources) {
-                writeFile(source, out);
+            final Set<String> takenNames = new HashSet<>();
+            final List<File> files = walk(sources);
+
+            for (File file : files) {
+                final String uniqueName = uniqueName(file, takenNames);
+                zipSingleFile(file, uniqueName, out);
+                takenNames.add(uniqueName);
             }
+
         } finally {
             if (out != null) {
                 out.close();
@@ -81,21 +92,13 @@ public final class FileUtil {
         }
     }
 
-    private static void writeFile(File source, ZipOutputStream out) throws IOException {
-        if (source.isDirectory()) {
-            final File[] files = source.listFiles();
-            for (File file : files) {
-                writeFile(file, out);
-            }
-            return;
-        }
+    private static void zipSingleFile(File source, String nameInZip, ZipOutputStream out) throws IOException {
+        out.putNextEntry(new ZipEntry(nameInZip));
 
         final byte[] buffer = new byte[BUFFER_SIZE];
         BufferedInputStream bis = null;
         try {
             bis = new BufferedInputStream(new FileInputStream(source), BUFFER_SIZE);
-
-            out.putNextEntry(new ZipEntry(source.getName()));
 
             int count;
             while ((count = bis.read(buffer, 0, BUFFER_SIZE)) != -1) {
@@ -107,5 +110,53 @@ public final class FileUtil {
                 bis.close();
             }
         }
+    }
+
+
+    public static List<File> walk(File source) {
+        if (!source.isDirectory()) {
+            return Collections.singletonList(source);
+        }
+
+        final File[] files = source.listFiles();
+        return walk(Arrays.asList(files));
+    }
+
+    public static List<File> walk(List<File> sources) {
+        final List<File> result = new ArrayList<>();
+        for (File source : sources) {
+            result.addAll(walk(source));
+        }
+        return result;
+    }
+
+    public static String uniqueName(File source, Set<String> taken) {
+        String name = source.getName();
+        for (int i = 1; taken.contains(name); i++) {
+            name = getFileNameWithoutExtention(source) + "_" + i;
+            final String extension = getFileExtension(source);
+            if (!extension.isEmpty()) {
+                name += "." + extension;
+            }
+        }
+        return name;
+    }
+
+    public static String getFileExtension(File file) {
+        final String fileName = file.getName();
+        int dotPos = fileName.lastIndexOf('.');
+        if (dotPos > 0) {
+            return fileName.substring(dotPos + 1);
+        }
+        return "";
+    }
+
+    public static String getFileNameWithoutExtention(File file) {
+        final String fileName = file.getName();
+        int dotPos = fileName.lastIndexOf('.');
+        if (dotPos > 0) {
+            return fileName.substring(0, dotPos);
+        }
+        return fileName;
     }
 }
