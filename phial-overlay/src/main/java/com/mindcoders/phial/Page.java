@@ -3,6 +3,8 @@ package com.mindcoders.phial;
 import android.content.Context;
 import android.view.View;
 
+import com.mindcoders.phial.internal.ScreenTracker;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -42,12 +44,27 @@ public final class Page {
      * @param iconResourceId  page icon
      * @param title           page title
      * @param pageViewFactory factory that will create view when page is selected
+     */
+    public Page(
+            String id,
+            int iconResourceId,
+            CharSequence title,
+            PageViewFactory pageViewFactory
+    ) {
+        this(id, iconResourceId, title, pageViewFactory, Collections.<TargetScreen>emptySet());
+    }
+
+    /**
+     * @param id              unique pageId
+     * @param iconResourceId  page icon
+     * @param title           page title
+     * @param pageViewFactory factory that will create view when page is selected
      * @param targetScreens   screens to present this page on. Page will be present on all screens if this is empty.
      */
     public Page(
             String id,
             int iconResourceId,
-            String title,
+            CharSequence title,
             PageViewFactory pageViewFactory,
             Set<TargetScreen> targetScreens
     ) {
@@ -55,7 +72,7 @@ public final class Page {
         this.iconResourceId = iconResourceId;
         this.title = title;
         this.pageViewFactory = pageViewFactory;
-        this.targetScreens = targetScreens;
+        this.targetScreens = Collections.unmodifiableSet(targetScreens);
     }
 
     public String getId() {
@@ -75,7 +92,7 @@ public final class Page {
     }
 
     public Set<TargetScreen> getTargetScreens() {
-        return Collections.unmodifiableSet(targetScreens);
+        return targetScreens;
     }
 
 }

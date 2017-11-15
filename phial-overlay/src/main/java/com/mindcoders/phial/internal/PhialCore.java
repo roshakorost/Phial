@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import com.mindcoders.phial.Attacher;
 import com.mindcoders.phial.ListAttacher;
 import com.mindcoders.phial.PhialBuilder;
-import com.mindcoders.phial.ScreenTracker;
 import com.mindcoders.phial.internal.keyvalue.InfoWriter;
 import com.mindcoders.phial.internal.keyvalue.KVAttacher;
 import com.mindcoders.phial.internal.keyvalue.KVSaver;
@@ -71,6 +70,7 @@ public final class PhialCore {
         phialNotifier.addListener(attachmentManager);
         application.registerActivityLifecycleCallbacks(activityProvider);
         application.registerActivityLifecycleCallbacks(screenTracker);
+        PhialScopeNotifier.addListener(screenTracker);
 
         final List<InfoWriter> writers = phialBuilder.getInfoWriters();
         for (InfoWriter writer : writers) {

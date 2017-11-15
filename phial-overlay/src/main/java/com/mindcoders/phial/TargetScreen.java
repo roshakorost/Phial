@@ -24,11 +24,11 @@ public class TargetScreen {
         return new TargetScreen(null, scope);
     }
 
-    Class<? extends Activity> getTargetActivity() {
+    public Class<? extends Activity> getTargetActivity() {
         return target;
     }
 
-    String getScope() {
+    public String getScope() {
         return scope;
     }
 

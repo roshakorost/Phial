@@ -1,38 +1,16 @@
 package com.mindcoders.phial;
 
+import com.mindcoders.phial.internal.PhialScopeNotifier;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class PhialScope {
-
-    private static final List<OnScopeChangedListener> LISTENERS = new CopyOnWriteArrayList<>();
-
-    static void addListener(OnScopeChangedListener listener) {
-        LISTENERS.add(listener);
-    }
-
-    static void removeListener(OnScopeChangedListener listener) {
-        LISTENERS.remove(listener);
-    }
-
+public final class PhialScope extends PhialScopeNotifier {
     public static void enterScope(String scope) {
-        for (OnScopeChangedListener listener : LISTENERS) {
-            listener.onEnterScope(scope);
-        }
+        fireEnterScope(scope);
     }
 
     public static void exitScope(String scope) {
-        for (OnScopeChangedListener listener : LISTENERS) {
-            listener.onExitScope(scope);
-        }
+        fireExitScope(scope);
     }
-
-    interface OnScopeChangedListener {
-
-        void onEnterScope(String scope);
-
-        void onExitScope(String scope);
-
-    }
-
 }

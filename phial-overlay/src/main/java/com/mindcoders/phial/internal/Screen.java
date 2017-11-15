@@ -1,11 +1,14 @@
-package com.mindcoders.phial;
+package com.mindcoders.phial.internal;
 
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.mindcoders.phial.TargetScreen;
+import com.mindcoders.phial.internal.util.CollectionUtils;
 import com.mindcoders.phial.internal.util.ObjectUtil;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -55,6 +58,20 @@ public class Screen {
         }
 
         return true;
+    }
+
+    public boolean matchesAny(Collection<TargetScreen> screens) {
+        if (CollectionUtils.isNullOrEmpty(screens)) {
+            return true;
+        }
+
+        for (TargetScreen targetScreen : screens) {
+            if (matches(targetScreen)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     Activity getActivity() {

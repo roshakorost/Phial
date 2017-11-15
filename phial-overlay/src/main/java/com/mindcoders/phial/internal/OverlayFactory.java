@@ -8,7 +8,6 @@ import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.R;
-import com.mindcoders.phial.ScreenTracker;
 import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.keyvalue.KeyValueView;
 import com.mindcoders.phial.internal.overlay.Overlay;

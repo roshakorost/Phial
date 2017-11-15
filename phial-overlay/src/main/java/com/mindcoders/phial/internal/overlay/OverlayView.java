@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
-import com.mindcoders.phial.Screen;
+import com.mindcoders.phial.internal.Screen;
 import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.util.Precondition;
 import com.mindcoders.phial.internal.util.ViewUtil;
@@ -100,14 +100,7 @@ class OverlayView extends LinearLayout {
 
     public void updateVisiblePages(Screen screen) {
         for (Page page : pages) {
-            boolean screenMatches = false;
-            for (TargetScreen targetScreen : page.getTargetScreens()) {
-                if (screen.matches(targetScreen)) {
-                    screenMatches = true;
-                    break;
-                }
-            }
-            boolean shouldShowPage = screenMatches || page.getTargetScreens().isEmpty();
+            final boolean shouldShowPage = screen.matchesAny(page.getTargetScreens());
             if (shouldShowPage && !pageViewMap.containsKey(page)) {
                 addPageButton(page);
             } else if (!shouldShowPage && pageViewMap.containsKey(page)) {
