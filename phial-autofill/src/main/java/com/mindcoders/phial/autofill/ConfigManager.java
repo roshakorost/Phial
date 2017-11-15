@@ -1,5 +1,7 @@
 package com.mindcoders.phial.autofill;
 
+import android.support.annotation.VisibleForTesting;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +10,10 @@ import java.util.List;
  */
 
 class ConfigManager {
-    private static final String ORDER = "keys_order";
-    private static final String KEY_PREFIX = "key_";
+    @VisibleForTesting
+    static final String ORDER = "keys_order";
+    @VisibleForTesting
+    static final String KEY_PREFIX = "key_";
     private final FillConfig fillConfig;
     private final Store store;
 

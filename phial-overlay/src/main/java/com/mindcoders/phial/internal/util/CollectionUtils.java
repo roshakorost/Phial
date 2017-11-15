@@ -59,7 +59,7 @@ public final class CollectionUtils {
         return input == null || input.isEmpty();
     }
 
-    public static List<Integer> asList(int[] ids) {
+    public static List<Integer> asList(int... ids) {
         final List<Integer> result = new ArrayList<>(ids.length);
         for (int id : ids) {
             result.add(id);
