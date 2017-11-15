@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -51,6 +52,14 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
         listView.setAdapter(adapter);
 
         final EditText nameTV = findViewById(R.id.name_tv);
+        nameTV.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                saveOption(nameTV.getText().toString());
+                presentOptions(manager.getOptions());
+                return true;
+            }
+            return false;
+        });
 
         final View button = findViewById(R.id.add_button);
         button.setOnClickListener(v -> {
