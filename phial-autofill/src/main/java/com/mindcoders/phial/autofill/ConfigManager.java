@@ -1,7 +1,5 @@
 package com.mindcoders.phial.autofill;
 
-import android.text.TextUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +56,7 @@ class ConfigManager {
             //PageCreation might be updated and have less options or mo option
             //Since we not sure what to do in such case just ignore them as invalid;
             if (hasSameSizeAsConfig(values)) {
-                final FillOption fillOption = new FillOption(optionName, values, fillConfig.getTargetIds());
+                final FillOption fillOption = new FillOption(optionName, values);
                 options.add(fillOption);
             }
         }

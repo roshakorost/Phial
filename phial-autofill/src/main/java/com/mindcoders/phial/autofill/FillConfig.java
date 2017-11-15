@@ -40,14 +40,15 @@ public class FillConfig {
         FillConfig that = (FillConfig) o;
 
         if (!screen.equals(that.screen)) return false;
-        return options.equals(that.options);
+        if (!options.equals(that.options)) return false;
+        return targetIds.equals(that.targetIds);
     }
 
     @Override
     public int hashCode() {
         int result = screen.hashCode();
         result = 31 * result + options.hashCode();
+        result = 31 * result + targetIds.hashCode();
         return result;
     }
-
 }

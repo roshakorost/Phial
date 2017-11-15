@@ -50,7 +50,7 @@ public class AutoFillerBuilder {
         for (FillOption option : options) {
             final List<String> dataToFill = option.getDataToFill();
             verifySizeMatches(expectedSize, option, dataToFill);
-            optionsWithTargets.add(option.withIds(targetIds));
+            optionsWithTargets.add(option);
         }
         return new FillConfig(targetScreen, optionsWithTargets, targetIds);
     }

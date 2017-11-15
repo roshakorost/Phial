@@ -60,7 +60,7 @@ public class AutoFillerBuilderTest {
         final List<Integer> ids = Arrays.asList(1, 2);
         final FillConfig expected = new FillConfig(
                 screen,
-                Arrays.asList(opt1.withIds(ids), opt2.withIds(ids)),
+                Arrays.asList(opt1, opt2),
                 ids);
         Assert.assertEquals("Bad FillConfig is build", expected, actual);
     }
