@@ -44,7 +44,8 @@ android {
     }
 }
 dependencies {
-    implementation "com.android.support:appcompat-v7:26.1.0"
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.jakewharton.timber:timber:4.5.1'
 
@@ -52,5 +53,8 @@ dependencies {
     qaImplementation project(':phial-logging')
     qaImplementation project(':phial-jira')
     qaImplementation project(':phial-key-value')
+    qaImplementation project(':phial-autofill')
+    qaImplementation project(':phial-scope')
     prodImplementation project(':phial-key-value')
+    prodImplementation project(':phial-scope-no-op')
 }

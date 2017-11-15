@@ -2,6 +2,8 @@ package com.mindcoders.phial.keyvalue;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Created by rost on 11/2/17.
  */
+@RunWith(JUnit4.class)
 public class PhialTest {
     //we would like to check the Phial call save and remove forEach saver
     private static final int SAVERS_COUNT = 2;
@@ -69,6 +72,12 @@ public class PhialTest {
         Phial.category("category").setKey("key", "value");
         Phial.category("category").removeKey("key");
         savers.forEach(Mockito::verifyZeroInteractions);
+    }
+
+    @Test
+    public void clearCategory() {
+        Phial.category("category").setKey("key", "value").clear();
+        savers.forEach(saver -> verify(saver).remove(eq("category")));
     }
 
     private List<Saver> createSavers() {

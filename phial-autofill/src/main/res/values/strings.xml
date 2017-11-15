@@ -1,0 +1,5 @@
+<resources>
+    <string name="phial.autofill.title">Auto fill</string>
+    <string name="phial.add">Add</string>
+    <string name="phial.option_name">Option Name</string>
+</resources>

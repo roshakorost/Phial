@@ -67,6 +67,7 @@ public class ShareManager {
     private Intent createShareIntent(Uri file, String message) {
         final Intent intent = new Intent(Intent.ACTION_SEND)
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .setType("application/zip")
                 .putExtra(Intent.EXTRA_TEXT, message);
 

@@ -4,6 +4,10 @@
 
 <module name="Checker">
 
+    <module name="SuppressionFilter">
+        <property name="file" value="suppressions.xml"/>
+    </module>
+
     <module name="FileLength" />
     <module name="FileTabCharacter" />
 
@@ -44,7 +48,7 @@
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
         <module name="AvoidStarImport">
-            <property name="excludes" value="org.junit.Assert, org.mockito.Mockito"/>
+            <property name="excludes" value="org.junit.Assert, org.mockito.Mockito" />
         </module>
         <module name="IllegalImport" />
         <module name="RedundantImport" />
@@ -107,5 +111,20 @@
         <!--module name="VisibilityModifier"/-->
 
         <module name="UpperEll" />
+
+        <module name="JavadocMethod">
+            <property name="scope" value="public" />
+            <property name="allowMissingReturnTag" value="true" />
+            <property name="allowMissingThrowsTags" value="true" />
+            <property name="allowMissingParamTags" value="true" />
+            <property name="allowMissingPropertyJavadoc" value="true" />
+            <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF" />
+        </module>
+
+        <module name="SuppressWarningsHolder" />
+
     </module>
+
+    <module name="SuppressWarningsFilter" />
+
 </module>

@@ -24,4 +24,10 @@ public final class SelectedPageStorage {
                    .apply();
     }
 
+    public void removeSelectedPageId() {
+        preferences.edit()
+                   .remove(KEY_SELECTED_PAGE_ID)
+                   .apply();
+    }
+
 }

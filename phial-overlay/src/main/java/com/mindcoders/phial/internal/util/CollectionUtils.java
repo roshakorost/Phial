@@ -1,7 +1,9 @@
 package com.mindcoders.phial.internal.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,15 +49,21 @@ public final class CollectionUtils {
         return result;
     }
 
-    public static <T, G> List<T> map(Collection<G> input, Function1<T, G> function) {
-        List<T> result = new ArrayList<T>(input.size());
-        for (G item : input) {
-            result.add(function.call(item));
+    public static boolean isNullOrEmpty(Collection<?> input) {
+        return input == null || input.isEmpty();
+    }
+
+    public static List<Integer> asList(int... ids) {
+        final List<Integer> result = new ArrayList<>(ids.length);
+        for (int id : ids) {
+            result.add(id);
         }
         return result;
     }
 
-    public static boolean isNullOrEmpty(Collection<?> input) {
-        return input == null || input.isEmpty();
+    public static <T> Set<T> asSet(T... items) {
+        final HashSet<T> result = new HashSet<>(items.length);
+        result.addAll(Arrays.asList(items));
+        return Collections.unmodifiableSet(result);
     }
 }

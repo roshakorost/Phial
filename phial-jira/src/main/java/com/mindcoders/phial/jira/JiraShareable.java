@@ -60,7 +60,7 @@ class JiraShareable implements Shareable {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_GO | actionId == EditorInfo.IME_ACTION_DONE) {
-                    shareManager.authorize(loginTV.getText().toString(), passwordTV.getText().toString());
+                    shareManager.authorize(loginTV.getText().toString().trim(), passwordTV.getText().toString());
                     internalShare(shareContext, attachment, message);
                     return true;
                 }

@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -19,6 +20,8 @@ import android.widget.FrameLayout;
 import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.internal.Screen;
+import com.mindcoders.phial.internal.ScreenTracker;
 import com.mindcoders.phial.internal.PhialNotifier;
 import com.mindcoders.phial.internal.overlay.OverlayView.OnPageSelectedListener;
 import com.mindcoders.phial.internal.util.AnimatorFactory;
@@ -30,7 +33,7 @@ import java.util.List;
 
 import static com.mindcoders.phial.internal.util.UiUtils.dpToPx;
 
-public final class Overlay implements CurrentActivityProvider.AppStateListener {
+public final class Overlay implements CurrentActivityProvider.AppStateListener, ScreenTracker.ScreenListener {
 
     private static final int BUTTON_SIZE_DP = 68;
     private static final int STATUSBAR_HEIGHT_DP = 25;
@@ -40,6 +43,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     private final List<Page> pages;
     private final OverlayPositionStorage positionStorage;
     private final CurrentActivityProvider activityProvider;
+    private final ScreenTracker screenTracker;
     private final WindowManager windowManager;
     private final OverlayView overlayView;
 
@@ -63,6 +67,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
             List<Page> pages,
             PhialNotifier notifier,
             CurrentActivityProvider activityProvider,
+            ScreenTracker screenTracker,
             OverlayPositionStorage positionStorage,
             SelectedPageStorage selectedPageStorage
     ) {
@@ -70,6 +75,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         this.pages = pages;
         this.notifier = notifier;
         this.activityProvider = activityProvider;
+        this.screenTracker = screenTracker;
         this.positionStorage = positionStorage;
 
         this.windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -80,6 +86,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         overlayView = new OverlayView(context, btnSizePx, selectedPageStorage);
 
         activityProvider.addListener(this);
+        screenTracker.addListener(this);
     }
 
     private void setupOverlayView(List<Page> pages) {
@@ -105,7 +112,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         overlayView.setOnPageSelectedListener(onPageSelectedListener);
         overlayView.setOnHandleMoveListener(onHandleMoveListener);
 
-        overlayView.addPages(pages);
+        overlayView.addPages(pages, screenTracker.getCurrentScreen());
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -163,6 +170,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
     public void destroy() {
         activityProvider.removeListener(this);
+        screenTracker.removeListener(this);
         windowManager.removeView(overlayView);
         if (containerWrapperView != null) {
             windowManager.removeView(containerWrapperView);
@@ -225,7 +233,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
         @Override
         public void onBackPressed() {
             if (!pageContainerView.onBackPressed()) {
-                overlayView.toggle();
+                overlayView.hide();
             }
         }
 
@@ -294,7 +302,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         @Override
         public void onPageSelectionChanged(Page page, int position) {
-            pageContainerView.showPage(page.getPageViewFactory().createPageView(context, overlayCallback));
+            pageContainerView.showPage(page.getPageViewFactory().createPageView(context, overlayCallback, screenTracker));
             pageContainerView.setPageTitle(page.getTitle());
 
             updateSelectedPageIndicator(position);
@@ -329,7 +337,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
                                 public void onAnimationEnd(Animator animation) {
                                     containerWrapperView.setVisibility(View.VISIBLE);
                                     pageContainerView.showPage(
-                                            page.getPageViewFactory().createPageView(context, overlayCallback)
+                                            page.getPageViewFactory().createPageView(context, overlayCallback, screenTracker)
                                     );
                                     pageContainerView.setPageTitle(page.getTitle());
                                     params.dimAmount = 0.5f;
@@ -443,9 +451,13 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
 
         @Override
         public void finish() {
-            overlayView.toggle();
+            overlayView.hide();
         }
 
+        @Override
+        public Activity getCurrentActivity() {
+            return activityProvider.getActivity();
+        }
     };
 
     @Override
@@ -457,4 +469,12 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener {
     public void onAppBackground() {
         hide();
     }
+
+    @Override
+    public void onScreenChanged(Screen screen) {
+        if (isOverlayViewSetup) {
+            overlayView.updateVisiblePages(screen);
+        }
+    }
+
 }

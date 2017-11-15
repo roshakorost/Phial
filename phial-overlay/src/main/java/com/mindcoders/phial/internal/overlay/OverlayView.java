@@ -1,6 +1,5 @@
 package com.mindcoders.phial.internal.overlay;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.VisibleForTesting;
@@ -10,14 +9,19 @@ import android.widget.LinearLayout;
 
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.internal.Screen;
 import com.mindcoders.phial.internal.util.Precondition;
+import com.mindcoders.phial.internal.util.ViewUtil;
 import com.mindcoders.phial.internal.util.support.ResourcesCompat;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 class OverlayView extends LinearLayout {
-
+    private static final long CLICK_MAX_DURATION_MS = 300L;
     private final HandleButton btnHandle;
 
     interface OnPageSelectedListener {
@@ -45,6 +49,8 @@ class OverlayView extends LinearLayout {
     private final SelectedPageStorage selectedPageStorage;
 
     private final List<Page> pages = new ArrayList<>();
+
+    private final Map<Page, View> pageViewMap = new LinkedHashMap<>();
 
     private OnPageSelectedListener onPageSelectedListener;
 
@@ -91,16 +97,36 @@ class OverlayView extends LinearLayout {
         addView(btnHandle, params);
     }
 
-    public void addPage(Page page) {
-        pages.add(page);
-        addPageButton(page, 0);
+    public void updateVisiblePages(Screen screen) {
+        for (Page page : pages) {
+            final boolean shouldShowPage = screen.matchesAny(page.getTargetScreens());
+            if (shouldShowPage && !pageViewMap.containsKey(page)) {
+                addPageButton(page);
+            } else if (!shouldShowPage && pageViewMap.containsKey(page)) {
+                removeView(pageViewMap.remove(page));
+            }
+        }
+
+        updateSelection();
     }
 
-    public void addPages(List<Page> pages) {
+    private void updateSelection() {
+        Page previouslySelectedPage = getPreviouslySelectedPage();
+        if (previouslySelectedPage != null && !pageViewMap.containsKey(previouslySelectedPage)) {
+            Iterator<Page> iterator = pageViewMap.keySet().iterator();
+            if (iterator.hasNext()) {
+                Page page = iterator.next();
+                selectedPageStorage.setSelectedPage(page.getId());
+            }
+        }
+    }
+
+    public void addPages(List<Page> pages, Screen screen) {
         this.pages.addAll(pages);
         for (Page page : this.pages) {
-            addPageButton(page, 0);
+            addPageButton(page);
         }
+        updateVisiblePages(screen);
     }
 
     public void setOnPageSelectedListener(OnPageSelectedListener onPageSelectedListener) {
@@ -111,18 +137,31 @@ class OverlayView extends LinearLayout {
         this.onHandleMoveListener = onHandleMoveListener;
     }
 
-    public void toggle() {
-        if (pages.size() > 0) {
-            isExpanded = !isExpanded;
-            setPageButtonsVisible(isExpanded);
-            if (isExpanded) {
-                selectedPage = getPreviouslySelectedPage();
-                onPageSelectedListener.onFirstPageSelected(selectedPage, pages.indexOf(selectedPage));
-            } else {
-                selectedPage = null;
-                onPageSelectedListener.onNothingSelected();
-            }
-            setPageButtonsColors(isExpanded);
+    public void show() {
+        if (pages.size() > 0 && !isExpanded) {
+            isExpanded = true;
+            setPageButtonsVisible(true);
+            selectedPage = getPreviouslySelectedPage();
+            onPageSelectedListener.onFirstPageSelected(selectedPage, pages.indexOf(selectedPage));
+            setPageButtonsColors(true);
+        }
+    }
+
+    public void hide() {
+        if (pages.size() > 0 && isExpanded) {
+            isExpanded = false;
+            setPageButtonsVisible(false);
+            selectedPage = null;
+            onPageSelectedListener.onNothingSelected();
+            setPageButtonsColors(false);
+        }
+    }
+
+    private void toggle() {
+        if (isExpanded) {
+            hide();
+        } else {
+            show();
         }
     }
 
@@ -135,10 +174,10 @@ class OverlayView extends LinearLayout {
 
     private void setPageButtonsColors(boolean isExpanded) {
         if (isExpanded) {
-            int activeIndex = pages.size() - 1 - pages.indexOf(selectedPage);
+            View activeButton = pageViewMap.get(selectedPage);
             for (int i = 0; i < getChildCount() - 1; i++) {
-                HandleButton activeBtn = (HandleButton) getChildAt(i);
-                activeBtn.setSelected(activeIndex == i);
+                View btn = getChildAt(i);
+                btn.setSelected(activeButton == btn);
             }
         }
     }
@@ -154,12 +193,13 @@ class OverlayView extends LinearLayout {
         return pages.get(0);
     }
 
-    private void addPageButton(final Page page, int position) {
+    private void addPageButton(final Page page) {
         final HandleButton button = createButton(page.getIconResourceId());
 
         LinearLayout.LayoutParams params = new LayoutParams(btnSize, btnSize);
-        addView(button, position, params);
+        addView(button, 0, params);
         button.setVisibility(View.GONE);
+        button.setTag(page.getId());
 
         button.setOnClickListener(new OnClickListener() {
             @Override
@@ -182,6 +222,8 @@ class OverlayView extends LinearLayout {
                 }
             }
         });
+
+        pageViewMap.put(page, button);
     }
 
     private HandleButton createButton(@DrawableRes int iconResId) {
@@ -193,9 +235,9 @@ class OverlayView extends LinearLayout {
     private final OnTouchListener handleOnTouchListener = new OnTouchListener() {
 
         private float initialTouchX, initialTouchY;
+        private long startTimeMS;
 
         @Override
-        @SuppressLint("ClickableViewAccessibility")
         public boolean onTouch(View v, MotionEvent event) {
             if (selectedPage != null) {
                 return false;
@@ -205,7 +247,7 @@ class OverlayView extends LinearLayout {
                 case MotionEvent.ACTION_DOWN:
                     initialTouchX = event.getRawX();
                     initialTouchY = event.getRawY();
-
+                    startTimeMS = event.getEventTime();
                     onHandleMoveListener.onMoveStart(initialTouchX, initialTouchY);
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -213,13 +255,18 @@ class OverlayView extends LinearLayout {
                     break;
                 case MotionEvent.ACTION_UP:
                     onHandleMoveListener.onMoveEnd();
+                    final long downTimeMS = event.getEventTime() - startTimeMS;
+                    final boolean wasClicked = downTimeMS < CLICK_MAX_DURATION_MS
+                            && ViewUtil.distance(initialTouchX, initialTouchY, event.getRawX(), event.getRawY()) < btnSize / 2;
+                    if (wasClicked) {
+                        v.performClick();
+                    }
                     break;
                 default:
-                    return false;
+                    return true;
             }
 
-            return false;
+            return true;
         }
     };
-
 }

@@ -65,6 +65,15 @@ public class Category {
         return this;
     }
 
+    /**
+     * Clears all the keys associated with this category.
+     */
+    public void clear() {
+        for (Saver saver : savers) {
+            saver.remove(name);
+        }
+    }
+
     private void verifyKeyIsNotNull(String key) {
         if (key == null) {
             throw new IllegalArgumentException("key should not be null.");

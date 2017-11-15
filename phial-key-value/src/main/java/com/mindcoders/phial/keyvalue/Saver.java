@@ -20,4 +20,11 @@ public interface Saver {
      * @param key      - provided key
      */
     void remove(String category, String key);
+
+
+    /**
+     * Delete the category and all the key-value pairs associated with it.
+     * @param category - name of the category to be deleted
+     */
+    void remove(String category);
 }

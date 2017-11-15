@@ -4,4 +4,6 @@
     <color name="jira.color.primaryDark">#1C4160</color>
     <color name="jira.background">@color/jira.color.primary</color>
     <color name="jira.textColor.primary">@android:color/white</color>
+    <color name="jira.editTextColor">@android:color/black</color>
+    <color name="jira.textColorHint">#9E9E9E</color>
 </resources>

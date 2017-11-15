@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by rost on 10/29/17.
  */
-
+@SuppressWarnings("checkstyle:JavadocMethod")
 public class JiraShareableBuilder {
     private final Context context;
     private ShareDescription shareDescription;

@@ -32,26 +32,31 @@ public final class PhialCore {
     private final KVSaver kvSaver;
     private final PhialNotifier notifier;
     private final CurrentActivityProvider activityProvider;
+    private final ScreenTracker screenTracker;
 
-
-    private PhialCore(Application application,
-                      ShareManager shareManager,
-                      AttachmentManager attachmentManager,
-                      KVSaver kvSaver,
-                      PhialNotifier notifier,
-                      CurrentActivityProvider activityProvider) {
+    private PhialCore(
+            Application application,
+            ShareManager shareManager,
+            AttachmentManager attachmentManager,
+            KVSaver kvSaver,
+            PhialNotifier notifier,
+            CurrentActivityProvider activityProvider,
+            ScreenTracker screenTracker
+    ) {
         this.application = application;
         this.shareManager = shareManager;
         this.attachmentManager = attachmentManager;
         this.kvSaver = kvSaver;
         this.notifier = notifier;
         this.activityProvider = activityProvider;
+        this.screenTracker = screenTracker;
     }
 
     public static PhialCore create(PhialBuilder phialBuilder) {
         final Application application = phialBuilder.getApplication();
 
         final CurrentActivityProvider activityProvider = new CurrentActivityProvider();
+        final ScreenTracker screenTracker = new ScreenTracker();
         final PhialNotifier phialNotifier = new PhialNotifier();
         final KVSaver kvSaver = new KVSaver();
         final ShareManager shareManager = new ShareManager(
@@ -64,13 +69,23 @@ public final class PhialCore {
         Phial.addSaver(kvSaver);
         phialNotifier.addListener(attachmentManager);
         application.registerActivityLifecycleCallbacks(activityProvider);
+        application.registerActivityLifecycleCallbacks(screenTracker);
+        PhialScopeNotifier.addListener(screenTracker);
 
         final List<InfoWriter> writers = phialBuilder.getInfoWriters();
         for (InfoWriter writer : writers) {
             writer.writeInfo();
         }
 
-        return new PhialCore(application, shareManager, attachmentManager, kvSaver, phialNotifier, activityProvider);
+        return new PhialCore(
+                application,
+                shareManager,
+                attachmentManager,
+                kvSaver,
+                phialNotifier,
+                activityProvider,
+                screenTracker
+        );
     }
 
     public void destroy() {
@@ -80,9 +95,11 @@ public final class PhialCore {
     }
 
     @NonNull
-    private static AttachmentManager createAttachmentManager(PhialBuilder phialBuilder,
-                                                             KVSaver kvSaver,
-                                                             CurrentActivityProvider activityProvider) {
+    private static AttachmentManager createAttachmentManager(
+            PhialBuilder phialBuilder,
+            KVSaver kvSaver,
+            CurrentActivityProvider activityProvider
+    ) {
         final List<ListAttacher> attachers = prepareAttachers(phialBuilder, kvSaver, activityProvider);
         return new AttachmentManager(
                 attachers,
@@ -91,9 +108,11 @@ public final class PhialCore {
         );
     }
 
-    private static List<ListAttacher> prepareAttachers(PhialBuilder phialBuilder,
-                                                       KVSaver kvSaver,
-                                                       CurrentActivityProvider activityProvider) {
+    private static List<ListAttacher> prepareAttachers(
+            PhialBuilder phialBuilder,
+            KVSaver kvSaver,
+            CurrentActivityProvider activityProvider
+    ) {
         final List<ListAttacher> attachers = new ArrayList<>(phialBuilder.getAttachers());
 
         if (phialBuilder.attachKeyValues()) {
@@ -139,4 +158,9 @@ public final class PhialCore {
     CurrentActivityProvider getActivityProvider() {
         return activityProvider;
     }
+
+    ScreenTracker getScreenTracker() {
+        return screenTracker;
+    }
+
 }

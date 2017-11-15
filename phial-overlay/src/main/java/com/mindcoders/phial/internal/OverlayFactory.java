@@ -8,6 +8,7 @@ import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.keyvalue.KeyValueView;
 import com.mindcoders.phial.internal.overlay.Overlay;
 import com.mindcoders.phial.internal.overlay.OverlayPositionStorage;
@@ -15,6 +16,7 @@ import com.mindcoders.phial.internal.overlay.SelectedPageStorage;
 import com.mindcoders.phial.internal.share.ShareView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.mindcoders.phial.internal.InternalPhialConfig.PREFERENCES_FILE_NAME;
@@ -24,6 +26,7 @@ import static com.mindcoders.phial.internal.InternalPhialConfig.PREFERENCES_FILE
  */
 
 public final class OverlayFactory {
+
     private OverlayFactory() {
         //to hide
     }
@@ -37,7 +40,8 @@ public final class OverlayFactory {
                     "keyvalue",
                     R.drawable.ic_keyvalue,
                     application.getString(R.string.system_info_page_title),
-                    new KVPageFactory(phialCore)
+                    new KVPageFactory(phialCore),
+                    Collections.<TargetScreen>emptySet()
             );
             pages.add(page);
         }
@@ -47,7 +51,8 @@ public final class OverlayFactory {
                     "share",
                     R.drawable.ic_share,
                     application.getString(R.string.share_page_title),
-                    new ShareViewFactory(phialCore)
+                    new ShareViewFactory(phialCore),
+                    Collections.<TargetScreen>emptySet()
             );
             pages.add(page);
         }
@@ -58,8 +63,14 @@ public final class OverlayFactory {
         final OverlayPositionStorage positionStorage = new OverlayPositionStorage(prefs);
         final SelectedPageStorage selectedPageStorage = new SelectedPageStorage(prefs);
 
-        return new Overlay(application, pages, phialCore.getNotifier(), phialCore.getActivityProvider(), positionStorage,
-                           selectedPageStorage);
+        return new Overlay(
+                application,
+                pages, phialCore.getNotifier(),
+                phialCore.getActivityProvider(),
+                phialCore.getScreenTracker(),
+                positionStorage,
+                selectedPageStorage
+        );
     }
 
     private static final class KVPageFactory implements Page.PageViewFactory<KeyValueView> {
@@ -70,7 +81,11 @@ public final class OverlayFactory {
         }
 
         @Override
-        public KeyValueView createPageView(Context context, OverlayCallback overlayCallback) {
+        public KeyValueView createPageView(
+                Context context,
+                OverlayCallback overlayCallback,
+                ScreenTracker screenTracker
+        ) {
             return new KeyValueView(context, phialCore.getKvSaver());
         }
     }
@@ -83,7 +98,11 @@ public final class OverlayFactory {
         }
 
         @Override
-        public ShareView createPageView(Context context, OverlayCallback overlayCallback) {
+        public ShareView createPageView(
+                Context context,
+                OverlayCallback overlayCallback,
+                ScreenTracker screenTracker
+        ) {
             return new ShareView(context, phialCore.getShareManager(), phialCore.getAttachmentManager(), overlayCallback);
         }
     }

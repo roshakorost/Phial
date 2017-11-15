@@ -9,6 +9,8 @@
         <item name="android:maxLines">1</item>
         <item name="android:paddingLeft">@dimen/jira.padding.horizontal.small</item>
         <item name="android:paddingRight">@dimen/jira.padding.horizontal.small</item>
+        <item name="android:textColorHint">@color/jira.textColorHint</item>
+        <item name="android:textColor">@color/jira.editTextColor</item>
     </style>
 
     <style name="Widget.Button" parent="">

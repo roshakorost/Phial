@@ -1,29 +1,42 @@
 package com.mindcoders.phial.sample;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.mindcoders.phial.keyvalue.Phial;
 
 import timber.log.Timber;
 
+/**
+ * Created by rost on 11/8/17.
+ */
 
-public class SampleActivity extends AppCompatActivity {
-
+public class MainFragment extends Fragment {
     public static final String CLICKED_KEY = "clicked_key";
     private int clickCount;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Timber.d("onCreate");
-        setContentView(R.layout.activity_main);
-        final Button button = findViewById(R.id.button);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_main, container, false);
+    }
 
-        final SharedPreferences sp = getSharedPreferences("ClicksSharedPreferences", MODE_PRIVATE);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Timber.d("onCreate");
+
+        final Button button = view.findViewById(R.id.button);
+        ((ShareElementManager) getActivity()).addSharedElement(button, R.string.transition_button);
+
+        final SharedPreferences sp = getContext().getSharedPreferences("ClicksSharedPreferences", Context.MODE_PRIVATE);
         clickCount = sp.getInt(CLICKED_KEY, 0);
 
         showClickCount(button, clickCount);
@@ -38,19 +51,19 @@ public class SampleActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        Phial.setKey("currentActivity", getClass().getSimpleName());
+        Timber.d("onResume");
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
-        Phial.removeKey("currentActivity");
+        Timber.d("onPause");
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         Timber.d("onDestroy");
     }
