@@ -14,7 +14,7 @@ import java.util.List;
 public class AutoFillerBuilder {
     private final TargetScreen targetScreen;
     private List<Integer> targetIds;
-    private List<FillOption> options;
+    private List<FillOption> options = new ArrayList<>();
 
     AutoFillerBuilder(TargetScreen targetScreen) {
         this.targetScreen = targetScreen;
@@ -22,6 +22,7 @@ public class AutoFillerBuilder {
 
     /**
      * Sets view ids to fill.
+     *
      * @param ids identifiers of views to be filled. Cannot be empty.
      */
     public AutoFillerBuilder fill(int... ids) {
@@ -31,18 +32,26 @@ public class AutoFillerBuilder {
     }
 
     /**
-     * Constructs {@link FillConfig} with provided ids and options.
-     * @param options options that provide values to be inserted. Cannot be empty.
+     * Constructs {@link FillConfig} with provided fill ids and options.
+     *
+     * @param options options that provide values to be inserted. Can be empty.
      */
     public FillConfig withOptions(FillOption... options) {
-        Precondition.notEmpty(options, "options should not be empty. See AutoFiller.option");
         this.options = Arrays.asList(options);
+        return this.build();
+    }
+
+    /**
+     * Constructs {@link FillConfig} with provided fill ids but without options.
+     * So user can manually add them
+     */
+    public FillConfig withoutOptions() {
+        this.options = new ArrayList<>();
         return this.build();
     }
 
     private FillConfig build() {
         Precondition.notNull(targetIds, "fill target is not set");
-        Precondition.notNull(options, "options are not set");
 
         final List<FillOption> optionsWithTargets = new ArrayList<>(options.size());
         final int expectedSize = targetIds.size();

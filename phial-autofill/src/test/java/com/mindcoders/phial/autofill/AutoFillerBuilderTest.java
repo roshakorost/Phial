@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,9 +31,9 @@ public class AutoFillerBuilderTest {
         builder.fill();
     }
 
-    @Test(expected = Exception.class)
-    public void empty_options_raises_exception() {
-        builder.withOptions();
+    @Test
+    public void empty_options_not_raises_exception() {
+        builder.fill(1, 2).withOptions();
     }
 
     @Test(expected = Exception.class)
@@ -61,6 +62,18 @@ public class AutoFillerBuilderTest {
         final FillConfig expected = new FillConfig(
                 screen,
                 Arrays.asList(opt1, opt2),
+                ids);
+        Assert.assertEquals("Bad FillConfig is build", expected, actual);
+    }
+
+    @Test
+    public void withoutOptions_returns_correct_FillConfig() {
+        final FillConfig actual = builder.fill(1, 2).withoutOptions();
+
+        final List<Integer> ids = Arrays.asList(1, 2);
+        final FillConfig expected = new FillConfig(
+                screen,
+                Collections.emptyList(),
                 ids);
         Assert.assertEquals("Bad FillConfig is build", expected, actual);
     }
