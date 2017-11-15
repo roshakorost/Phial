@@ -107,13 +107,14 @@ class OverlayView extends LinearLayout {
                 shiftSelectedPage = false;
             }
 
-            boolean shouldShowPage = false;
+            boolean screenMatches = false;
             for (TargetScreen targetScreen : page.getTargetScreens()) {
                 if (screen.matches(targetScreen)) {
-                    shouldShowPage = true;
+                    screenMatches = true;
                     break;
                 }
             }
+            boolean shouldShowPage = screenMatches || page.getTargetScreens().isEmpty();
             if (shouldShowPage && !pageViewMap.containsKey(page)) {
                 addPageButton(page);
             } else if (!shouldShowPage && pageViewMap.containsKey(page)) {
@@ -178,10 +179,10 @@ class OverlayView extends LinearLayout {
 
     private void setPageButtonsColors(boolean isExpanded) {
         if (isExpanded) {
-            int activeIndex = pages.size() - 1 - pages.indexOf(selectedPage);
+            View activeButton = pageViewMap.get(selectedPage);
             for (int i = 0; i < getChildCount() - 1; i++) {
-                HandleButton activeBtn = (HandleButton) getChildAt(i);
-                activeBtn.setSelected(activeIndex == i);
+                View btn = getChildAt(i);
+                btn.setSelected(activeButton == btn);
             }
         }
     }
