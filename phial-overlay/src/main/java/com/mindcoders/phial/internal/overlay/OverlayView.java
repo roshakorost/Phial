@@ -16,7 +16,8 @@ import com.mindcoders.phial.internal.util.ViewUtil;
 import com.mindcoders.phial.internal.util.support.ResourcesCompat;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ class OverlayView extends LinearLayout {
 
     private final List<Page> pages = new ArrayList<>();
 
-    private final Map<Page, View> pageViewMap = new HashMap<>();
+    private final Map<Page, View> pageViewMap = new LinkedHashMap<>();
 
     private OnPageSelectedListener onPageSelectedListener;
 
@@ -98,15 +99,7 @@ class OverlayView extends LinearLayout {
     }
 
     public void updateVisiblePages(Screen screen) {
-        String selectedPageId = selectedPageStorage.getSelectedPage();
-
-        boolean shiftSelectedPage = false;
         for (Page page : pages) {
-            if (shiftSelectedPage) {
-                selectedPageStorage.setSelectedPage(page.getId());
-                shiftSelectedPage = false;
-            }
-
             boolean screenMatches = false;
             for (TargetScreen targetScreen : page.getTargetScreens()) {
                 if (screen.matches(targetScreen)) {
@@ -119,10 +112,19 @@ class OverlayView extends LinearLayout {
                 addPageButton(page);
             } else if (!shouldShowPage && pageViewMap.containsKey(page)) {
                 removeView(pageViewMap.remove(page));
-                if (page.getId().equals(selectedPageId)) {
-                    shiftSelectedPage = true;
-                    selectedPageStorage.removeSelectedPageId();
-                }
+            }
+        }
+
+        updateSelection();
+    }
+
+    private void updateSelection() {
+        Page previouslySelectedPage = getPreviouslySelectedPage();
+        if (previouslySelectedPage != null && !pageViewMap.containsKey(previouslySelectedPage)) {
+            Iterator<Page> iterator = pageViewMap.keySet().iterator();
+            if (iterator.hasNext()) {
+                Page page = iterator.next();
+                selectedPageStorage.setSelectedPage(page.getId());
             }
         }
     }
