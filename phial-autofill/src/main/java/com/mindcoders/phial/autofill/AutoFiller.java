@@ -3,7 +3,6 @@ package com.mindcoders.phial.autofill;
 import android.app.Activity;
 
 import com.mindcoders.phial.Page;
-import com.mindcoders.phial.ScreenTracker;
 import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.util.Precondition;
 import com.mindcoders.phial_autofill.R;
@@ -21,8 +20,8 @@ public class AutoFiller {
 
     private static final String EMPTY_FIELD = null;
 
-    public static Page createPhialPage(ScreenTracker screenTracker, List<FillConfig> autoFillers) {
-        AutoFillPageFactory pageFactory = new AutoFillPageFactory(autoFillers, screenTracker);
+    public static Page createPhialPage(List<FillConfig> autoFillers) {
+        AutoFillPageFactory pageFactory = new AutoFillPageFactory(autoFillers);
 
         Set<TargetScreen> screens = new HashSet<>();
         for (FillConfig autoFiller : autoFillers) {
@@ -32,8 +31,8 @@ public class AutoFiller {
         return new Page("autofill", R.drawable.ic_paste, "AutoFill", pageFactory, screens);
     }
 
-    public static Page createPhialPage(ScreenTracker screenTracker, FillConfig... autoFillers) {
-        return createPhialPage(screenTracker, Arrays.asList(autoFillers));
+    public static Page createPhialPage(FillConfig... autoFillers) {
+        return createPhialPage(Arrays.asList(autoFillers));
     }
 
     public static AutoFillerBuilder forActivity(Class<? extends Activity> target) {

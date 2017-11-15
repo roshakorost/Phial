@@ -21,7 +21,7 @@ import java.util.List;
  * Created by rost on 11/3/17.
  */
 
-class FillView extends FrameLayout implements PageView, ScreenTracker.ScreenListener, Adapter.OnItemClickedListener {
+class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedListener {
     private final ScreenTracker tracker;
     private final List<FillConfig> configs;
     private final OverlayCallback overlayCallback;
@@ -39,6 +39,8 @@ class FillView extends FrameLayout implements PageView, ScreenTracker.ScreenList
 
         final ListView listView = findViewById(R.id.list_view);
         listView.setAdapter(adapter);
+
+        onScreenChanged(tracker.getCurrentScreen());
     }
 
     @Override
@@ -46,20 +48,7 @@ class FillView extends FrameLayout implements PageView, ScreenTracker.ScreenList
         return false;
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        tracker.addListener(this);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        tracker.removeListener(this);
-    }
-
-    @Override
-    public void onScreenChanged(Screen screen) {
+    private void onScreenChanged(Screen screen) {
         final List<FillOption> options = new ArrayList<>();
         for (FillConfig config : configs) {
             if (screen.matches(config.getScreen())) {

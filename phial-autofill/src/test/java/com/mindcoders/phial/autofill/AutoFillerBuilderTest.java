@@ -1,6 +1,8 @@
 package com.mindcoders.phial.autofill;
 
 
+import com.mindcoders.phial.TargetScreen;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

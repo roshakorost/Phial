@@ -39,7 +39,6 @@ final class ApplicationHook {
                 //.setCustomField(key, object) in order to add extra fields to created item
                 .build();
 
-
         final Page autoFillPage = createPhialPage(
                 forActivity(AutoFillActivity.class)
                         .fill(R.id.login, R.id.password)
@@ -49,7 +48,6 @@ final class ApplicationHook {
                                 option("user E", "EEEEEE", "Epwdpwd3"),
                                 option("user R", "RRRRRR", "Rpwdpwd4")
                         ),
-
                 forScope("Login")
                         .fill(R.id.login, R.id.password)
                         .withOptions(

@@ -1,6 +1,5 @@
 package com.mindcoders.phial.internal;
 
-import android.app.Activity;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
@@ -16,7 +15,6 @@ import com.mindcoders.phial.internal.share.attachment.AttacherAdaptor;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.share.attachment.ScreenShotAttacher;
 import com.mindcoders.phial.internal.util.CurrentActivityProvider;
-import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;
 import com.mindcoders.phial.keyvalue.Phial;
 
 import java.util.ArrayList;
@@ -72,17 +70,7 @@ public final class PhialCore {
         Phial.addSaver(kvSaver);
         phialNotifier.addListener(attachmentManager);
         application.registerActivityLifecycleCallbacks(activityProvider);
-        application.registerActivityLifecycleCallbacks(new SimpleActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityResumed(Activity activity) {
-                screenTracker.onActivityResumed(activity);
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-                screenTracker.onActivityPaused(activity);
-            }
-        });
+        application.registerActivityLifecycleCallbacks(screenTracker);
 
         final List<InfoWriter> writers = phialBuilder.getInfoWriters();
         for (InfoWriter writer : writers) {

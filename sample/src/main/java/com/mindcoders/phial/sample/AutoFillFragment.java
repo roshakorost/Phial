@@ -9,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.mindcoders.phial.ScreenTracker;
-import com.mindcoders.phial.autofill.AutoFiller;
+import com.mindcoders.phial.PhialScope;
 
 /**
  * Created by rost on 11/8/17.
@@ -40,12 +39,12 @@ public class AutoFillFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ScreenTracker.enterScope("Login");
+        PhialScope.enterScope("Login");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ScreenTracker.exitScope("Login");
+        PhialScope.exitScope("Login");
     }
 }

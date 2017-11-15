@@ -8,6 +8,7 @@ import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.ScreenTracker;
 import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.keyvalue.KeyValueView;
 import com.mindcoders.phial.internal.overlay.Overlay;
@@ -81,7 +82,11 @@ public final class OverlayFactory {
         }
 
         @Override
-        public KeyValueView createPageView(Context context, OverlayCallback overlayCallback) {
+        public KeyValueView createPageView(
+                Context context,
+                OverlayCallback overlayCallback,
+                ScreenTracker screenTracker
+                                          ) {
             return new KeyValueView(context, phialCore.getKvSaver());
         }
     }
@@ -94,7 +99,11 @@ public final class OverlayFactory {
         }
 
         @Override
-        public ShareView createPageView(Context context, OverlayCallback overlayCallback) {
+        public ShareView createPageView(
+                Context context,
+                OverlayCallback overlayCallback,
+                ScreenTracker screenTracker
+                                       ) {
             return new ShareView(context, phialCore.getShareManager(), phialCore.getAttachmentManager(), overlayCallback);
         }
     }

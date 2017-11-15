@@ -19,6 +19,7 @@ android {
 dependencies {
     compileOnly 'com.android.support:support-annotations:27.0.0'
     implementation project(':phial-key-value')
+    implementation project(':phial-scope')
 }
 
 // build a jar with source files

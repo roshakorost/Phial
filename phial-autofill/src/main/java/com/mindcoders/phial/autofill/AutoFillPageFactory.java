@@ -13,17 +13,20 @@ import java.util.List;
  */
 
 class AutoFillPageFactory implements Page.PageViewFactory<FillView> {
+
     private final List<FillConfig> configs;
-    private final ScreenTracker screenTracker;
 
-
-    AutoFillPageFactory(List<FillConfig> configs, ScreenTracker screenTracker) {
+    AutoFillPageFactory(List<FillConfig> configs) {
         this.configs = configs;
-        this.screenTracker = screenTracker;
     }
 
     @Override
-    public FillView createPageView(Context context, OverlayCallback overlayCallback) {
+    public FillView createPageView(
+            Context context,
+            OverlayCallback overlayCallback,
+            ScreenTracker screenTracker
+                                  ) {
         return new FillView(context, configs, screenTracker, overlayCallback);
     }
+
 }

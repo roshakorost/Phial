@@ -53,7 +53,8 @@ dependencies {
     qaImplementation project(':phial-logging')
     qaImplementation project(':phial-jira')
     qaImplementation project(':phial-key-value')
-    qaImplementation project (':phial-autofill')
+    qaImplementation project(':phial-autofill')
+    qaImplementation project(':phial-scope')
     prodImplementation project(':phial-key-value')
-    prodImplementation project(':phial-autofill-no-op')
+    prodImplementation project(':phial-scope-no-op')
 }

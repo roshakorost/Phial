@@ -20,12 +20,15 @@ public final class Page {
      * @param <T> view to display
      */
     public interface PageViewFactory<T extends View & PageView> {
+
         /**
          * @param context         android application context
          * @param overlayCallback interface for communication with Phial
+         * @param screenTracker
          * @return view to display
          */
-        T createPageView(Context context, OverlayCallback overlayCallback);
+        T createPageView(Context context, OverlayCallback overlayCallback, ScreenTracker screenTracker);
+
     }
 
     private final String id;
