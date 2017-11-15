@@ -26,6 +26,10 @@ public final class PhialOverlay {
         return new PhialBuilder(application);
     }
 
+    public static PhialPageBuilder pageBuilder(String id, int iconResourceId, CharSequence title, Page.PageViewFactory pageViewFactory){
+        return new PhialPageBuilder(id, iconResourceId, title, pageViewFactory);
+    }
+
     static void init(PhialBuilder builder) {
         destroy();
         PhialOverlay.phialCore = PhialCore.create(builder);

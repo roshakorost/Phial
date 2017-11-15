@@ -4,9 +4,12 @@ import android.app.Activity;
 
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.TargetScreen;
+import com.mindcoders.phial.internal.util.CollectionUtils;
 import com.mindcoders.phial.internal.util.Precondition;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,19 +22,24 @@ public class AutoFiller {
 
     private static final String EMPTY_FIELD = null;
 
-    public static Page createPhialPage(List<FillConfig> autoFillers) {
-        AutoFillPageFactory pageFactory = new AutoFillPageFactory(autoFillers);
+    public static Page createPhialPage(FillConfig config) {
+        final AutoFillPageFactory pageFactory = new AutoFillPageFactory(config);
+        final TargetScreen screen = config.getScreen();
 
-        Set<TargetScreen> screens = new HashSet<>();
-        for (FillConfig autoFiller : autoFillers) {
-            screens.add(autoFiller.getScreen());
-        }
-
-        return new Page("autofill", R.drawable.ic_paste, "AutoFill", pageFactory, screens);
+        return new Page("autofill" + screen.hashCode(),
+                R.drawable.ic_paste,
+                "Fill " + screen.getName(),
+                pageFactory,
+                Collections.singleton(screen)
+        );
     }
 
-    public static Page createPhialPage(FillConfig... autoFillers) {
-        return createPhialPage(Arrays.asList(autoFillers));
+    public static List<Page> createPhialPages(List<FillConfig> autoFillers) {
+        return CollectionUtils.map(autoFillers, AutoFiller::createPhialPage);
+    }
+
+    public static List<Page> createPhialPages(FillConfig... autoFillers) {
+        return createPhialPages(Arrays.asList(autoFillers));
     }
 
     public static AutoFillerBuilder forActivity(Class<? extends Activity> target) {

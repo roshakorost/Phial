@@ -1,5 +1,6 @@
 package com.mindcoders.phial.autofill;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.PageView;
 import com.mindcoders.phial.internal.Screen;
 import com.mindcoders.phial.internal.ScreenTracker;
+import com.mindcoders.phial.internal.util.Precondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +23,20 @@ import java.util.List;
  */
 
 class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedListener {
-    private final ScreenTracker tracker;
-    private final List<FillConfig> configs;
+
     private final OverlayCallback overlayCallback;
     private final Adapter adapter;
 
-    FillView(@NonNull Context context, List<FillConfig> configs, ScreenTracker tracker, OverlayCallback overlayCallback) {
+    public FillView(@NonNull Context context) {
         super(context);
-        this.tracker = tracker;
-        this.configs = configs;
+        Precondition.calledFromTools(this);
+        overlayCallback = null;
+        adapter = null;
+    }
+
+    FillView(@NonNull Context context, FillConfig config, OverlayCallback overlayCallback) {
+        super(context);
+
         this.overlayCallback = overlayCallback;
         this.adapter = new Adapter(context, this);
 
@@ -39,22 +46,12 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
         final ListView listView = findViewById(R.id.list_view);
         listView.setAdapter(adapter);
 
-        onScreenChanged(tracker.getCurrentScreen());
+        presentOptions(config.getOptions());
     }
 
     @Override
     public boolean onBackPressed() {
         return false;
-    }
-
-    private void onScreenChanged(Screen screen) {
-        final List<FillOption> options = new ArrayList<>();
-        for (FillConfig config : configs) {
-            if (screen.matches(config.getScreen())) {
-                options.addAll(config.getOptions());
-            }
-        }
-        presentOptions(options);
     }
 
     private void presentOptions(List<FillOption> options) {
@@ -65,10 +62,14 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
     public void onItemClicked(FillOption option) {
         final List<String> dataToFill = option.getDataToFill();
         final List<Integer> ids = option.getIds();
-        final Screen currentScreen = tracker.getCurrentScreen();
 
         for (int i = 0; i < Math.min(dataToFill.size(), ids.size()); i++) {
-            final View view = currentScreen.findTarget(ids.get(i));
+            final Activity currentActivity = overlayCallback.getCurrentActivity();
+            if (currentActivity == null) {
+                return;
+            }
+
+            final View view = currentActivity.findViewById(ids.get(i));
             if (view instanceof TextView) {
                 ((TextView) view).setText(dataToFill.get(i));
             }

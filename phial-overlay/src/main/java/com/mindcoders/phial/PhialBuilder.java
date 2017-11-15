@@ -8,6 +8,7 @@ import com.mindcoders.phial.internal.keyvalue.SystemInfoWriter;
 import com.mindcoders.phial.internal.share.attachment.AttacherAdaptor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -157,6 +158,15 @@ public class PhialBuilder {
      */
     public PhialBuilder addPage(Page page) {
         this.pages.add(page);
+        return this;
+    }
+
+    public PhialBuilder addPages(Page... pages) {
+        return this.addPages(Arrays.asList(pages));
+    }
+
+    public PhialBuilder addPages(List<Page> pages) {
+        this.pages.addAll(pages);
         return this;
     }
 

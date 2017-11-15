@@ -10,9 +10,12 @@ import com.mindcoders.phial.internal.PhialErrorPlugins;
 import com.mindcoders.phial.jira.JiraShareableBuilder;
 import com.mindcoders.phial.logging.PhialLogger;
 
+import java.util.List;
+
 import timber.log.Timber;
 
 import static com.mindcoders.phial.autofill.AutoFiller.createPhialPage;
+import static com.mindcoders.phial.autofill.AutoFiller.createPhialPages;
 import static com.mindcoders.phial.autofill.AutoFiller.forActivity;
 import static com.mindcoders.phial.autofill.AutoFiller.forScope;
 import static com.mindcoders.phial.autofill.AutoFiller.leaveEmpty;
@@ -39,7 +42,7 @@ final class ApplicationHook {
                 //.setCustomField(key, object) in order to add extra fields to created item
                 .build();
 
-        final Page autoFillPage = createPhialPage(
+        final List<Page> autoFillPages = createPhialPages(
                 forActivity(AutoFillActivity.class)
                         .fill(R.id.login, R.id.password)
                         .withOptions(
@@ -81,7 +84,7 @@ final class ApplicationHook {
                 // The list of options might be extended by providing custom Shareables.
                 // Here we add extra JiraShareable that will add create Jira Issue option in Share Tab
                 .addShareable(jiraShareable)
-                .addPage(autoFillPage)
+                .addPages(autoFillPages)
                 .initPhial();
 
         //In case you would like to see Phial errors in logcat.

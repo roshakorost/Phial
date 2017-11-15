@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -453,6 +454,10 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener, 
             overlayView.hide();
         }
 
+        @Override
+        public Activity getCurrentActivity() {
+            return activityProvider.getActivity();
+        }
     };
 
     @Override
