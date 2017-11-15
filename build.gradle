@@ -24,13 +24,15 @@ allprojects {
 subprojects {
     apply plugin: 'checkstyle'
     project.checkstyle {
-        toolVersion "7.6.1"
+        toolVersion "8.4"
         configFile rootProject.file('checkstyle.xml')
+        configProperties = [ "suppressionFile" : rootProject.file('suppressions.xml')]
     }
 
     task checkstyle(type: Checkstyle) {
         showViolations = true
         configFile rootProject.file('checkstyle.xml')
+        configProperties = [ "suppressionFile" : rootProject.file('suppressions.xml')]
 
         source 'src'
         include '**/*.java'

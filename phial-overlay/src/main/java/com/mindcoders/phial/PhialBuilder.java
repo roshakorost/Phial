@@ -161,10 +161,18 @@ public class PhialBuilder {
         return this;
     }
 
+    /**
+     * Adds multiple pages.
+     * @param pages pages to add.
+     * @return same instance of builder
+     */
     public PhialBuilder addPages(Page... pages) {
         return this.addPages(Arrays.asList(pages));
     }
 
+    /**
+     * @see PhialBuilder#addPages
+     */
     public PhialBuilder addPages(List<Page> pages) {
         this.pages.addAll(pages);
         return this;
@@ -251,10 +259,18 @@ public class PhialBuilder {
         return Collections.unmodifiableList(pages);
     }
 
+    /**
+     * @see PhialBuilder#attachScreenshot
+     */
     public boolean attachScreenshots() {
         return attachScreenshots;
     }
 
+    /**
+     * @see PhialBuilder#applyBuildInfo
+     * @see PhialBuilder#applySystemInfo
+     * @return a list of info writers to output data.
+     */
     public List<InfoWriter> getInfoWriters() {
         final List<InfoWriter> writers = new ArrayList<>(2);
         if (buildInfoWriter != null) {
@@ -266,18 +282,30 @@ public class PhialBuilder {
         return writers;
     }
 
+    /**
+     * @see PhialBuilder#attachKeyValues(boolean)
+     */
     public boolean attachKeyValues() {
         return attachKeyValues;
     }
 
+    /**
+     * @see PhialBuilder#enableKeyValueView(boolean)
+     */
     public boolean enableKeyValueView() {
         return enableKeyValueView;
     }
 
+    /**
+     * @see PhialBuilder#enableShareView(boolean)
+     */
     public boolean enableShareView() {
         return enableShareView;
     }
 
+    /**
+     * @see PhialBuilder#setShareDataFilePattern
+     */
     public String getShareDataFilePattern() {
         return shareDataFilePattern;
     }

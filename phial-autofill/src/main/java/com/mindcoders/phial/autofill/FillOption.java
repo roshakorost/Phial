@@ -22,15 +22,15 @@ public class FillOption {
         return new FillOption(name, dataToFill, ids);
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public List<String> getDataToFill() {
+    List<String> getDataToFill() {
         return dataToFill;
     }
 
-    public List<Integer> getIds() {
+    List<Integer> getIds() {
         return ids;
     }
 

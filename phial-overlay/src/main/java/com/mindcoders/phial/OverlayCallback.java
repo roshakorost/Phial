@@ -12,5 +12,9 @@ public interface OverlayCallback {
      */
     void finish();
 
+    /**
+     * Returns activity that is currently resumed and visible.
+     */
     Activity getCurrentActivity();
+
 }

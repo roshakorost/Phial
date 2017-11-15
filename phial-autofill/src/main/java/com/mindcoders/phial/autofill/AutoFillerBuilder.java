@@ -20,12 +20,20 @@ public class AutoFillerBuilder {
         this.targetScreen = targetScreen;
     }
 
+    /**
+     * Sets view ids to fill.
+     * @param ids identifiers of views to be filled. Cannot be empty.
+     */
     public AutoFillerBuilder fill(int... ids) {
         Precondition.notEmpty(ids, "ids should not be empty");
         this.targetIds = CollectionUtils.asList(ids);
         return this;
     }
 
+    /**
+     * Constructs {@link FillConfig} with provided ids and options.
+     * @param options options that provide values to be inserted. Cannot be empty.
+     */
     public FillConfig withOptions(FillOption... options) {
         Precondition.notEmpty(options, "options should not be empty. See AutoFiller.option");
         this.options = Arrays.asList(options);

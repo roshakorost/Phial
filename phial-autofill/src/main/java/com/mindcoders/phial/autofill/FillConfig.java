@@ -14,6 +14,11 @@ public class FillConfig {
     private final TargetScreen screen;
     private final List<FillOption> options;
 
+    /**
+     * Constructs a new FillConfig.
+     * @param screen screen where the specified options can be inserted.
+     * @param options options that provide values to be inserted.
+     */
     public FillConfig(TargetScreen screen, List<FillOption> options) {
         this.screen = screen;
         this.options = Collections.unmodifiableList(options);

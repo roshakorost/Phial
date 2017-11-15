@@ -28,10 +28,17 @@ public class PhialPageBuilder {
         this.pageViewFactory = pageViewFactory;
     }
 
+    /**
+     * Sets activities on which the page should be visible.
+     * @return the same instance of {@link PhialPageBuilder}
+     */
     public PhialPageBuilder visibleOnActivities(Class<? extends Activity>... activities) {
         return this.visibleOnActivities(Arrays.asList(activities));
     }
 
+    /**
+     * @see PhialPageBuilder#visibleOnActivities
+     */
     public PhialPageBuilder visibleOnActivities(List<Class<? extends Activity>> activities) {
         final ArrayList<TargetScreen> screensToAdd = CollectionUtils.map(activities,
                 new CollectionUtils.Function1<TargetScreen, Class<? extends Activity>>() {
@@ -44,10 +51,17 @@ public class PhialPageBuilder {
         return this;
     }
 
+    /**
+     * Sets scopes in which the page should be visible.
+     * @return the same instance of {@link PhialPageBuilder}
+     */
     public PhialPageBuilder visibleOnScopes(String... scopes) {
         return this.visibleOnScopes(Arrays.asList(scopes));
     }
 
+    /**
+     * @see PhialPageBuilder#visibleOnScopes
+     */
     public PhialPageBuilder visibleOnScopes(List<String> scopes) {
         final ArrayList<TargetScreen> screensToAdd = CollectionUtils.map(scopes,
                 new CollectionUtils.Function1<TargetScreen, String>() {
@@ -60,6 +74,10 @@ public class PhialPageBuilder {
         return this;
     }
 
+    /**
+     * Builds the page with provided settings.
+     * @return a new instance of {@link Page}
+     */
     public Page build() {
         return new Page(id, iconResourceId, title, pageViewFactory, screens);
     }

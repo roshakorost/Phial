@@ -76,18 +76,25 @@ public class Phial {
         return CATEGORIES.get(name);
     }
 
+    /**
+     * Removes category and associated keys.
+     */
     public static void removeCategory(String name) {
         Category category = CATEGORIES.remove(name);
         category.clear();
     }
 
     /**
-     * @param saver
+     * Add a new saver.
      */
     public static void addSaver(Saver saver) {
         SAVERS.add(saver);
     }
 
+
+    /**
+     * Remove previously added saver
+     */
     public static void removeSaver(Saver saver) {
         SAVERS.remove(saver);
     }
