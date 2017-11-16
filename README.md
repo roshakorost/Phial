@@ -107,6 +107,26 @@ In case you want to include some information that is not persisted to file, you 
 
 Currently Attacher API works only with files, so when `provideAttachment` is called you should dump the data to a temporary file and return it. When `onAttachmentNotNeeded` is called the temporary file can be deleted (see SharedPreferencesAttacher in the sample app or KVAttacher for an example).
 
+## Automatic fields filling
+Phial-autofill allows you to fill `EditTexts` and `TextViews` with predefined options.
+
+![DemoScreenshot][3]
+
+Example of adding your options:
+```java
+final Page autoFillPage = createPhialPage(
+        forActivity(AutoFillActivity.class)      //for what activity AutoFill page should be enabled.
+                .fill(R.id.login, R.id.password) //what fields should be filled.
+                .withOptions(
+                        option("user Q" /*name of option*/, "QQQQQQ"/*first field to fill*/, "Qpwdpwd1"/*second field*/),
+                        option("user W", "WWWWWW", leaveEmpty()),
+                        option("user E", "EEEEEE", "Epwdpwd3"),
+                        option("user R", "RRRRRR", "Rpwdpwd4")
+                )
+);
+```
+You can also add options directly in the application. Fill specified fields, enter a name and press `ADD` button.
+
 ## Custom overlay pages
 You can add custom pages that will be available in the overlay.
 To do this provide your instance of `Page` class to the `PhialOverlay.Builder`.
@@ -136,7 +156,7 @@ This can be achieved by creating multiple flavors or build types.
 Here is an example with product flavors.
 * Create your flavors in `build.gradle` of your application module:
 * Create `ApplicationHook` class with same interface in all flavors and put it in the respective source directories for each source set.
-* Init Phial in the debug version of `ApplicationHook`. Refer to the sample app for an [example][3].
+* Init Phial in the debug version of `ApplicationHook`. Refer to the sample app for an [example][4].
 
 ## Download
 1. Add Jitpack maven repository in your root build.gradle file
@@ -157,8 +177,12 @@ dependencies {
     debugImplementation "com.github.roshakorost.Phial:phial-jira:$phialVersion"
     //if you use html logging 
     debugImplementation "com.github.roshakorost.Phial:phial-logging:$phialVersion"
+    //if you use auto fill
+    debugImplementation "com.github.roshakorost.Phial:phial-autofill:$phialVersion"
     //if you use key values.
     implementation "com.github.roshakorost.Phial:phial-key-value:$phialVersion"
+    //if you use custom scopes.
+    implementation "com.github.roshakorost.Phial:phial-scope:$phialVersion"
 }
 ```
 *If you use older Android Gradle Plugin change `implementation` to `compile`*
@@ -171,4 +195,5 @@ dependencies {
 
 [1]:/art/screenshot_demo.gif
 [2]:art/data_M11D01_H15_58_53/
-[3]:sample/src/qa/java/com/mindcoders/phial/sample/ApplicationHook.java
+[3]:art/screenshot_autofill_demo.gif
+[4]:sample/src/qa/java/com/mindcoders/phial/sample/ApplicationHook.java
