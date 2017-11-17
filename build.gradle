@@ -26,13 +26,13 @@ subprojects {
     project.checkstyle {
         toolVersion "8.4"
         configFile rootProject.file('checkstyle.xml')
-        configProperties = [ "suppressionFile" : rootProject.file('suppressions.xml')]
+        configProperties = ["suppressionFile": rootProject.file('suppressions.xml')]
     }
 
     task checkstyle(type: Checkstyle) {
         showViolations = true
         configFile rootProject.file('checkstyle.xml')
-        configProperties = [ "suppressionFile" : rootProject.file('suppressions.xml')]
+        configProperties = ["suppressionFile": rootProject.file('suppressions.xml')]
 
         source 'src'
         include '**/*.java'
@@ -43,11 +43,6 @@ subprojects {
         // empty classpath
         classpath = files()
     }
-}
-
-configure(subprojects.findAll { it.name != 'sample' }) {
-    apply plugin: 'com.github.dcendents.android-maven'
-    group = 'com.github.roshakorost'
 }
 
 subprojects.each { project ->
