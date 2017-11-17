@@ -1,5 +1,4 @@
 include ':sample',
-        ':phial-scope-no-op',
         ':phial-scope',
         ':phial-overlay',
         ':phial-key-value',
