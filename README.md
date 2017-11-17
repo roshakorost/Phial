@@ -108,7 +108,7 @@ In case you want to include some information that is not persisted to file, you 
 Currently Attacher API works only with files, so when `provideAttachment` is called you should dump the data to a temporary file and return it. When `onAttachmentNotNeeded` is called the temporary file can be deleted (see SharedPreferencesAttacher in the sample app or KVAttacher for an example).
 
 ## Automatic fields filling
-Phial-autofill allows you to fill `EditTexts` and `TextViews` with predefined options.
+Phial-autofill allows you to fill `EditTexts` and `TextViews` with predefined data.
 
 ![DemoScreenshot][3]
 
@@ -125,7 +125,7 @@ final Page autoFillPage = createPhialPage(
                 )
 );
 ```
-You can also add options directly in the application. Fill specified fields, enter a name and press `ADD` button.
+You can also save the data directly from the application. Fill specified fields, enter a name and press `ADD` button.
 
 ## Custom overlay pages
 You can add custom pages that will be available in the overlay.
