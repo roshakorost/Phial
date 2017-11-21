@@ -249,6 +249,7 @@ class OverlayView extends LinearLayout {
                     initialTouchY = event.getRawY();
                     startTimeMS = event.getEventTime();
                     onHandleMoveListener.onMoveStart(initialTouchX, initialTouchY);
+                    v.setPressed(true);
                     break;
                 case MotionEvent.ACTION_MOVE:
                     onHandleMoveListener.onMove(event.getRawX() - initialTouchX, event.getRawY() - initialTouchY);
@@ -261,6 +262,7 @@ class OverlayView extends LinearLayout {
                     if (wasClicked) {
                         v.performClick();
                     }
+                    v.setPressed(false);
                     break;
                 default:
                     return true;

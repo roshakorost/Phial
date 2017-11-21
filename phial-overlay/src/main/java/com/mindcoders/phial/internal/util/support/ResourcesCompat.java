@@ -1,5 +1,7 @@
 package com.mindcoders.phial.internal.util.support;
 
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.ColorInt;
@@ -25,5 +27,14 @@ public final class ResourcesCompat {
         } else {
             return res.getColor(id);
         }
+    }
+
+
+    @SuppressWarnings("deprecation")
+    public static ColorStateList getColorStateList(@NonNull Resources res, @ColorRes int id, @Nullable Resources.Theme theme) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return res.getColorStateList(id, theme);
+        }
+        return res.getColorStateList(id);
     }
 }

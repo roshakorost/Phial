@@ -3,4 +3,7 @@
     <dimen name="share.padding.default">16dp</dimen>
     <dimen name="share.padding.items">32dp</dimen>
     <dimen name="share.padding.small">8dp</dimen>
+
+    <dimen name="phial.button.size">65dp</dimen>
+    <dimen name="phial.button.shadow.size">5dp</dimen>
 </resources>

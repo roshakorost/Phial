@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="phial.title.background">#24292e</color>
-    <color name="phial.title.color">#d3d4d5</color>
-    <color name="phial.button.background">#ffffff</color>
-    <color name="phial.button.foreground">#24292e</color>
+    <color name="phial.button.background">@color/phial.palette.white</color>
+    <color name="phial.button.foreground">@color/phial.palette.gray.darkest</color>
 
-    <color name="phial.background.light">#f4f4f4</color>
+    <color name="phial.title.background">@color/phial.palette.gray.darkest</color>
+    <color name="phial.title.color">@color/phial.palette.gray.light</color>
+    <color name="phial.background.highlighted">@color/phial.palette.gray.lightest</color>
 
-    <color name="phial.key.text">#000000</color>
-    <color name="phial.value.text">#4b4b4b</color>
-
+    <color name="phial.key.text">@color/phial.palette.gray.darkest</color>
+    <color name="phial.value.text">@color/phial.palette.gray.dark</color>
 </resources>

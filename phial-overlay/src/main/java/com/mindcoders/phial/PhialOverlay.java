@@ -29,9 +29,10 @@ public final class PhialOverlay {
 
     /**
      * Creates an instance of {@link PhialPageBuilder}.
-     * @param id unique id of the page.
-     * @param iconResourceId icon resource of the page
-     * @param title page title.
+     *
+     * @param id              unique id of the page.
+     * @param iconResourceId  icon resource of the page
+     * @param title           page title.
      * @param pageViewFactory factory to create page view.
      * @return instance of {@link PhialPageBuilder}.
      */
@@ -46,6 +47,7 @@ public final class PhialOverlay {
         destroy();
         PhialOverlay.phialCore = PhialCore.create(builder);
         PhialOverlay.overlay = OverlayFactory.createOverlay(builder, phialCore);
+        builder.getApplication().registerActivityLifecycleCallbacks(OverlayFactory.createOverlay2(builder, phialCore));
     }
 
     /**

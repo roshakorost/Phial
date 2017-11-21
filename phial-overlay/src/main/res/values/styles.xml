@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Phial.Theme" parent="">
+        <item name="phial.button_style">@style/Phial.Button</item>
+    </style>
+
+    <style name="Phial.Button" parent="">
+        <item name="phial.button.color.icon">@color/phial_icon_color</item>
+        <item name="phial.button.color.background">@color/phial_button_color</item>
+        <item name="phial.button.color.shadow">@color/phial.palette.gray.darkest.transparent</item>
+        <item name="phial.button.size">@dimen/phial.button.size</item>
+        <item name="phial.button.size.shadow">@dimen/phial.button.shadow.size</item>
+    </style>
+</resources>

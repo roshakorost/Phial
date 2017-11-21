@@ -1,8 +1,10 @@
 package com.mindcoders.phial.internal.util.support;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
 /**
@@ -22,5 +24,4 @@ public final class ContextCompat {
 
         return context.getResources().getDrawable(id);
     }
-
 }

@@ -13,6 +13,7 @@ import com.mindcoders.phial.internal.keyvalue.KeyValueView;
 import com.mindcoders.phial.internal.overlay.Overlay;
 import com.mindcoders.phial.internal.overlay.OverlayPositionStorage;
 import com.mindcoders.phial.internal.overlay.SelectedPageStorage;
+import com.mindcoders.phial.internal.overlay2.OverlayManager;
 import com.mindcoders.phial.internal.share.ShareView;
 
 import java.util.ArrayList;
@@ -29,6 +30,11 @@ public final class OverlayFactory {
 
     private OverlayFactory() {
         //to hide
+    }
+
+
+    public static OverlayManager createOverlay2(PhialBuilder phialBuilder, PhialCore phialCore) {
+        return new OverlayManager(phialCore.getApplication(), phialCore.getSharedPreferences());
     }
 
     public static Overlay createOverlay(PhialBuilder phialBuilder, PhialCore phialCore) {
