@@ -302,7 +302,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener, 
 
         @Override
         public void onPageSelectionChanged(Page page, int position) {
-            pageContainerView.showPage(page.getPageViewFactory().createPageView(context, overlayCallback, screenTracker));
+            pageContainerView.showPage(page.getPageViewFactory().createPageView(context, overlayCallback));
             pageContainerView.setPageTitle(page.getTitle());
 
             updateSelectedPageIndicator(position);
@@ -337,7 +337,7 @@ public final class Overlay implements CurrentActivityProvider.AppStateListener, 
                                 public void onAnimationEnd(Animator animation) {
                                     containerWrapperView.setVisibility(View.VISIBLE);
                                     pageContainerView.showPage(
-                                            page.getPageViewFactory().createPageView(context, overlayCallback, screenTracker)
+                                            page.getPageViewFactory().createPageView(context, overlayCallback)
                                     );
                                     pageContainerView.setPageTitle(page.getTitle());
                                     params.dimAmount = 0.5f;

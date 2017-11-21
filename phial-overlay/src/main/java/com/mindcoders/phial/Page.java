@@ -26,10 +26,9 @@ public final class Page {
         /**
          * @param context         android application context
          * @param overlayCallback interface for communication with Phial
-         * @param screenTracker
          * @return view to display
          */
-        T createPageView(Context context, OverlayCallback overlayCallback, ScreenTracker screenTracker);
+        T createPageView(Context context, OverlayCallback overlayCallback);
 
     }
 

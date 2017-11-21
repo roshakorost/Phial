@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.VisibleForTesting;
 import android.view.View;

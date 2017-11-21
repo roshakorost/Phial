@@ -3,4 +3,6 @@
     <string name="share.error_attachment">Error during preparing of debug attachment</string>
     <string name="share.page_title">Share</string>
     <string name="system_info.page_title">System Info</string>
+
+    <string name="phial_font_medium">sans-serif</string>
 </resources>

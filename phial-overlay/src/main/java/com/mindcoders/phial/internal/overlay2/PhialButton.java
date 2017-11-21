@@ -19,6 +19,7 @@ import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.util.support.ContextCompat;
 
 class PhialButton extends View {
+    private static final float SHADOW_DY = 0.75f;
     private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private int shadowSize;
@@ -42,30 +43,40 @@ class PhialButton extends View {
 
         final TypedArray array = context.obtainStyledAttributes(attrs,
                 R.styleable.PhialButton, defStyleAttr,
-                R.style.Phial_Button);
+                R.style.Widget_Phial_Button);
 
         try {
-            backgroundColor = array.getColorStateList(R.styleable.PhialButton_phial_button_color_background);
-            iconColor = array.getColorStateList(R.styleable.PhialButton_phial_button_color_icon);
-            shadowColor = array.getColorStateList(R.styleable.PhialButton_phial_button_color_shadow);
+            backgroundColor = array.getColorStateList(R.styleable.PhialButton_phial_color_background);
+            if (backgroundColor == null) {
+                throw new IllegalStateException(array.toString());
+            }
+            iconColor = array.getColorStateList(R.styleable.PhialButton_phial_color_icon);
+            shadowColor = array.getColorStateList(R.styleable.PhialButton_phial_color_shadow);
 
-            icon = array.getDrawable(R.styleable.PhialButton_phial_button_icon);
+            icon = array.getDrawable(R.styleable.PhialButton_phial_icon);
+            if (icon != null) {
+                icon = icon.mutate();
+            }
 
             int defaultButtonSize = context.getResources().getDimensionPixelSize(R.dimen.phial_button_size);
-            buttonSize = array.getDimensionPixelSize(R.styleable.PhialButton_phial_button_size, defaultButtonSize);
+            buttonSize = array.getDimensionPixelSize(R.styleable.PhialButton_phial_size, defaultButtonSize);
 
             int defaultShadowSize = context.getResources().getDimensionPixelSize(R.dimen.phial_button_shadow_size);
-            shadowSize = array.getDimensionPixelSize(R.styleable.PhialButton_phial_button_size_shadow, defaultShadowSize);
+            shadowSize = array.getDimensionPixelSize(R.styleable.PhialButton_phial_size_shadow, defaultShadowSize);
         } finally {
             array.recycle();
         }
 
-        setLayerType(LAYER_TYPE_SOFTWARE, bgPaint);
+        if (!isInEditMode()) {
+            setLayerType(LAYER_TYPE_SOFTWARE, bgPaint);
+        }
         refreshDrawableState();
     }
 
     public void setIcon(Drawable drawable) {
-        icon = drawable;
+        if (drawable != null) {
+            icon = drawable.mutate();
+        }
         refreshDrawableState();
         invalidate();
     }
@@ -99,7 +110,10 @@ class PhialButton extends View {
         final int[] drawableState = getDrawableState();
 
         bgPaint.setColor(getColor(backgroundColor, drawableState));
-        bgPaint.setShadowLayer(shadowSize, 0f, getShadowDy(), getColor(shadowColor, drawableState));
+        if (!isInEditMode()) {
+            bgPaint.setShadowLayer(shadowSize, 0f, getShadowDy(), getColor(shadowColor, drawableState));
+        }
+
         if (icon != null) {
             icon.setColorFilter(getColor(iconColor, drawableState), PorterDuff.Mode.SRC_ATOP);
         }
@@ -107,7 +121,7 @@ class PhialButton extends View {
     }
 
     private float getShadowDy() {
-        return shadowSize * 0.66f;
+        return shadowSize * SHADOW_DY;
     }
 
     @Override

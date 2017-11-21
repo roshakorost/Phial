@@ -11,5 +11,5 @@
     android:paddingRight="?android:attr/expandableListPreferredItemPaddingLeft"
     android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
     android:textAppearance="?android:attr/textAppearanceListItem"
-    android:textColor="@color/phial.key.text"
+    android:textColor="@color/phial_key_text"
     tools:text="System Info" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/phial.palette.gray.darkest" android:state_selected="true" />
-    <item android:color="@color/phial.palette.gray.lightest" android:state_pressed="true" />
-    <item android:color="@color/phial.palette.white" />
+    <item android:color="@color/phial_palette_gray_darkest" android:state_selected="true" />
+    <item android:color="@color/phial_palette_gray_very_light" android:state_pressed="true" />
+    <item android:color="@color/phial_palette_gray_lightest" />
 </selector>

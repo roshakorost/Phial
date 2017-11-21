@@ -39,16 +39,15 @@ class DragHelper implements View.OnTouchListener {
         return new DragHelper(view, positionStorage);
     }
 
-    void start() {
+
+    void adjustBounds(Rect newBounds) {
         target.setOnTouchListener(this);
-        disposable = LayoutHelper.onLayout(this::onLayout, target, getParent(target));
+        disposable.dispose();
+        disposable = LayoutHelper.onLayout(() -> onLayout(newBounds), target);
     }
 
-    void stop() {
+    void cancelAnimation() {
         target.animate().cancel();
-        parent = new Rect();
-        disposable.dispose();
-        target.setOnTouchListener(null);
     }
 
     @Override
@@ -114,9 +113,9 @@ class DragHelper implements View.OnTouchListener {
         positionStorage.savePosition(percentX, percentY);
     }
 
-    private void onLayout() {
-        final View parentView = getParent(target);
-        parentView.getWindowVisibleDisplayFrame(parent);
+    private void onLayout(Rect parentBounds) {
+        parent = new Rect(parentBounds);
+
         parent.right -= target.getWidth();
         parent.bottom -= target.getHeight();
 
@@ -125,9 +124,5 @@ class DragHelper implements View.OnTouchListener {
         final float y = parent.top + parent.height() * position.y;
         target.setX(x);
         target.setY(y);
-    }
-
-    private View getParent(View view) {
-        return (View) view.getParent();
     }
 }
