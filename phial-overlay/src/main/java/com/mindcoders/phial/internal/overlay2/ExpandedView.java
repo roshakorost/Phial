@@ -1,8 +1,6 @@
 package com.mindcoders.phial.internal.overlay2;
 
 import android.content.Context;
-import android.graphics.Rect;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -19,7 +17,6 @@ import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PageView;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.util.ObjectUtil;
-import com.mindcoders.phial.internal.util.support.ResourcesCompat;
 
 import java.util.List;
 
@@ -35,7 +32,6 @@ public class ExpandedView extends FrameLayout {
         void onPageSelected(Page page);
     }
 
-    private final LinearLayout root;
     private final LinearLayout iconsHolder;
     private final View arrow;
     private final TextView title;
@@ -46,7 +42,12 @@ public class ExpandedView extends FrameLayout {
     private LayoutHelper.Disposable disposable = LayoutHelper.Disposable.EMPTY;
 
     public ExpandedView(@NonNull Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
+    }
+
+    public ExpandedView(@NonNull Context context, ExpandedViewCallback callback) {
+        this(context);
+        setCallback(callback);
     }
 
     public ExpandedView(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -56,27 +57,25 @@ public class ExpandedView extends FrameLayout {
     public ExpandedView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.view_expanded, this, true);
-        root = findViewById(R.id.root);
         iconsHolder = findViewById(R.id.tab_icons_holder);
         arrow = findViewById(R.id.arrow);
         title = findViewById(R.id.title);
         contentContainer = findViewById(R.id.content);
-        final PhialButton settingsButton = findViewById(R.id.settings_button);
-        settingsButton.setOnClickListener(v -> notifyFinish());
-
-        setBackgroundColor(getShadowColor());
-        setFocusableInTouchMode(true);
-        requestFocus();
+        setupPaddings();
+        setBackgroundResource(R.color.phial_palette_gray_darkest_transparent);
     }
 
-    public void displayPages(ExpandedViewCallback callback, List<Page> pages, Page selected) {
-        this.callback = callback;
+    public void displayPages(List<Page> pages, Page selected) {
         setupIcons(pages, selected);
         setupPage(selected);
         title.setText(selected.getTitle());
     }
 
-    public void reset() {
+    public void setCallback(ExpandedViewCallback callback) {
+        this.callback = callback;
+    }
+
+    public void destroyContent() {
         contentContainer.removeAllViews();
     }
 
@@ -121,14 +120,6 @@ public class ExpandedView extends FrameLayout {
         }
     }
 
-    @ColorInt
-    private int getShadowColor() {
-        return ResourcesCompat.getColor(getResources(),
-                R.color.phial_palette_gray_darkest_transparent,
-                getContext().getTheme()
-        );
-    }
-
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (!isBackClicked(event)) {
@@ -142,7 +133,7 @@ public class ExpandedView extends FrameLayout {
             }
         }
 
-        notifyFinish();
+        callback.finish();
         return true;
     }
 
@@ -153,20 +144,8 @@ public class ExpandedView extends FrameLayout {
 
     private void onTabClicked(PhialButton button, Page page) {
         if (button.isSelected()) {
-            notifyFinish();
-        } else {
-            notifySelectionChanged(page);
-        }
-    }
-
-    private void notifyFinish() {
-        if (callback != null) {
             callback.finish();
-        }
-    }
-
-    private void notifySelectionChanged(Page page) {
-        if (callback != null) {
+        } else {
             callback.onPageSelected(page);
         }
     }
@@ -176,7 +155,8 @@ public class ExpandedView extends FrameLayout {
                 && event.getKeyCode() == KeyEvent.KEYCODE_BACK;
     }
 
-    public void adjustBounds(int width, int height, Rect bounds) {
-        setPadding(bounds.left, bounds.top, width - bounds.right, height - bounds.bottom);
+    private void setupPaddings() {
+        final int padding = getResources().getDimensionPixelSize(R.dimen.phial_padding_small);
+        setPadding(padding, padding, padding, padding);
     }
 }

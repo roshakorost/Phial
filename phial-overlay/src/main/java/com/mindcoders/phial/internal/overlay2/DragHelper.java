@@ -50,6 +50,10 @@ class DragHelper implements View.OnTouchListener {
         target.animate().cancel();
     }
 
+    void start() {
+
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (parent.isEmpty()) {
