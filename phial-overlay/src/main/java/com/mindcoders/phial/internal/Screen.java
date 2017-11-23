@@ -16,7 +16,7 @@ import java.util.Set;
 public class Screen {
 
     private Activity activity;
-    private Set<String> scopes = Collections.synchronizedSet(new HashSet<String>());
+    private Set<Scope> scopes = Collections.synchronizedSet(new HashSet<Scope>());
 
     Screen(Activity activity, String scope) {
         this.activity = activity;
@@ -26,11 +26,11 @@ public class Screen {
         return new Screen(null, null);
     }
 
-    void enterScope(String scope) {
+    void enterScope(Scope scope) {
         this.scopes.add(scope);
     }
 
-    void exitScope(String scope) {
+    void exitScope(Scope scope) {
         this.scopes.remove(scope);
     }
 
@@ -84,9 +84,22 @@ public class Screen {
 
     @Nullable
     public View findTarget(int id) {
-        if (activity != null) {
-            return activity.findViewById(id);
+        View resultView = null;
+
+        for (Scope scope : scopes) {
+            if (scope.getScopeView() != null) {
+                resultView = scope.getScopeView().findViewById(id);
+            }
+
+            if (resultView != null) {
+                return resultView;
+            }
         }
-        return null;
+
+
+        if (activity != null) {
+            resultView = activity.findViewById(id);
+        }
+        return resultView;
     }
 }

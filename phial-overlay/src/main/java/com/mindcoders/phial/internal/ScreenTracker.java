@@ -57,13 +57,13 @@ public final class ScreenTracker extends SimpleActivityLifecycleCallbacks implem
     }
 
     @Override
-    public void onEnterScope(String scope) {
+    public void onEnterScope(Scope scope) {
         currentScreen.enterScope(scope);
         fireOnScreenChanged();
     }
 
     @Override
-    public void onExitScope(String scope) {
+    public void onExitScope(Scope scope) {
         currentScreen.exitScope(scope);
         fireOnScreenChanged();
     }
