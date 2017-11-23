@@ -66,6 +66,15 @@ public class ExpandedView extends FrameLayout {
         setBackgroundResource(R.color.phial_palette_gray_darkest_transparent);
     }
 
+    /**
+     * Shows pages as tabIcons. Highlights selectedTabIcon and shows content for selected Page.
+     * <p>
+     * Important: It has optimization: if selected page is same we don't recreate content.
+     * Important: OverlayPresenter expects the optimization.
+     *
+     * @param pages    list of pages to display
+     * @param selected selected page
+     */
     public void displayPages(List<Page> pages, Page selected) {
         setupIcons(pages, selected);
         setupPage(selected);

@@ -47,6 +47,14 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         BUTTON_PARAMS.dimAmount = 0f;
     }
 
+    //ExpandView has state so we don't want to recreate it after pause/resume and orientation change,
+    //because content page might have some user input.
+    //So we remove it from current window and add to next. As a result we need to remove it during on pause and add during on resume
+    //to insure that single instance is created.
+    //Buttons are different: their state can be restored. So we can recreate them or create multiple buttons.
+    //Buttons are created during onStart and removed during onStop so there would be no flickering
+    //(Since it is not expected to navigate between activities in expanded mode there would be no flickering for
+    //expandView as well).
     private final Map<Activity, PhialButton> buttons = new HashMap<>();
     private final DragHelper dragHelper;
     private final ExpandedView expandedView;
