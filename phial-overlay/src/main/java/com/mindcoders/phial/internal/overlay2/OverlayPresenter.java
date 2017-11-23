@@ -2,12 +2,9 @@ package com.mindcoders.phial.internal.overlay2;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.os.Handler;
 import android.view.ContextThemeWrapper;
-import android.view.View;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
 import com.mindcoders.phial.Page;
@@ -16,7 +13,9 @@ import com.mindcoders.phial.internal.PhialNotifier;
 import com.mindcoders.phial.internal.util.ObjectUtil;
 import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -48,70 +47,109 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         BUTTON_PARAMS.dimAmount = 0f;
     }
 
+    private final Map<Activity, PhialButton> buttons = new HashMap<>();
     private final DragHelper dragHelper;
-    private final List<Page> pages;
-    private final PhialButton button;
     private final ExpandedView expandedView;
+    private final List<Page> pages;
     private final PhialNotifier notifier;
+    private final Context context;
 
     private boolean isExpanded = false;
     private Activity curActivity;
 
-    public OverlayPresenter(Context baseContext, List<Page> pages, SharedPreferences sharedPreferences, PhialNotifier notifier) {
-        final Context context = new ContextThemeWrapper(baseContext, R.style.Theme_Phial);
+    public OverlayPresenter(Context baseContext, List<Page> pages, PositionStorage positionStorage, PhialNotifier notifier) {
+        this.context = new ContextThemeWrapper(baseContext, R.style.Theme_Phial);
         this.pages = pages;
         this.notifier = notifier;
+        this.dragHelper = new DragHelper(positionStorage);
         this.expandedView = new ExpandedView(context, this);
-        this.button = new PhialButton(context);
-        this.button.setIcon(R.drawable.ic_handle);
-        button.setOnClickListener(v -> showDebugWindow());
-        this.dragHelper = DragHelper.create(button, sharedPreferences);
+
+        //this.dragHelper = DragHelper.create(button, sharedPreferences);
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+        if (!isExpanded) {
+            showButton(activity);
+        }
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+        if (!isExpanded) {
+            removePhialButton(activity);
+        }
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
         curActivity = activity;
-        showView(activity, isExpanded);
+        if (isExpanded) {
+            showExpandView(activity);
+        }
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
         if (ObjectUtil.equals(activity, curActivity)) {
-            hideView(activity, isExpanded);
+            if (isExpanded) {
+                removeExpandedView(curActivity, false);
+            }
+
+            curActivity = null;
         }
     }
 
     private void showDebugWindow() {
         notifier.fireDebugWindowShown();
 
-        hideView(curActivity, false);
-        showView(curActivity, true);
+        removePhialButton(curActivity);
+        showExpandView(curActivity);
+
         isExpanded = true;
     }
 
     private void closeDebugWindow() {
         notifier.fireDebugWindowHide();
 
-        hideView(curActivity, true);
-        showView(curActivity, false);
+        removeExpandedView(curActivity, true);
+        showButton(curActivity);
+
         isExpanded = false;
     }
 
-    private void hideView(Activity activity, boolean expanded) {
-        if (expanded) {
-            activity.getWindowManager().removeView(expandedView);
-        } else {
-            activity.getWindowManager().removeView(button);
-        }
+    private void showExpandView(Activity activity) {
+        activity.getWindowManager().addView(expandedView, wrap(EXPANDED_VIEW_PARAMS));
+        expandedView.displayPages(pages, pages.get(1));
     }
 
-    private void showView(Activity activity, boolean expanded) {
-        if (expanded) {
-            activity.getWindowManager().addView(expandedView, wrap(EXPANDED_VIEW_PARAMS));
-            expandedView.displayPages(pages, pages.get(0));
-        } else {
-            activity.getWindowManager().addView(button, wrap(BUTTON_PARAMS));
+    private void removeExpandedView(Activity activity, boolean destroyContent) {
+        if (destroyContent) {
+            expandedView.destroyContent();
         }
+        activity.getWindowManager().removeView(expandedView);
+    }
+
+    private void showButton(Activity activity) {
+        WindowManager windowManager = activity.getWindowManager();
+        final PhialButton button = createButton();
+        buttons.put(activity, button);
+        final LayoutParams wrap = wrap(BUTTON_PARAMS);
+        windowManager.addView(button, wrap);
+        dragHelper.manager(windowManager, button);
+    }
+
+    private void removePhialButton(Activity activity) {
+        final PhialButton button = buttons.remove(activity);
+        dragHelper.unmanage(button);
+        activity.getWindowManager().removeView(button);
+    }
+
+    private PhialButton createButton() {
+        final PhialButton button = new PhialButton(context);
+        button.setIcon(R.drawable.ic_handle);
+        button.setOnClickListener(v -> showDebugWindow());
+        return button;
     }
 
     @Override
@@ -119,12 +157,6 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         if (isExpanded) {
             closeDebugWindow();
         }
-    }
-
-    private static Rect getBounds(View view) {
-        final Rect outRect = new Rect();
-        view.getWindowVisibleDisplayFrame(outRect);
-        return outRect;
     }
 
     @Override

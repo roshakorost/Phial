@@ -15,6 +15,7 @@ import com.mindcoders.phial.internal.overlay.Overlay;
 import com.mindcoders.phial.internal.overlay.OverlayPositionStorage;
 import com.mindcoders.phial.internal.overlay.SelectedPageStorage;
 import com.mindcoders.phial.internal.overlay2.OverlayPresenter;
+import com.mindcoders.phial.internal.overlay2.PositionStorage;
 import com.mindcoders.phial.internal.share.ShareView;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public final class OverlayFactory {
         final List<Page> pages = createPages(phialBuilder, phialCore, application);
         return new OverlayPresenter(application,
                 pages,
-                phialCore.getSharedPreferences(),
+                new PositionStorage(phialCore.getSharedPreferences()),
                 phialCore.getNotifier()
         );
     }

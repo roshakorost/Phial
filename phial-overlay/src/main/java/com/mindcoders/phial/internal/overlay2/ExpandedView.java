@@ -61,7 +61,8 @@ public class ExpandedView extends FrameLayout {
         arrow = findViewById(R.id.arrow);
         title = findViewById(R.id.title);
         contentContainer = findViewById(R.id.content);
-        setupPaddings();
+        findViewById(R.id.settings_button).setOnClickListener(v -> callback.finish());
+
         setBackgroundResource(R.color.phial_palette_gray_darkest_transparent);
     }
 
@@ -76,6 +77,7 @@ public class ExpandedView extends FrameLayout {
     }
 
     public void destroyContent() {
+        content = null;
         contentContainer.removeAllViews();
     }
 
@@ -153,10 +155,5 @@ public class ExpandedView extends FrameLayout {
     private boolean isBackClicked(KeyEvent event) {
         return event.getAction() == KeyEvent.ACTION_UP
                 && event.getKeyCode() == KeyEvent.KEYCODE_BACK;
-    }
-
-    private void setupPaddings() {
-        final int padding = getResources().getDimensionPixelSize(R.dimen.phial_padding_small);
-        setPadding(padding, padding, padding, padding);
     }
 }

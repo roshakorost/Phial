@@ -3,7 +3,7 @@ package com.mindcoders.phial.internal.overlay2;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 
-class PositionStorage {
+public class PositionStorage {
 
     private static final String KEY_X = "rel_x";
     private static final String KEY_Y = "rel_y";
