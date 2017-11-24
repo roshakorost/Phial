@@ -5,13 +5,12 @@ import android.graphics.Rect;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.mindcoders.phial.internal.util.NumberUtil;
+import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
 import com.mindcoders.phial.internal.util.ViewUtil;
 
 /**
@@ -19,7 +18,7 @@ import com.mindcoders.phial.internal.util.ViewUtil;
  */
 
 class DragHelper {
-    private static final long MOVE_TO_EDGE_DURATION = 150L;
+    private static final long ANIM_DURATION = 150L;
     private static final long CLICK_MAX_DURATION_MS = 300L;
     private static final float DEFAULT_X = 1f;
     private static final float DEFAULT_Y = 0.7f;
@@ -47,9 +46,19 @@ class DragHelper {
         }
     }
 
+    void animateTo(View view, float relX, float relY, Runnable endAction) {
+        final Object tag = view.getTag();
+        final Dragger dragger;
+        if (tag instanceof Dragger) {
+            dragger = (Dragger) tag;
+            dragger.animatorToPosition(view, relX, relY, endAction);
+        } else {
+            throw new IllegalStateException("request to animate view that is not managed by DragHelper");
+        }
+    }
+
     private class Dragger implements View.OnTouchListener, View.OnLayoutChangeListener {
         private final WindowManager windowManager;
-
 
         //left and bottom is adjusted by view width and height
         private Rect parent = new Rect();
@@ -130,7 +139,7 @@ class DragHelper {
             }
 
             cancelAnimation();
-            animator = ValueAnimator.ofInt(x, edgeX).setDuration(MOVE_TO_EDGE_DURATION);
+            animator = ValueAnimator.ofInt(x, edgeX).setDuration(ANIM_DURATION);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator.addUpdateListener(animation -> {
                 int updatedX = (int) animation.getAnimatedValue();
@@ -163,6 +172,29 @@ class DragHelper {
             lp.y = y;
             lp.gravity = Gravity.TOP | Gravity.LEFT;
             windowManager.updateViewLayout(view, lp);
+        }
+
+        void animatorToPosition(View view, float relX, float relY, Runnable endAction) {
+            cancelAnimation();
+
+            final int targetX = (int) (parent.left + parent.width() * relX);
+            final int targetY = (int) (parent.top + parent.height() * relY);
+
+            final LayoutParams lp = (LayoutParams) view.getLayoutParams();
+            final int startX = lp.x;
+            final int startY = lp.y;
+
+            animator = ValueAnimator.ofFloat(0f, 1f).setDuration(ANIM_DURATION);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.addUpdateListener(animation -> {
+                float fraction = (float) animation.getAnimatedValue();
+                final int x = (int) (startX + (targetX - startX) * fraction);
+                final int y = (int) (startY + (targetY - startY) * fraction);
+                setPosition(view, x, y);
+            });
+            animator.addListener(SimpleAnimatorListener.createEndListener(endAction));
+
+            animator.start();
         }
     }
 }

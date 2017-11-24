@@ -71,8 +71,6 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         this.notifier = notifier;
         this.dragHelper = new DragHelper(positionStorage);
         this.expandedView = new ExpandedView(context, this);
-
-        //this.dragHelper = DragHelper.create(button, sharedPreferences);
     }
 
     @Override
@@ -109,12 +107,18 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
     }
 
     private void showDebugWindow() {
+
         notifier.fireDebugWindowShown();
 
-        removePhialButton(curActivity);
-        showExpandView(curActivity);
+        final Activity curActivity = this.curActivity;
+        final PhialButton curButton = buttons.get(curActivity);
 
-        isExpanded = true;
+        final Runnable endAction = () -> {
+            isExpanded = true;
+            removePhialButton(curActivity, curButton);
+            showExpandView(curActivity);
+        };
+        dragHelper.animateTo(curButton, 1f, 0f, endAction);
     }
 
     private void closeDebugWindow() {
@@ -149,6 +153,10 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
 
     private void removePhialButton(Activity activity) {
         final PhialButton button = buttons.remove(activity);
+        removePhialButton(activity, button);
+    }
+
+    private void removePhialButton(Activity activity, PhialButton button) {
         dragHelper.unmanage(button);
         activity.getWindowManager().removeView(button);
     }
@@ -177,6 +185,10 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         if (isExpanded) {
             expandedView.displayPages(pages, page);
         }
+    }
+
+    public void reveal() {
+
     }
 
     private static LayoutParams wrap(LayoutParams source) {
