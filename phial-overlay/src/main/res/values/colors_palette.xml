@@ -7,5 +7,6 @@
     <color name="phial_palette_gray_dark">#4b4b4b</color>
     <color name="phial_palette_gray_darkest">#24292e</color>
     <color name="phial_palette_gray_darkest_transparent">#7024292e</color>
+    <color name="phial_palette_gray_darkest_full_transparent">#0024292e</color>
     <color name="phial_palette_black">#000000</color>
 </resources>

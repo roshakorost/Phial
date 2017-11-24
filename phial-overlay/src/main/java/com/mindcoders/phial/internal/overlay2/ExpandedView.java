@@ -1,5 +1,8 @@
 package com.mindcoders.phial.internal.overlay2;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,7 +19,10 @@ import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PageView;
 import com.mindcoders.phial.R;
+import com.mindcoders.phial.internal.util.AnimatorFactory;
+import com.mindcoders.phial.internal.util.ArgbEvaluator;
 import com.mindcoders.phial.internal.util.ObjectUtil;
+import com.mindcoders.phial.internal.util.support.ResourcesCompat;
 
 import java.util.List;
 
@@ -28,6 +34,10 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  */
 
 public class ExpandedView extends FrameLayout {
+    private static final int ANIMATION_DURATION = 500;
+    private static final int BACKGROUND_COLOR_RES = R.color.phial_palette_gray_darkest_transparent;
+    public static final int BACGROUND_TRANSPARENT_COLOR_RES = R.color.phial_palette_gray_darkest_full_transparent;
+
     interface ExpandedViewCallback extends OverlayCallback {
         void onPageSelected(Page page);
     }
@@ -37,6 +47,7 @@ public class ExpandedView extends FrameLayout {
     private final TextView title;
     private final FrameLayout contentContainer;
 
+    private Animator animator = ValueAnimator.ofInt();
     private View content;
     private ExpandedViewCallback callback;
     private LayoutHelper.Disposable disposable = LayoutHelper.Disposable.EMPTY;
@@ -61,9 +72,12 @@ public class ExpandedView extends FrameLayout {
         arrow = findViewById(R.id.arrow);
         title = findViewById(R.id.title);
         contentContainer = findViewById(R.id.content);
+
         findViewById(R.id.settings_button).setOnClickListener(v -> callback.finish());
 
-        setBackgroundResource(R.color.phial_palette_gray_darkest_transparent);
+        setBackgroundResource(BACKGROUND_COLOR_RES);
+        final int padding = getResources().getDimensionPixelSize(R.dimen.phial_padding_small);
+        setPadding(padding, padding, padding, padding);
     }
 
     /**
@@ -75,8 +89,8 @@ public class ExpandedView extends FrameLayout {
      * @param pages    list of pages to display
      * @param selected selected page
      */
-    public void displayPages(List<Page> pages, Page selected) {
-        setupIcons(pages, selected);
+    public void displayPages(List<Page> pages, Page selected, boolean animated) {
+        setupIcons(pages, selected, animated);
         setupPage(selected);
         title.setText(selected.getTitle());
     }
@@ -88,9 +102,11 @@ public class ExpandedView extends FrameLayout {
     public void destroyContent() {
         content = null;
         contentContainer.removeAllViews();
+        disposable.dispose();
+        animator.cancel();
     }
 
-    private void setupIcons(List<Page> pages, Page selected) {
+    private void setupIcons(List<Page> pages, Page selected, boolean animated) {
         // - 1 in order to not remove settings button
         iconsHolder.removeViews(0, iconsHolder.getChildCount() - 1);
         PhialButton selectedButton = null;
@@ -114,7 +130,10 @@ public class ExpandedView extends FrameLayout {
         if (selectedButton != null) {
             final PhialButton finalSelectedButton = selectedButton;
             disposable.dispose();
-            disposable = LayoutHelper.onLayout(() -> setupArrowPosition(finalSelectedButton), finalSelectedButton, arrow);
+            disposable = LayoutHelper.onLayout(() -> {
+                setupArrowPosition(finalSelectedButton);
+                animateAppear();
+            }, finalSelectedButton, arrow);
         }
     }
 
@@ -164,5 +183,45 @@ public class ExpandedView extends FrameLayout {
     private boolean isBackClicked(KeyEvent event) {
         return event.getAction() == KeyEvent.ACTION_UP
                 && event.getKeyCode() == KeyEvent.KEYCODE_BACK;
+    }
+
+    private void animateAppear() {
+        setBackgroundResource(BACGROUND_TRANSPARENT_COLOR_RES);
+
+        final AnimatorSet animator = new AnimatorSet();
+        animator.playTogether(
+                createRevelAnimator(),
+                createAppearBackgroundAnimator()
+        );
+
+        animator.start();
+    }
+
+    private Animator createRevelAnimator() {
+        return AnimatorFactory
+                .createFactory(findViewById(R.id.settings_button))
+                .createAppearAnimator(this)
+                .setDuration(ANIMATION_DURATION);
+    }
+
+    private Animator createAppearBackgroundAnimator() {
+        int startColor = ResourcesCompat.getColor(getResources(),
+                BACGROUND_TRANSPARENT_COLOR_RES,
+                getContext().getTheme()
+        );
+        int finColor = ResourcesCompat.getColor(getResources(),
+                BACKGROUND_COLOR_RES,
+                getContext().getTheme()
+        );
+        ValueAnimator anim = new ValueAnimator();
+        anim.setIntValues(startColor, finColor);
+        anim.setEvaluator(ArgbEvaluator.getInstance());
+        anim.setStartDelay(ANIMATION_DURATION / 2);
+        anim.setDuration(ANIMATION_DURATION / 2);
+        anim.addUpdateListener(animation -> {
+            int color = (int) animation.getAnimatedValue();
+            setBackgroundColor(color);
+        });
+        return anim;
     }
 }

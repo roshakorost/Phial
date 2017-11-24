@@ -18,7 +18,7 @@ import com.mindcoders.phial.internal.util.ViewUtil;
  */
 
 class DragHelper {
-    private static final long ANIM_DURATION = 150L;
+    private static final long ANIM_DURATION = 250L;
     private static final long CLICK_MAX_DURATION_MS = 300L;
     private static final float DEFAULT_X = 1f;
     private static final float DEFAULT_Y = 0.7f;
