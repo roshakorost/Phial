@@ -14,6 +14,11 @@ buildscript {
     }
 }
 
+plugins {
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.6.3'
+}
+
 allprojects {
     repositories {
         jcenter()
@@ -43,6 +48,8 @@ subprojects {
         // empty classpath
         classpath = files()
     }
+
+    apply plugin: 'jacoco'
 }
 
 configure(subprojects.findAll { it.name != 'sample' }) {
@@ -61,4 +68,49 @@ subprojects.each { project ->
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+def publishedProjects = subprojects.findAll().findAll { it.name != "sample" && it.name != "phial-scope"  }
+
+task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
+    description = 'Generates an aggregate report from all subprojects'
+
+    dependsOn(publishedProjects.test)
+
+    sourceDirectories = files()
+    classDirectories = files()
+    executionData = files()
+
+    publishedProjects.each { p ->
+        p.android.unitTestVariants.each { variant ->
+            sourceDirectories += files(variant.testedVariant.sourceSets.java.srcDirs.flatten())
+            classDirectories += fileTree(
+                    dir: variant.testedVariant.javaCompiler.destinationDir,
+                    excludes: ['**/R.class',
+                               '**/R$*.class',
+                               '**/BuildConfig.*',
+                               '**/Manifest*.*',
+                               '**/*Lambda*.class']
+            )
+            executionData += files("${p.buildDir}/jacoco/test${variant.name.capitalize()}.exec")
+        }
+    }
+
+    doFirst {
+        executionData = files(executionData.findAll { it.exists() })
+    }
+
+    reports {
+        html.enabled = true // human readable
+        xml.enabled = true // required by coveralls
+    }
+}
+
+coveralls {
+//    sourceDirs = publishedProjects.android.sourceSets.main.java.srcDirs.flatten()
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+}
+
+tasks.coveralls {
+    dependsOn jacocoRootReport
 }
