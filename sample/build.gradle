@@ -52,9 +52,12 @@ dependencies {
     qaImplementation project(':phial-overlay')
     qaImplementation project(':phial-logging')
     qaImplementation project(':phial-jira')
-    qaImplementation project(':phial-key-value')
     qaImplementation project(':phial-autofill')
-    qaImplementation project(':phial-scope')
-    prodImplementation project(':phial-key-value')
-    prodImplementation project(':phial-scope-no-op')
+
+    //Provides interface to Phial.setKey().
+    //it is no-op in production code since without phial-overlay it doesn't store values
+    implementation project(':phial-key-value')
+    //Provides interface to PhialScope.enterScope().
+    //it is no-op in production code since without phial-overlay it doesn't do anything
+    implementation project(':phial-scope')
 }
