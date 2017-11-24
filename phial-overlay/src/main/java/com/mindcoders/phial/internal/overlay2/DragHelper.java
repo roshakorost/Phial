@@ -2,6 +2,7 @@ package com.mindcoders.phial.internal.overlay2;
 
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,7 +19,7 @@ import com.mindcoders.phial.internal.util.ViewUtil;
  */
 
 class DragHelper {
-    private static final long ANIM_DURATION = 250L;
+    private static final long ANIM_DURATION = 200L;
     private static final long CLICK_MAX_DURATION_MS = 300L;
     private static final float DEFAULT_X = 1f;
     private static final float DEFAULT_Y = 0.7f;
@@ -29,7 +30,15 @@ class DragHelper {
         this.positionStorage = positionStorage;
     }
 
-    void manager(WindowManager windowManager, View view) {
+    void manageAnimated(WindowManager windowManager, View view, float relX, float relY) {
+        final Dragger dragger = new Dragger(windowManager);
+        dragger.moveToInitialPositionAnimated(relX, relY);
+        view.setTag(dragger);
+        view.setOnTouchListener(dragger);
+        view.addOnLayoutChangeListener(dragger);
+    }
+
+    void manage(WindowManager windowManager, View view) {
         final Dragger dragger = new Dragger(windowManager);
         view.setTag(dragger);
         view.setOnTouchListener(dragger);
@@ -51,7 +60,7 @@ class DragHelper {
         final Dragger dragger;
         if (tag instanceof Dragger) {
             dragger = (Dragger) tag;
-            dragger.animatorToPosition(view, relX, relY, endAction);
+            dragger.animateToPosition(view, relX, relY, endAction);
         } else {
             throw new IllegalStateException("request to animate view that is not managed by DragHelper");
         }
@@ -59,7 +68,6 @@ class DragHelper {
 
     private class Dragger implements View.OnTouchListener, View.OnLayoutChangeListener {
         private final WindowManager windowManager;
-
         //left and bottom is adjusted by view width and height
         private Rect parent = new Rect();
         private float initialTouchX, initialTouchY;
@@ -67,8 +75,19 @@ class DragHelper {
         private long startTimeMS;
         private ValueAnimator animator = ValueAnimator.ofInt();
 
+        private boolean animated;
+        private float relX;
+        private float relY;
+
         Dragger(WindowManager windowManager) {
             this.windowManager = windowManager;
+
+        }
+
+        void moveToInitialPositionAnimated(float relX, float relY) {
+            this.animated = true;
+            this.relX = relX;
+            this.relY = relY;
         }
 
         void cancelAnimation() {
@@ -160,10 +179,18 @@ class DragHelper {
             parent = new Rect(0, 0, rect.width() - v.getWidth(), rect.height() - v.getHeight());
 
             final PositionStorage.Position position = positionStorage.getPosition(DEFAULT_X, DEFAULT_Y);
-            final int x = (int) (parent.left + parent.width() * position.x);
-            final int y = (int) (parent.top + parent.height() * position.y);
+            final int targetX = (int) (parent.left + parent.width() * position.x);
+            final int targetY = (int) (parent.top + parent.height() * position.y);
 
-            setPosition(v, x, y);
+            if (animated) {
+                final int startX = (int) (parent.left + parent.width() * relX);
+                final int startY = (int) (parent.top + parent.height() * relY);
+                ValueAnimator animator = createMoveAnimator(v, startX, startY, targetX, targetY);
+                this.animator = animator;
+                animator.start();
+            } else {
+                setPosition(v, targetX, targetY);
+            }
         }
 
         private void setPosition(View view, int x, int y) {
@@ -174,27 +201,32 @@ class DragHelper {
             windowManager.updateViewLayout(view, lp);
         }
 
-        void animatorToPosition(View view, float relX, float relY, Runnable endAction) {
+        void animateToPosition(View view, float relX, float relY, Runnable endAction) {
             cancelAnimation();
+
+            final LayoutParams lp = (LayoutParams) view.getLayoutParams();
 
             final int targetX = (int) (parent.left + parent.width() * relX);
             final int targetY = (int) (parent.top + parent.height() * relY);
 
-            final LayoutParams lp = (LayoutParams) view.getLayoutParams();
-            final int startX = lp.x;
-            final int startY = lp.y;
+            animator = createMoveAnimator(view, lp.x, lp.y, targetX, targetY);
+            animator.addListener(SimpleAnimatorListener.createEndListener(endAction));
 
-            animator = ValueAnimator.ofFloat(0f, 1f).setDuration(ANIM_DURATION);
+            animator.start();
+        }
+
+        @NonNull
+        private ValueAnimator createMoveAnimator(View v, int startX, int startY, int targetX, int targetY) {
+            ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f).setDuration(ANIM_DURATION);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator.addUpdateListener(animation -> {
                 float fraction = (float) animation.getAnimatedValue();
                 final int x = (int) (startX + (targetX - startX) * fraction);
                 final int y = (int) (startY + (targetY - startY) * fraction);
-                setPosition(view, x, y);
+                setPosition(v, x, y);
             });
-            animator.addListener(SimpleAnimatorListener.createEndListener(endAction));
-
-            animator.start();
+            return animator;
         }
+
     }
 }

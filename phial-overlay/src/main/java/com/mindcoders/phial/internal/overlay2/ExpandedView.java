@@ -22,6 +22,7 @@ import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.util.AnimatorFactory;
 import com.mindcoders.phial.internal.util.ArgbEvaluator;
 import com.mindcoders.phial.internal.util.ObjectUtil;
+import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
 import com.mindcoders.phial.internal.util.support.ResourcesCompat;
 
 import java.util.List;
@@ -34,9 +35,10 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  */
 
 public class ExpandedView extends FrameLayout {
-    private static final int ANIMATION_DURATION = 500;
+    private static final int ANIMATION_DURATION = 400;
     private static final int BACKGROUND_COLOR_RES = R.color.phial_palette_gray_darkest_transparent;
     public static final int BACGROUND_TRANSPARENT_COLOR_RES = R.color.phial_palette_gray_darkest_full_transparent;
+    private View settingsButton;
 
     interface ExpandedViewCallback extends OverlayCallback {
         void onPageSelected(Page page);
@@ -73,7 +75,8 @@ public class ExpandedView extends FrameLayout {
         title = findViewById(R.id.title);
         contentContainer = findViewById(R.id.content);
 
-        findViewById(R.id.settings_button).setOnClickListener(v -> callback.finish());
+        settingsButton = findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(v -> callback.finish());
 
         setBackgroundResource(BACKGROUND_COLOR_RES);
         final int padding = getResources().getDimensionPixelSize(R.dimen.phial_padding_small);
@@ -90,6 +93,7 @@ public class ExpandedView extends FrameLayout {
      * @param selected selected page
      */
     public void displayPages(List<Page> pages, Page selected, boolean animated) {
+        setVisibility(VISIBLE);
         setupIcons(pages, selected, animated);
         setupPage(selected);
         title.setText(selected.getTitle());
@@ -99,11 +103,20 @@ public class ExpandedView extends FrameLayout {
         this.callback = callback;
     }
 
-    public void destroyContent() {
-        content = null;
-        contentContainer.removeAllViews();
-        disposable.dispose();
+    public void destroyContent(Runnable runnable) {
         animator.cancel();
+        animator = AnimatorFactory
+                .createFactory(settingsButton)
+                .createDisappearAnimator(this)
+                .setDuration(ANIMATION_DURATION);
+        animator.addListener(SimpleAnimatorListener.createEndListener(() -> {
+            setVisibility(INVISIBLE);
+            content = null;
+            contentContainer.removeAllViews();
+            disposable.dispose();
+            runnable.run();
+        }));
+        animator.start();
     }
 
     private void setupIcons(List<Page> pages, Page selected, boolean animated) {
@@ -132,7 +145,9 @@ public class ExpandedView extends FrameLayout {
             disposable.dispose();
             disposable = LayoutHelper.onLayout(() -> {
                 setupArrowPosition(finalSelectedButton);
-                animateAppear();
+                if (animated) {
+                    animateAppear();
+                }
             }, finalSelectedButton, arrow);
         }
     }
@@ -199,7 +214,7 @@ public class ExpandedView extends FrameLayout {
 
     private Animator createRevelAnimator() {
         return AnimatorFactory
-                .createFactory(findViewById(R.id.settings_button))
+                .createFactory(settingsButton)
                 .createAppearAnimator(this)
                 .setDuration(ANIMATION_DURATION);
     }

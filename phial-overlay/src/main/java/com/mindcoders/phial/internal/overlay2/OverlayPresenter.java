@@ -99,7 +99,7 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
     public void onActivityPaused(Activity activity) {
         if (ObjectUtil.equals(activity, curActivity)) {
             if (isExpanded) {
-                removeExpandedView(curActivity, false);
+                removeExpandedView(curActivity);
             }
 
             curActivity = null;
@@ -120,12 +120,14 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
     }
 
     private void closeDebugWindow() {
-        notifier.fireDebugWindowHide();
-
-        removeExpandedView(curActivity, true);
-        showButton(curActivity);
-
-        isExpanded = false;
+        expandedView.destroyContent(() -> {
+            if (curActivity != null) {
+                notifier.fireDebugWindowHide();
+                removeExpandedView(curActivity);
+                isExpanded = false;
+                showButton(curActivity, true);
+            }
+        });
     }
 
 
@@ -138,20 +140,25 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         expandedView.displayPages(pages, pages.get(1), animated);
     }
 
-    private void removeExpandedView(Activity activity, boolean destroyContent) {
-        if (destroyContent) {
-            expandedView.destroyContent();
-        }
+    private void removeExpandedView(Activity activity) {
         activity.getWindowManager().removeView(expandedView);
     }
 
     private void showButton(Activity activity) {
+        showButton(activity, false);
+    }
+
+    private void showButton(Activity activity, boolean animated) {
         WindowManager windowManager = activity.getWindowManager();
         final PhialButton button = createButton();
         buttons.put(activity, button);
         final LayoutParams wrap = wrap(BUTTON_PARAMS);
         windowManager.addView(button, wrap);
-        dragHelper.manager(windowManager, button);
+        if (animated) {
+            dragHelper.manageAnimated(windowManager, button, 1f, 0f);
+        } else {
+            dragHelper.manage(windowManager, button);
+        }
     }
 
     private void removePhialButton(Activity activity) {
