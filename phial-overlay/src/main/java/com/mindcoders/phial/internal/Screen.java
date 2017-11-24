@@ -27,6 +27,7 @@ public class Screen {
     }
 
     void enterScope(Scope scope) {
+        this.scopes.remove(scope);
         this.scopes.add(scope);
     }
 
@@ -43,8 +44,8 @@ public class Screen {
             return false;
         }
 
-        if (screen.getScope() != null) {
-            final boolean sameScope = scopes.contains(screen.getScope());
+        if (screen.getScopeName() != null) {
+            final boolean sameScope = isSameScope(screen.getScopeName());
             if (!sameScope) {
                 return false;
             }
@@ -101,5 +102,13 @@ public class Screen {
             resultView = activity.findViewById(id);
         }
         return resultView;
+    }
+
+    private boolean isSameScope(String scopeName) {
+        for (Scope scope : scopes) {
+            if (scope.getScopeName().equals(scopeName)) return true;
+        }
+
+        return false;
     }
 }

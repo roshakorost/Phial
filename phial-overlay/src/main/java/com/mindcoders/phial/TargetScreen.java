@@ -1,9 +1,6 @@
 package com.mindcoders.phial;
 
 import android.app.Activity;
-import android.view.View;
-
-import com.mindcoders.phial.internal.Scope;
 
 /**
  * Class is used to abstract from activity,
@@ -11,12 +8,12 @@ import com.mindcoders.phial.internal.Scope;
  */
 public class TargetScreen {
     private final Class<? extends Activity> target;
-    private final Scope scope;
+    private final String scope;
 
 
-    TargetScreen(Class<? extends Activity> target, String scope, View view) {
+    TargetScreen(Class<? extends Activity> target, String scope) {
         this.target = target;
-        this.scope = Scope.createScope(scope, view);
+        this.scope = scope;
     }
 
     /**
@@ -24,7 +21,7 @@ public class TargetScreen {
      * @param target activity.
      */
     public static TargetScreen forActivity(Class<? extends Activity> target) {
-        return new TargetScreen(target, null, null);
+        return new TargetScreen(target, null);
     }
 
     /**
@@ -32,23 +29,14 @@ public class TargetScreen {
      * @param scope scope name.
      */
     public static TargetScreen forScope(String scope) {
-        return new TargetScreen(null, scope, null);
-    }
-
-    /**
-     * Creates a {@link TargetScreen} with custom scope as a target.
-     * @param scope scope name.
-     * @param view scope view
-     */
-    public static TargetScreen forScope(String scope, View view) {
-        return new TargetScreen(null, scope, view);
+        return new TargetScreen(null, scope);
     }
 
     public Class<? extends Activity> getTargetActivity() {
         return target;
     }
 
-    public Scope getScope() {
+    public String getScopeName() {
         return scope;
     }
 
@@ -79,7 +67,7 @@ public class TargetScreen {
             return target.getSimpleName();
         }
 
-        return scope.getScopeName();
+        return scope;
     }
 }
 

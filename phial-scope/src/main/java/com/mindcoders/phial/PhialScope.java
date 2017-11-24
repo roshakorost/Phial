@@ -3,7 +3,6 @@ package com.mindcoders.phial;
 import android.view.View;
 
 import com.mindcoders.phial.internal.PhialScopeNotifier;
-import com.mindcoders.phial.internal.Scope;
 
 public final class PhialScope extends PhialScopeNotifier {
 
@@ -12,7 +11,7 @@ public final class PhialScope extends PhialScopeNotifier {
      * @param scopeName scopeName
      */
     public static void enterScope(String scopeName) {
-        fireEnterScope(Scope.createScope(scopeName, null));
+        fireEnterScope(scopeName, null);
     }
 
     /**
@@ -22,7 +21,7 @@ public final class PhialScope extends PhialScopeNotifier {
      * @param view view of current scope
      */
     public static void enterScope(String scopeName, View view) {
-        fireEnterScope(Scope.createScope(scopeName, view));
+        fireEnterScope(scopeName, view);
     }
 
     /**
@@ -30,7 +29,7 @@ public final class PhialScope extends PhialScopeNotifier {
      * @param scopeName scopeName
      */
     public static void exitScope(String scopeName) {
-        fireExitScope(Scope.createScope(scopeName, null));
+        fireExitScope(scopeName);
     }
 
 }

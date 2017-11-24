@@ -1,5 +1,7 @@
 package com.mindcoders.phial.internal;
 
+import android.view.View;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -26,13 +28,15 @@ public class PhialScopeNotifier {
         LISTENERS.remove(listener);
     }
 
-    protected static void fireEnterScope(Scope scope) {
+    protected static void fireEnterScope(String scopeName, View view) {
+        Scope scope = Scope.createScope(scopeName, view);
         for (OnScopeChangedListener listener : LISTENERS) {
             listener.onEnterScope(scope);
         }
     }
 
-    protected static void fireExitScope(Scope scope) {
+    protected static void fireExitScope(String scopeName) {
+        Scope scope = Scope.createScope(scopeName, null);
         for (OnScopeChangedListener listener : LISTENERS) {
             listener.onExitScope(scope);
         }

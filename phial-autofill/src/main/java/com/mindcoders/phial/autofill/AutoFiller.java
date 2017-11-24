@@ -1,7 +1,6 @@
 package com.mindcoders.phial.autofill;
 
 import android.app.Activity;
-import android.view.View;
 
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialBuilder;
@@ -76,17 +75,6 @@ public class AutoFiller {
      * @return builder to set available {@link FillOption}.
      */
     public static AutoFillerBuilder forScope(String scope) {
-        return new AutoFillerBuilder(TargetScreen.forScope(scope));
-    }
-
-    /**
-     * Creates {@link AutoFillerBuilder} for target scope.
-     *
-     * @param scope unique scope name.
-     * @parav view scope view.
-     * @return builder to set available {@link FillOption}.
-     */
-    public static AutoFillerBuilder forScope(String scope, View view) {
         return new AutoFillerBuilder(TargetScreen.forScope(scope));
     }
 
