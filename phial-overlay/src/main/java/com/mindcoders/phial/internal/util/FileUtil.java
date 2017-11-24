@@ -37,13 +37,17 @@ public final class FileUtil {
 
     public static void write(String text, File target) throws IOException {
         BufferedWriter bw = null;
+        FileWriter fw = null;
         try {
-            final FileWriter fw = new FileWriter(target);
+            fw = new FileWriter(target);
             bw = new BufferedWriter(fw);
             bw.write(text);
         } finally {
             if (bw != null) {
                 bw.close();
+            }
+            if (fw != null) {
+                fw.close();
             }
         }
     }
