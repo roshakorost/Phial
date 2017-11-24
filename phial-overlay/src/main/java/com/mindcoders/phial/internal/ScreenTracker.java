@@ -1,6 +1,7 @@
 package com.mindcoders.phial.internal;
 
 import android.app.Activity;
+import android.view.View;
 
 import com.mindcoders.phial.internal.util.ObjectUtil;
 import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;
@@ -57,14 +58,14 @@ public final class ScreenTracker extends SimpleActivityLifecycleCallbacks implem
     }
 
     @Override
-    public void onEnterScope(String scope) {
-        currentScreen.enterScope(scope);
+    public void onEnterScope(String scopeName, View view) {
+        currentScreen.enterScope(scopeName, view);
         fireOnScreenChanged();
     }
 
     @Override
-    public void onExitScope(String scope) {
-        currentScreen.exitScope(scope);
+    public void onExitScope(String scopeName) {
+        currentScreen.exitScope(scopeName);
         fireOnScreenChanged();
     }
 }

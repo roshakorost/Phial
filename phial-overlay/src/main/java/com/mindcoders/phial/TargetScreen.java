@@ -36,7 +36,7 @@ public class TargetScreen {
         return target;
     }
 
-    public String getScope() {
+    public String getScopeName() {
         return scope;
     }
 
