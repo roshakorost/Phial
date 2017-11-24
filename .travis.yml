@@ -27,8 +27,7 @@ branches:
 
 
 script:
-  - ./gradlew check --no-daemon
-  - sonar-scanner
+  - ./gradlew check sonarqube --no-daemon
 
 notifications:
   email: false
