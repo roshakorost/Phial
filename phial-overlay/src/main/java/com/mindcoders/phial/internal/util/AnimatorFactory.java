@@ -12,7 +12,9 @@ import android.view.ViewAnimationUtils;
  */
 
 public abstract class AnimatorFactory {
-    final int x, y, startRadius;
+    final int x;
+    final int y;
+    final int startRadius;
 
     AnimatorFactory(View startView) {
         final int width = startView.getWidth();
