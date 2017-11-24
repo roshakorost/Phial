@@ -16,7 +16,6 @@ buildscript {
 
 plugins {
     id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.6.3'
 }
 
 allprojects {
@@ -104,13 +103,4 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
         html.enabled = true // human readable
         xml.enabled = true // required by coveralls
     }
-}
-
-coveralls {
-//    sourceDirs = publishedProjects.android.sourceSets.main.java.srcDirs.flatten()
-    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
-}
-
-tasks.coveralls {
-    dependsOn jacocoRootReport
 }
