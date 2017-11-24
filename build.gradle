@@ -16,6 +16,7 @@ buildscript {
 
 plugins {
     id 'jacoco'
+    id "org.sonarqube" version "2.6"
 }
 
 allprojects {
@@ -102,5 +103,13 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
     reports {
         html.enabled = true // human readable
         xml.enabled = true // required by coveralls
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "Phial library"
+        property "sonar.projectKey", "com.mindcoders.phial"
+        property "sonar.jacoco.reportPaths", fileTree(dir: project.projectDir, includes: ['**/*.exec'])
     }
 }
