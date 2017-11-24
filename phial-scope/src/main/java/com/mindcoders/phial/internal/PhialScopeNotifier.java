@@ -12,9 +12,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PhialScopeNotifier {
     interface OnScopeChangedListener {
 
-        void onEnterScope(Scope scope);
+        void onEnterScope(String scopeName, View view);
 
-        void onExitScope(Scope scope);
+        void onExitScope(String scopeName);
 
     }
 
@@ -29,16 +29,14 @@ public class PhialScopeNotifier {
     }
 
     protected static void fireEnterScope(String scopeName, View view) {
-        Scope scope = Scope.createScope(scopeName, view);
         for (OnScopeChangedListener listener : LISTENERS) {
-            listener.onEnterScope(scope);
+            listener.onEnterScope(scopeName, view);
         }
     }
 
     protected static void fireExitScope(String scopeName) {
-        Scope scope = Scope.createScope(scopeName, null);
         for (OnScopeChangedListener listener : LISTENERS) {
-            listener.onExitScope(scope);
+            listener.onExitScope(scopeName);
         }
     }
 }

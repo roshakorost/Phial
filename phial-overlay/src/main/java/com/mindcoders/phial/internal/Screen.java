@@ -8,17 +8,18 @@ import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.util.CollectionUtils;
 import com.mindcoders.phial.internal.util.ObjectUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Screen {
 
     private Activity activity;
-    private Set<Scope> scopes = Collections.synchronizedSet(new HashSet<Scope>());
+    private Map<String, WeakReference<View>> scopes = Collections.synchronizedMap(new HashMap<String, WeakReference<View>>());
 
-    Screen(Activity activity, String scope) {
+    Screen(Activity activity, String scopeName) {
         this.activity = activity;
     }
 
@@ -26,13 +27,12 @@ public class Screen {
         return new Screen(null, null);
     }
 
-    void enterScope(Scope scope) {
-        this.scopes.remove(scope);
-        this.scopes.add(scope);
+    void enterScope(String scopeName, View view) {
+        this.scopes.put(scopeName, new WeakReference<>(view));
     }
 
-    void exitScope(Scope scope) {
-        this.scopes.remove(scope);
+    void exitScope(String scopeName) {
+        this.scopes.remove(scopeName);
     }
 
     void clearActivity() {
@@ -45,7 +45,7 @@ public class Screen {
         }
 
         if (screen.getScopeName() != null) {
-            final boolean sameScope = isSameScope(screen.getScopeName());
+            final boolean sameScope = scopes.containsKey(screen.getScopeName());
             if (!sameScope) {
                 return false;
             }
@@ -87,9 +87,10 @@ public class Screen {
     public View findTarget(int id) {
         View resultView = null;
 
-        for (Scope scope : scopes) {
-            if (scope.getScopeView() != null) {
-                resultView = scope.getScopeView().findViewById(id);
+        for (WeakReference<View> weakRefView : scopes.values()) {
+            View scopeView = weakRefView.get();
+            if (scopeView != null) {
+                resultView = scopeView.findViewById(id);
             }
 
             if (resultView != null) {
@@ -97,18 +98,9 @@ public class Screen {
             }
         }
 
-
         if (activity != null) {
             resultView = activity.findViewById(id);
         }
         return resultView;
-    }
-
-    private boolean isSameScope(String scopeName) {
-        for (Scope scope : scopes) {
-            if (scope.getScopeName().equals(scopeName)) return true;
-        }
-
-        return false;
     }
 }
