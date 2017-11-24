@@ -1,4 +1,4 @@
-# Phial [![Release](https://jitpack.io/v/roshakorost/Phial.svg)](https://jitpack.io/#roshakorost/Phial)  [![Build Status](https://travis-ci.org/roshakorost/Phial.svg?branch=master)](https://travis-ci.org/roshakorost/Phial)[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=com.mindcoders.phial)](https://sonarcloud.io/dashboard/index/com.mindcoders.phial)
+# Phial [![Release](https://jitpack.io/v/roshakorost/Phial.svg)](https://jitpack.io/#roshakorost/Phial)  [![Build Status](https://travis-ci.org/roshakorost/Phial.svg?branch=master)](https://travis-ci.org/roshakorost/Phial)  [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=com.mindcoders.phial)](https://sonarcloud.io/dashboard/index/com.mindcoders.phial)
 
 
 **Phial is an Android library that was created to make communication between QAs and developers easier.** When bug happens Phial allows to share logs, screenshot and system and build data from a device to the evelopers for simplifying debugging and fixing.
