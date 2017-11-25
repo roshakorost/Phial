@@ -54,11 +54,8 @@ public final class PhialOverlay {
      * removes overlay button and pages
      */
     public static void destroy() {
-        if (phialCore != null) {
+        if (phialCore != null && overlay != null) {
             phialCore.destroy();
-        }
-
-        if (overlay != null) {
             overlay.destroy();
             phialCore.getApplication().unregisterActivityLifecycleCallbacks(overlay);
         }
