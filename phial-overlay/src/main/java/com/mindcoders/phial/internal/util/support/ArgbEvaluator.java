@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mindcoders.phial.internal.util;
+package com.mindcoders.phial.internal.util.support;
 
 import android.animation.TypeEvaluator;
 
@@ -23,7 +23,7 @@ import android.animation.TypeEvaluator;
  * values that represent ARGB colors.
  */
 public class ArgbEvaluator implements TypeEvaluator {
-    private static final ArgbEvaluator sInstance = new ArgbEvaluator();
+    private static final ArgbEvaluator INSTANCE = new ArgbEvaluator();
 
     /**
      * Returns an instance of <code>ArgbEvaluator</code> that may be used in
@@ -34,7 +34,7 @@ public class ArgbEvaluator implements TypeEvaluator {
      * @hide
      */
     public static ArgbEvaluator getInstance() {
-        return sInstance;
+        return INSTANCE;
     }
 
     /**
@@ -66,9 +66,9 @@ public class ArgbEvaluator implements TypeEvaluator {
         int endG = (endInt >> 8) & 0xff;
         int endB = endInt & 0xff;
 
-        return (int) ((startA + (int) (fraction * (endA - startA))) << 24) |
-                (int) ((startR + (int) (fraction * (endR - startR))) << 16) |
-                (int) ((startG + (int) (fraction * (endG - startG))) << 8) |
-                (int) ((startB + (int) (fraction * (endB - startB))));
+        return ((startA + (int) (fraction * (endA - startA))) << 24)
+                | ((startR + (int) (fraction * (endR - startR))) << 16)
+                | ((startG + (int) (fraction * (endG - startG))) << 8)
+                | ((startB + (int) (fraction * (endB - startB))));
     }
 }

@@ -2,14 +2,14 @@ package com.mindcoders.phial.internal.overlay;
 
 import android.content.SharedPreferences;
 
-public class PositionStorage {
+class PositionStorage {
 
     private static final String KEY_X = "rel_x";
     private static final String KEY_Y = "rel_y";
 
     private final SharedPreferences preferences;
 
-    public PositionStorage(SharedPreferences preferences) {
+    PositionStorage(SharedPreferences preferences) {
         this.preferences = preferences;
     }
 
@@ -31,7 +31,7 @@ public class PositionStorage {
         final float x;
         final float y;
 
-        public Position(float x, float y) {
+        Position(float x, float y) {
             this.x = x;
             this.y = y;
         }

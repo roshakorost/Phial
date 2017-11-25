@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
-import com.mindcoders.phial.internal.ScreenTracker;
 
 /**
  * Created by rost on 11/4/17.

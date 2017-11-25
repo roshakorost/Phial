@@ -185,11 +185,11 @@ class DragHelper {
                     startTimeMS = event.getEventTime();
                     onMoveStart(v);
                     v.setPressed(true);
-                    break;
+                    return true;
                 case MotionEvent.ACTION_MOVE:
                     animator.cancel();
                     onMove(v, event.getRawX() - initialTouchX, event.getRawY() - initialTouchY);
-                    break;
+                    return true;
                 case MotionEvent.ACTION_UP:
                     v.setPressed(false);
                     onMoveEnd(v);
@@ -200,9 +200,10 @@ class DragHelper {
                     if (wasClicked) {
                         v.performClick();
                     }
-                    break;
+                    return true;
+                default:
+                    return true;
             }
-            return true;
         }
 
         private void onMoveStart(View view) {

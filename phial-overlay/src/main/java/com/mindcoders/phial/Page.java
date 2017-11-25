@@ -3,8 +3,6 @@ package com.mindcoders.phial;
 import android.content.Context;
 import android.view.View;
 
-import com.mindcoders.phial.internal.ScreenTracker;
-
 import java.util.Collections;
 import java.util.Set;
 

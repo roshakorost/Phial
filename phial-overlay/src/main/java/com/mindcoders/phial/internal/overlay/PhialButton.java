@@ -18,7 +18,7 @@ import android.view.View;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.util.support.ContextCompat;
 
-class PhialButton extends View {
+public class PhialButton extends View {
     private static final float SHADOW_DY = 0.75f;
     private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 

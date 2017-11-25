@@ -20,7 +20,7 @@ import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PageView;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.util.AnimatorFactory;
-import com.mindcoders.phial.internal.util.ArgbEvaluator;
+import com.mindcoders.phial.internal.util.support.ArgbEvaluator;
 import com.mindcoders.phial.internal.util.ObjectUtil;
 import com.mindcoders.phial.internal.util.SimpleAnimatorListener;
 import com.mindcoders.phial.internal.util.support.ResourcesCompat;

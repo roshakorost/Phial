@@ -1,6 +1,5 @@
 package com.mindcoders.phial.internal.util.support;
 
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.Build;
