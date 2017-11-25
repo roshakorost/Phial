@@ -206,7 +206,7 @@ public class ExpandedView extends FrameLayout {
 
     private void setupArrowPosition(View target) {
         float cX = (target.getLeft() + target.getRight()) / 2f;
-        arrow.setX(cX - arrow.getWidth() / 2);
+        arrow.setX(cX - arrow.getWidth() / 2f);
     }
 
     private void onTabClicked(PhialButton button, Page page) {
