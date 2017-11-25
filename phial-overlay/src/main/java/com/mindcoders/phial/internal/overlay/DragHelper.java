@@ -71,7 +71,7 @@ class DragHelper {
         private float initialTouchX, initialTouchY;
         private float initialX, initialY;
         private long startTimeMS;
-        private LayoutHelper.Disposable disposable = LayoutHelper.Disposable.EMPTY;
+        private LayoutHelper.Disposable disposable = LayoutHelper.emptyDisposable();
 
         private ValueAnimator animator = ValueAnimator.ofInt();
 

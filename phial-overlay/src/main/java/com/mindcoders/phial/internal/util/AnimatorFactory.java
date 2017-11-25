@@ -40,7 +40,7 @@ public abstract class AnimatorFactory {
     public abstract Animator createDisappearAnimator(View targetView);
 
     static int calcRadius(int width, int height) {
-        return (int) Math.round(Math.sqrt(width * width + height * height));
+        return (int) Math.round(Math.sqrt((float) width * width + height * height));
     }
 }
 

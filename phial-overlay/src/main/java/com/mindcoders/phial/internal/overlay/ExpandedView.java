@@ -52,7 +52,7 @@ public class ExpandedView extends FrameLayout {
     private Animator animator = ValueAnimator.ofInt();
     private View content;
     private ExpandedViewCallback callback;
-    private LayoutHelper.Disposable disposable = LayoutHelper.Disposable.EMPTY;
+    private LayoutHelper.Disposable disposable = LayoutHelper.emptyDisposable();
 
     public ExpandedView(@NonNull Context context) {
         this(context, (AttributeSet) null);

@@ -36,7 +36,7 @@ public class KVAttacher implements Attacher {
 
     @Override
     public void onPreDebugWindowCreated() {
-
+        //we don't need to do anything before debug window is show
     }
 
     @Override

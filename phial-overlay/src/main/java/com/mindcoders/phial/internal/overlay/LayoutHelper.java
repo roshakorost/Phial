@@ -16,8 +16,10 @@ class LayoutHelper {
 
     interface Disposable {
         void dispose();
+    }
 
-        Disposable EMPTY = () -> {
+    static Disposable emptyDisposable() {
+        return () -> {
         };
     }
 
