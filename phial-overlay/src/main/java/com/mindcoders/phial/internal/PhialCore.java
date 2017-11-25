@@ -1,6 +1,8 @@
 package com.mindcoders.phial.internal;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
@@ -33,6 +35,7 @@ public final class PhialCore {
     private final PhialNotifier notifier;
     private final CurrentActivityProvider activityProvider;
     private final ScreenTracker screenTracker;
+    private final SharedPreferences sharedPreferences;
 
     private PhialCore(
             Application application,
@@ -41,8 +44,8 @@ public final class PhialCore {
             KVSaver kvSaver,
             PhialNotifier notifier,
             CurrentActivityProvider activityProvider,
-            ScreenTracker screenTracker
-    ) {
+            ScreenTracker screenTracker,
+            SharedPreferences sharedPreferences) {
         this.application = application;
         this.shareManager = shareManager;
         this.attachmentManager = attachmentManager;
@@ -50,6 +53,7 @@ public final class PhialCore {
         this.notifier = notifier;
         this.activityProvider = activityProvider;
         this.screenTracker = screenTracker;
+        this.sharedPreferences = sharedPreferences;
     }
 
     public static PhialCore create(PhialBuilder phialBuilder) {
@@ -76,6 +80,10 @@ public final class PhialCore {
         for (InfoWriter writer : writers) {
             writer.writeInfo();
         }
+        final SharedPreferences sharedPreferences = application.getSharedPreferences(
+                InternalPhialConfig.PREFERENCES_FILE_NAME,
+                Context.MODE_PRIVATE
+        );
 
         return new PhialCore(
                 application,
@@ -84,8 +92,8 @@ public final class PhialCore {
                 kvSaver,
                 phialNotifier,
                 activityProvider,
-                screenTracker
-        );
+                screenTracker,
+                sharedPreferences);
     }
 
     public void destroy() {
@@ -135,7 +143,7 @@ public final class PhialCore {
         return attachers;
     }
 
-    Application getApplication() {
+    public Application getApplication() {
         return application;
     }
 
@@ -163,4 +171,7 @@ public final class PhialCore {
         return screenTracker;
     }
 
+    SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
 }

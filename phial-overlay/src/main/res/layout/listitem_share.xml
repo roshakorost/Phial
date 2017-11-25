@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/share.padding.small"
+        android:layout_marginTop="@dimen/phial_padding_small"
         android:gravity="center_horizontal"
         android:maxLines="2"
         tools:text="Slack" />

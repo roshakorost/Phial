@@ -22,5 +22,4 @@ public final class ContextCompat {
 
         return context.getResources().getDrawable(id);
     }
-
 }

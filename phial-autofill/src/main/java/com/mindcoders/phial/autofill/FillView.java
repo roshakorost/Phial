@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.PageView;
-import com.mindcoders.phial.internal.Screen;
 import com.mindcoders.phial.internal.ScreenTracker;
 import com.mindcoders.phial.internal.util.Precondition;
 import com.mindcoders.phial.internal.util.SimpleTextWatcher;
@@ -31,7 +30,6 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
     private final OverlayCallback overlayCallback;
     private final Adapter adapter;
     private final ConfigManager manager;
-    private final ScreenTracker screenTracker;
 
     FillView(@NonNull Context context) {
         super(context);
@@ -39,7 +37,6 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
         overlayCallback = null;
         adapter = null;
         manager = null;
-        screenTracker = null;
     }
 
     FillView(@NonNull Context context, ConfigManager manager, OverlayCallback overlayCallback, ScreenTracker screenTracker) {
@@ -47,7 +44,6 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
         this.manager = manager;
         this.overlayCallback = overlayCallback;
         this.adapter = new Adapter(context, this);
-        this.screenTracker = screenTracker;
 
         final LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.view_autofill, this, true);
@@ -87,16 +83,11 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
 
     @Override
     public void onItemClicked(FillOption option) {
-        Screen currentScreen = screenTracker.getCurrentScreen();
-        if (currentScreen == null) {
-            return;
-        }
-
         final List<String> dataToFill = option.getDataToFill();
         final List<Integer> ids = manager.getTargetIds();
 
         for (int i = 0; i < Math.min(dataToFill.size(), ids.size()); i++) {
-            final View view = currentScreen.findTarget(ids.get(i));
+            final View view = overlayCallback.findViewById(ids.get(i));
             if (view instanceof TextView) {
                 ((TextView) view).setText(dataToFill.get(i));
             }
@@ -106,11 +97,6 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
     }
 
     private void saveOption(String optionName) {
-        Screen currentScreen = screenTracker.getCurrentScreen();
-        if (currentScreen == null) {
-            return;
-        }
-
         if (optionName.isEmpty()) {
             return;
         }
@@ -118,7 +104,7 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
         final List<Integer> ids = manager.getTargetIds();
         final List<String> values = new ArrayList<>(ids.size());
         for (int i = 0; i < ids.size(); i++) {
-            final View view = currentScreen.findTarget(ids.get(i));
+            final View view = overlayCallback.findViewById(ids.get(i));
             final String value = readValueOrDefault(view);
             values.add(value);
         }

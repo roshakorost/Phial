@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:theme="@style/Theme.Phial">
+
+    <LinearLayout
+        android:id="@+id/tab_icons_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right|end"
+        android:orientation="horizontal">
+
+        <com.mindcoders.phial.internal.overlay.PhialButton
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:phial_icon="@drawable/ic_handle" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/arrow"
+        android:layout_width="@dimen/phial_active_page_arrow_size"
+        android:layout_height="@dimen/phial_active_page_arrow_size"
+        android:background="@drawable/active_page_arrow"
+        tools:layout_gravity="right|end"
+        tools:layout_marginRight="28dp" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_page_title"
+        android:paddingBottom="@dimen/phial_padding_small"
+        android:paddingLeft="@dimen/phial_padding_default"
+        android:paddingRight="@dimen/phial_padding_default"
+        android:paddingTop="@dimen/phial_padding_small"
+        android:textAppearance="@style/TextAppearance.Phial.Title"
+        tools:text="Page Title" />
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_page_container" />
+
+</LinearLayout>
