@@ -2,8 +2,9 @@ package com.mindcoders.phial.internal.overlay2;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
+import android.support.annotation.NonNull;
 import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -11,9 +12,12 @@ import android.view.WindowManager.LayoutParams;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.PhialNotifier;
+import com.mindcoders.phial.internal.Screen;
+import com.mindcoders.phial.internal.ScreenTracker;
 import com.mindcoders.phial.internal.util.ObjectUtil;
 import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +34,9 @@ import static android.view.WindowManager.LayoutParams.WRAP_CONTENT;
  * Created by rost on 11/20/17.
  */
 
-public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implements ExpandedView.ExpandedViewCallback {
+public class OverlayPresenter extends SimpleActivityLifecycleCallbacks
+        implements ExpandedView.ExpandedViewCallback, ScreenTracker.ScreenListener {
+
     private final static int WINDOW_TYPE = TYPE_APPLICATION;
     private final static LayoutParams BUTTON_PARAMS = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT,
             WINDOW_TYPE,
@@ -59,6 +65,8 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
     private final Map<Activity, PhialButton> buttons = new HashMap<>();
     private final DragHelper dragHelper;
     private final ExpandedView expandedView;
+    private final ScreenTracker screenTracker;
+    private final SelectedPageStorage selectedPageStorage;
     private final List<Page> pages;
     private final PhialNotifier notifier;
     private final Context context;
@@ -66,19 +74,28 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
     private boolean isExpanded = false;
     private Activity curActivity;
 
-    public OverlayPresenter(Context baseContext, List<Page> pages, PositionStorage positionStorage, PhialNotifier notifier) {
+    public OverlayPresenter(Context baseContext, List<Page> pages,
+                            SharedPreferences sp,
+                            ScreenTracker screenTracker,
+                            PhialNotifier notifier) {
         this.context = new ContextThemeWrapper(baseContext, R.style.Theme_Phial);
         this.pages = pages;
+        this.screenTracker = screenTracker;
         this.notifier = notifier;
-        final int padding = baseContext.getResources().getDimensionPixelSize(R.dimen.phial_content_padding);
-        this.dragHelper = new DragHelper(positionStorage, padding, padding);
+        this.selectedPageStorage = new SelectedPageStorage(sp);
         this.expandedView = new ExpandedView(context, this);
+
+        final int padding = baseContext.getResources().getDimensionPixelSize(R.dimen.phial_content_padding);
+        final PositionStorage positionStorage = new PositionStorage(sp);
+        this.dragHelper = new DragHelper(positionStorage, padding, padding);
+
+        screenTracker.addListener(this);
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
         if (!isExpanded) {
-            showButton(activity);
+            showButton(activity, false);
         }
     }
 
@@ -93,7 +110,7 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
     public void onActivityResumed(Activity activity) {
         curActivity = activity;
         if (isExpanded) {
-            showExpandView(activity);
+            moveToExpandedStateIfPossible(activity, false);
         }
     }
 
@@ -114,9 +131,8 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
 
         final Runnable endAction = () -> {
             notifier.fireDebugWindowShown();
-            isExpanded = true;
             removePhialButton(curActivity, curButton);
-            showExpandView(curActivity, true);
+            moveToExpandedStateIfPossible(curActivity, true);
         };
         dragHelper.animateToDefaultPosition(curButton, endAction);
     }
@@ -132,21 +148,72 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         });
     }
 
-    private void showExpandView(Activity activity) {
-        showExpandView(activity, false);
+    private void moveToExpandedStateIfPossible(Activity activity, boolean animated) {
+        final boolean canShow = setupExpandedPage(animated);
+        if (canShow) {
+            isExpanded = true;
+            activity.getWindowManager().addView(expandedView, wrap(EXPANDED_VIEW_PARAMS));
+        } else {
+            isExpanded = false;
+            showButton(activity, false);
+        }
     }
 
-    private void showExpandView(Activity activity, boolean animated) {
-        activity.getWindowManager().addView(expandedView, wrap(EXPANDED_VIEW_PARAMS));
-        expandedView.displayPages(pages, pages.get(1), animated);
+    private boolean setupExpandedPage(boolean animated) {
+        final List<Page> visiblePages = calcVisiblePages();
+        if (visiblePages.isEmpty()) {
+            expandedView.destroyContent(null);
+            return false;
+        }
+
+        final Page selected = findSelected(visiblePages);
+        expandedView.displayPages(visiblePages, selected, animated);
+        return true;
+    }
+
+    @Override
+    public void onPageSelected(Page page) {
+        if (isExpanded) {
+            expandedView.setSelected(page);
+            selectedPageStorage.setSelectedPage(page.getId());
+        }
+    }
+
+    @Override
+    public void onScreenChanged(Screen screen) {
+        if (isExpanded) {
+            final boolean canUpdatePage = setupExpandedPage(false);
+            if (!canUpdatePage) {
+                closeDebugWindow();
+            }
+        }
+    }
+
+    @NonNull
+    private List<Page> calcVisiblePages() {
+        final List<Page> visiblePages = new ArrayList<>(pages.size());
+        final Screen screen = screenTracker.getCurrentScreen();
+        for (Page page : pages) {
+            final boolean shouldShowPage = screen.matchesAny(page.getTargetScreens());
+            if (shouldShowPage) {
+                visiblePages.add(page);
+            }
+        }
+        return visiblePages;
+    }
+
+    private Page findSelected(List<Page> visible) {
+        final String selectedPageId = selectedPageStorage.getSelectedPage();
+        for (Page page : visible) {
+            if (ObjectUtil.equals(selectedPageId, page.getId())) {
+                return page;
+            }
+        }
+        return visible.get(0);
     }
 
     private void removeExpandedView(Activity activity) {
         activity.getWindowManager().removeView(expandedView);
-    }
-
-    private void showButton(Activity activity) {
-        showButton(activity, false);
     }
 
     private void showButton(Activity activity, boolean animated) {
@@ -188,13 +255,6 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
     @Override
     public Activity getCurrentActivity() {
         return curActivity;
-    }
-
-    @Override
-    public void onPageSelected(Page page) {
-        if (isExpanded) {
-            expandedView.displayPages(pages, page, false);
-        }
     }
 
     private static LayoutParams wrap(LayoutParams source) {

@@ -38,9 +38,11 @@ public final class OverlayFactory {
     public static OverlayPresenter createOverlay2(PhialBuilder phialBuilder, PhialCore phialCore) {
         final Application application = phialBuilder.getApplication();
         final List<Page> pages = createPages(phialBuilder, phialCore, application);
+
         return new OverlayPresenter(application,
                 pages,
-                new PositionStorage(phialCore.getSharedPreferences()),
+                phialCore.getSharedPreferences(),
+                phialCore.getScreenTracker(),
                 phialCore.getNotifier()
         );
     }

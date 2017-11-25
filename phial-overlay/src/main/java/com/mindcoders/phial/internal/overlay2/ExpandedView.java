@@ -99,11 +99,25 @@ public class ExpandedView extends FrameLayout {
         title.setText(selected.getTitle());
     }
 
+    public void setSelected(Page selected) {
+        final int childCount = iconsHolder.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final View child = iconsHolder.getChildAt(i);
+            final boolean isSelected = ObjectUtil.equals(child.getTag(), selected.getId());
+            child.setSelected(isSelected);
+            if (isSelected) {
+                setupArrowPosition(child);
+            }
+        }
+        setupPage(selected);
+        title.setText(selected.getTitle());
+    }
+
     public void setCallback(ExpandedViewCallback callback) {
         this.callback = callback;
     }
 
-    public void destroyContent(Runnable runnable) {
+    public void destroyContent(@Nullable Runnable runnable) {
         animator.cancel();
         animator = AnimatorFactory
                 .createFactory(settingsButton)
@@ -114,7 +128,9 @@ public class ExpandedView extends FrameLayout {
             content = null;
             contentContainer.removeAllViews();
             disposable.dispose();
-            runnable.run();
+            if (runnable != null) {
+                runnable.run();
+            }
         }));
         animator.start();
     }
@@ -127,6 +143,7 @@ public class ExpandedView extends FrameLayout {
             final Page page = pages.get(i);
 
             final PhialButton button = new PhialButton(getContext());
+            button.setTag(page.getId());
             button.setIcon(page.getIconResourceId());
             final boolean isSelected = ObjectUtil.equals(selected, page);
             button.setSelected(isSelected);
@@ -182,7 +199,7 @@ public class ExpandedView extends FrameLayout {
         return true;
     }
 
-    private void setupArrowPosition(PhialButton target) {
+    private void setupArrowPosition(View target) {
         int cX = (target.getLeft() + target.getRight()) / 2;
         arrow.setX(cX - arrow.getWidth() / 2);
     }

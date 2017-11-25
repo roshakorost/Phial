@@ -15,9 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public final class ScreenTracker extends SimpleActivityLifecycleCallbacks implements PhialScopeNotifier.OnScopeChangedListener {
 
     public interface ScreenListener {
-
         void onScreenChanged(Screen screen);
-
     }
 
     private final Screen currentScreen = Screen.empty();
