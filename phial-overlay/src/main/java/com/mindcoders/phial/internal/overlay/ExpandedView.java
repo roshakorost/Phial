@@ -205,7 +205,7 @@ public class ExpandedView extends FrameLayout {
     }
 
     private void setupArrowPosition(View target) {
-        int cX = (target.getLeft() + target.getRight()) / 2;
+        float cX = (target.getLeft() + target.getRight()) / 2f;
         arrow.setX(cX - arrow.getWidth() / 2);
     }
 
