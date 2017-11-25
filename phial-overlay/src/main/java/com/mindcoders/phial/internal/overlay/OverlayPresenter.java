@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.ContextThemeWrapper;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
@@ -254,9 +256,13 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks
         }
     }
 
+    @Nullable
     @Override
-    public Activity getCurrentActivity() {
-        return curActivity;
+    public View findViewById(int id) {
+        final Screen currentScreen = screenTracker.getCurrentScreen();
+        if (currentScreen == null)
+            return null;
+        return currentScreen.findTarget(id);
     }
 
     private static LayoutParams wrap(LayoutParams source) {
