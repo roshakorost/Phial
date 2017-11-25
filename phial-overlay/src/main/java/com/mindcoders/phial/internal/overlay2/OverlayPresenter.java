@@ -138,7 +138,7 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks
     }
 
     private void closeDebugWindow() {
-        expandedView.destroyContent(() -> {
+        expandedView.destroyContentAnimated(() -> {
             if (curActivity != null) {
                 notifier.fireDebugWindowHide();
                 removeExpandedView(curActivity);
@@ -162,7 +162,7 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks
     private boolean setupExpandedPage(boolean animated) {
         final List<Page> visiblePages = calcVisiblePages();
         if (visiblePages.isEmpty()) {
-            expandedView.destroyContent(null);
+            expandedView.destroyContent();
             return false;
         }
 
@@ -181,10 +181,12 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks
 
     @Override
     public void onScreenChanged(Screen screen) {
-        if (isExpanded) {
+        if (isExpanded && curActivity != null) {
             final boolean canUpdatePage = setupExpandedPage(false);
             if (!canUpdatePage) {
-                closeDebugWindow();
+                isExpanded = false;
+                removeExpandedView(curActivity);
+                showButton(curActivity, false);
             }
         }
     }

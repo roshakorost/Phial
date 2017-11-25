@@ -117,22 +117,27 @@ public class ExpandedView extends FrameLayout {
         this.callback = callback;
     }
 
-    public void destroyContent(@Nullable Runnable runnable) {
+    public void destroyContentAnimated(@Nullable Runnable runnable) {
         animator.cancel();
         animator = AnimatorFactory
                 .createFactory(settingsButton)
                 .createDisappearAnimator(this)
                 .setDuration(ANIMATION_DURATION);
         animator.addListener(SimpleAnimatorListener.createEndListener(() -> {
-            setVisibility(INVISIBLE);
-            content = null;
-            contentContainer.removeAllViews();
-            disposable.dispose();
+            destroyContent();
             if (runnable != null) {
                 runnable.run();
             }
         }));
         animator.start();
+    }
+
+    public void destroyContent() {
+        animator.cancel();
+        setVisibility(INVISIBLE);
+        content = null;
+        contentContainer.removeAllViews();
+        disposable.dispose();
     }
 
     private void setupIcons(List<Page> pages, Page selected, boolean animated) {
