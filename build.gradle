@@ -14,6 +14,11 @@ buildscript {
     }
 }
 
+plugins {
+    id 'jacoco'
+    id "org.sonarqube" version "2.6"
+}
+
 allprojects {
     repositories {
         jcenter()
@@ -43,6 +48,8 @@ subprojects {
         // empty classpath
         classpath = files()
     }
+
+    apply plugin: 'jacoco'
 }
 
 subprojects.each { project ->
@@ -56,4 +63,54 @@ subprojects.each { project ->
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+def publishedProjects = subprojects.findAll().findAll {
+    it.name != "sample" && it.name != "phial-scope"
+}
+
+task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
+    description = 'Generates an aggregate report from all subprojects'
+
+    dependsOn(publishedProjects.test)
+
+    sourceDirectories = files()
+    classDirectories = files()
+    executionData = files()
+
+    publishedProjects.each { p ->
+        p.android.unitTestVariants.each { variant ->
+            sourceDirectories += files(variant.testedVariant.sourceSets.java.srcDirs.flatten())
+            classDirectories += fileTree(
+                    dir: variant.testedVariant.javaCompiler.destinationDir,
+                    excludes: [
+                            '**/R.class',
+                            '**/R$*.class',
+                            '**/BuildConfig.*',
+                            '**/Manifest*.*',
+                            '**/*Lambda*.class',
+                            '**/com/mindcoders/phial/internal/util/support/*'
+                    ]
+            )
+            executionData += files("${p.buildDir}/jacoco/test${variant.name.capitalize()}.exec")
+        }
+    }
+
+    doFirst {
+        executionData = files(executionData.findAll { it.exists() })
+    }
+
+    reports {
+        html.enabled = true // human readable
+        xml.enabled = true // required by coveralls
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "Phial library"
+        property "sonar.projectKey", "com.mindcoders.phial"
+        property "sonar.exclusions", "**/com/mindcoders/phial/internal/util/support/*"
+        property "sonar.jacoco.reportPaths", fileTree(dir: project.projectDir, includes: ['**/*.exec'])
+    }
 }
