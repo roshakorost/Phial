@@ -7,4 +7,6 @@
     <dimen name="phial_button_size">65dp</dimen>
     <dimen name="phial_button_shadow_size">5dp</dimen>
     <dimen name="phial_active_page_arrow_size">10dp</dimen>
+
+    <dimen name="phial_content_padding">@dimen/phial_padding_small</dimen>
 </resources>

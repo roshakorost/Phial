@@ -2,6 +2,7 @@ package com.mindcoders.phial.internal.overlay2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
@@ -69,7 +70,8 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         this.context = new ContextThemeWrapper(baseContext, R.style.Theme_Phial);
         this.pages = pages;
         this.notifier = notifier;
-        this.dragHelper = new DragHelper(positionStorage);
+        final int padding = baseContext.getResources().getDimensionPixelSize(R.dimen.phial_content_padding);
+        this.dragHelper = new DragHelper(positionStorage, padding, padding);
         this.expandedView = new ExpandedView(context, this);
     }
 
@@ -116,7 +118,7 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
             removePhialButton(curActivity, curButton);
             showExpandView(curActivity, true);
         };
-        dragHelper.animateTo(curButton, 1f, 0f, endAction);
+        dragHelper.animateToDefaultPosition(curButton, endAction);
     }
 
     private void closeDebugWindow() {
@@ -129,7 +131,6 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
             }
         });
     }
-
 
     private void showExpandView(Activity activity) {
         showExpandView(activity, false);
@@ -154,10 +155,9 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         buttons.put(activity, button);
         final LayoutParams wrap = wrap(BUTTON_PARAMS);
         windowManager.addView(button, wrap);
+        dragHelper.manage(windowManager, button);
         if (animated) {
-            dragHelper.manageAnimated(windowManager, button, 1f, 0f);
-        } else {
-            dragHelper.manage(windowManager, button);
+            dragHelper.animateFromDefaultPosition(button, null);
         }
     }
 

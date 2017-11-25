@@ -79,7 +79,7 @@ public class ExpandedView extends FrameLayout {
         settingsButton.setOnClickListener(v -> callback.finish());
 
         setBackgroundResource(BACKGROUND_COLOR_RES);
-        final int padding = getResources().getDimensionPixelSize(R.dimen.phial_padding_small);
+        final int padding = getResources().getDimensionPixelSize(R.dimen.phial_content_padding);
         setPadding(padding, padding, padding, padding);
     }
 
