@@ -65,7 +65,9 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-def publishedProjects = subprojects.findAll().findAll { it.name != "sample" && it.name != "phial-scope"  }
+def publishedProjects = subprojects.findAll().findAll {
+    it.name != "sample" && it.name != "phial-scope"
+}
 
 task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
     description = 'Generates an aggregate report from all subprojects'
@@ -81,11 +83,14 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
             sourceDirectories += files(variant.testedVariant.sourceSets.java.srcDirs.flatten())
             classDirectories += fileTree(
                     dir: variant.testedVariant.javaCompiler.destinationDir,
-                    excludes: ['**/R.class',
-                               '**/R$*.class',
-                               '**/BuildConfig.*',
-                               '**/Manifest*.*',
-                               '**/*Lambda*.class']
+                    excludes: [
+                            '**/R.class',
+                            '**/R$*.class',
+                            '**/BuildConfig.*',
+                            '**/Manifest*.*',
+                            '**/*Lambda*.class',
+                            '**/com/mindcoders/phial/internal/util/support/*'
+                    ]
             )
             executionData += files("${p.buildDir}/jacoco/test${variant.name.capitalize()}.exec")
         }
@@ -105,6 +110,7 @@ sonarqube {
     properties {
         property "sonar.projectName", "Phial library"
         property "sonar.projectKey", "com.mindcoders.phial"
+        property "sonar.exclusions", "**/com/mindcoders/phial/internal/util/support/*"
         property "sonar.jacoco.reportPaths", fileTree(dir: project.projectDir, includes: ['**/*.exec'])
     }
 }
