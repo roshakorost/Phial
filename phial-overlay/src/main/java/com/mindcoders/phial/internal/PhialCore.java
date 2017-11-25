@@ -143,7 +143,7 @@ public final class PhialCore {
         return attachers;
     }
 
-    Application getApplication() {
+    public Application getApplication() {
         return application;
     }
 

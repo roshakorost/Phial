@@ -1,7 +1,6 @@
-package com.mindcoders.phial.internal.overlay2;
+package com.mindcoders.phial.internal.overlay;
 
 import android.content.SharedPreferences;
-import android.graphics.Point;
 
 public class PositionStorage {
 

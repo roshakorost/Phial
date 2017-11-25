@@ -15,7 +15,7 @@
         android:gravity="right|end"
         android:orientation="horizontal">
 
-        <com.mindcoders.phial.internal.overlay2.PhialButton
+        <com.mindcoders.phial.internal.overlay.PhialButton
             android:id="@+id/settings_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

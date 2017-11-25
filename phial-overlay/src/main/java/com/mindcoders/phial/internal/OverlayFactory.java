@@ -2,7 +2,6 @@ package com.mindcoders.phial.internal;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.OverlayCallback;
@@ -11,18 +10,12 @@ import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.keyvalue.KeyValueView;
-import com.mindcoders.phial.internal.overlay.Overlay;
-import com.mindcoders.phial.internal.overlay.OverlayPositionStorage;
-import com.mindcoders.phial.internal.overlay.SelectedPageStorage;
-import com.mindcoders.phial.internal.overlay2.OverlayPresenter;
-import com.mindcoders.phial.internal.overlay2.PositionStorage;
+import com.mindcoders.phial.internal.overlay.OverlayPresenter;
 import com.mindcoders.phial.internal.share.ShareView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static com.mindcoders.phial.internal.InternalPhialConfig.PREFERENCES_FILE_NAME;
 
 /**
  * Created by rost on 10/25/17.
@@ -44,24 +37,6 @@ public final class OverlayFactory {
                 phialCore.getSharedPreferences(),
                 phialCore.getScreenTracker(),
                 phialCore.getNotifier()
-        );
-    }
-
-    public static Overlay createOverlay(PhialBuilder phialBuilder, PhialCore phialCore) {
-        final Application application = phialBuilder.getApplication();
-        final List<Page> pages = createPages(phialBuilder, phialCore, application);
-
-        final SharedPreferences prefs = application.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-        final OverlayPositionStorage positionStorage = new OverlayPositionStorage(prefs);
-        final SelectedPageStorage selectedPageStorage = new SelectedPageStorage(prefs);
-
-        return new Overlay(
-                application,
-                pages, phialCore.getNotifier(),
-                phialCore.getActivityProvider(),
-                phialCore.getScreenTracker(),
-                positionStorage,
-                selectedPageStorage
         );
     }
 

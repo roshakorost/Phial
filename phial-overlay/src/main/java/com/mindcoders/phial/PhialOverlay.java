@@ -6,7 +6,7 @@ import android.support.annotation.DrawableRes;
 
 import com.mindcoders.phial.internal.OverlayFactory;
 import com.mindcoders.phial.internal.PhialCore;
-import com.mindcoders.phial.internal.overlay.Overlay;
+import com.mindcoders.phial.internal.overlay.OverlayPresenter;
 
 /**
  * Creates PhialOverlay button and pages
@@ -17,7 +17,7 @@ public final class PhialOverlay {
     @SuppressLint("StaticFieldLeak")
     private static PhialCore phialCore;
     @SuppressLint("StaticFieldLeak")
-    private static Overlay overlay;
+    private static OverlayPresenter overlay;
 
     /**
      * @param application your application
@@ -46,8 +46,8 @@ public final class PhialOverlay {
     static void init(PhialBuilder builder) {
         destroy();
         PhialOverlay.phialCore = PhialCore.create(builder);
-        PhialOverlay.overlay = OverlayFactory.createOverlay(builder, phialCore);
-        builder.getApplication().registerActivityLifecycleCallbacks(OverlayFactory.createOverlay2(builder, phialCore));
+        PhialOverlay.overlay = OverlayFactory.createOverlay2(builder, phialCore);
+        phialCore.getApplication().registerActivityLifecycleCallbacks(PhialOverlay.overlay);
     }
 
     /**
@@ -60,6 +60,7 @@ public final class PhialOverlay {
 
         if (overlay != null) {
             overlay.destroy();
+            phialCore.getApplication().unregisterActivityLifecycleCallbacks(overlay);
         }
     }
 }

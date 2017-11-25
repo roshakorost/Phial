@@ -1,4 +1,4 @@
-package com.mindcoders.phial.internal.overlay2;
+package com.mindcoders.phial.internal.overlay;
 
 import android.app.Activity;
 import android.content.Context;
@@ -263,5 +263,12 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks
         LayoutParams lp = new LayoutParams();
         lp.copyFrom(source);
         return lp;
+    }
+
+    public void destroy() {
+        screenTracker.removeListener(this);
+        if (isExpanded) {
+            closeDebugWindow();
+        }
     }
 }

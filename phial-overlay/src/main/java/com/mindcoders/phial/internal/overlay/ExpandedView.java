@@ -1,4 +1,4 @@
-package com.mindcoders.phial.internal.overlay2;
+package com.mindcoders.phial.internal.overlay;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
