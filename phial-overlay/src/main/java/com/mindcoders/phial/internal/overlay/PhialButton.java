@@ -23,7 +23,7 @@ public class PhialButton extends View {
     private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private int shadowSize;
-    private int buttonSize;
+    private int suggestedSize;
     private ColorStateList backgroundColor;
     private ColorStateList iconColor;
     private ColorStateList shadowColor;
@@ -59,7 +59,7 @@ public class PhialButton extends View {
             }
 
             int defaultButtonSize = context.getResources().getDimensionPixelSize(R.dimen.phial_button_size);
-            buttonSize = array.getDimensionPixelSize(R.styleable.PhialButton_phial_size, defaultButtonSize);
+            suggestedSize = array.getDimensionPixelSize(R.styleable.PhialButton_phial_size, defaultButtonSize);
 
             int defaultShadowSize = context.getResources().getDimensionPixelSize(R.dimen.phial_button_shadow_size);
             shadowSize = array.getDimensionPixelSize(R.styleable.PhialButton_phial_size_shadow, defaultShadowSize);
@@ -70,7 +70,7 @@ public class PhialButton extends View {
         if (!isInEditMode()) {
             setLayerType(LAYER_TYPE_SOFTWARE, bgPaint);
         }
-        refreshDrawableState();
+        setupColors();
     }
 
     public void setIcon(Drawable drawable) {
@@ -89,12 +89,16 @@ public class PhialButton extends View {
         }
     }
 
+    public Drawable getIcon() {
+        return icon;
+    }
+
     public void setIcon(@DrawableRes int iconId) {
         setIcon(ContextCompat.getDrawable(getContext(), iconId));
     }
 
-    public void setButtonSize(int size) {
-        buttonSize = size;
+    public void setSuggestedSize(int size) {
+        suggestedSize = size;
         requestLayout();
     }
 
@@ -104,20 +108,44 @@ public class PhialButton extends View {
         requestLayout();
     }
 
+    @ColorInt
+    public int getBackgroundColor() {
+        return getColor(backgroundColor, getDrawableState());
+    }
+
+    @ColorInt
+    public int getIconColor() {
+        return getColor(iconColor, getDrawableState());
+    }
+
+    public int getShadowColor() {
+        return getColor(shadowColor, getDrawableState());
+    }
+
+    public int getShadowSize() {
+        return shadowSize;
+    }
+
+    public int getSuggestedSize() {
+        return suggestedSize;
+    }
+
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
-        final int[] drawableState = getDrawableState();
+        setupColors();
+        invalidate();
+    }
 
-        bgPaint.setColor(getColor(backgroundColor, drawableState));
+    private void setupColors() {
+        bgPaint.setColor(getBackgroundColor());
         if (!isInEditMode()) {
-            bgPaint.setShadowLayer(shadowSize, 0f, getShadowDy(), getColor(shadowColor, drawableState));
+            bgPaint.setShadowLayer(shadowSize, 0f, getShadowDy(), getShadowColor());
         }
 
         if (icon != null) {
-            icon.setColorFilter(getColor(iconColor, drawableState), PorterDuff.Mode.SRC_ATOP);
+            icon.setColorFilter(getIconColor(), PorterDuff.Mode.SRC_ATOP);
         }
-        invalidate();
     }
 
     private float getShadowDy() {
@@ -125,6 +153,7 @@ public class PhialButton extends View {
     }
 
     @Override
+
     protected void onDraw(Canvas canvas) {
         int w = getWidth();
         int h = getHeight();
@@ -147,8 +176,8 @@ public class PhialButton extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(
-                getSize(buttonSize + shadowSize, widthMeasureSpec),
-                getSize(buttonSize + shadowSize, heightMeasureSpec)
+                getSize(suggestedSize + shadowSize, widthMeasureSpec),
+                getSize(suggestedSize + shadowSize, heightMeasureSpec)
         );
     }
 
