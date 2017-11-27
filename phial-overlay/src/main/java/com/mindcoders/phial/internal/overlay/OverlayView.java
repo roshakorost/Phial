@@ -95,10 +95,7 @@ class OverlayView implements ExpandedView.ExpandedViewCallback {
         expandedView.displayPages(pages, selected, false);
     }
 
-    void removeExpandedView(Activity activity, boolean destroyContent) {
-        if (destroyContent) {
-            expandedView.destroyContent();
-        }
+    void removeExpandedView(Activity activity) {
         activity.getWindowManager().removeView(expandedView);
     }
 
@@ -142,5 +139,9 @@ class OverlayView implements ExpandedView.ExpandedViewCallback {
         LayoutParams lp = new LayoutParams();
         lp.copyFrom(source);
         return lp;
+    }
+
+    void freeExpandedContent() {
+        expandedView.destroyContent();
     }
 }

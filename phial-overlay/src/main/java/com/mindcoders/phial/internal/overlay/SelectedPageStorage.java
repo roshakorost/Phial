@@ -3,7 +3,7 @@ package com.mindcoders.phial.internal.overlay;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
-final class SelectedPageStorage {
+class SelectedPageStorage {
 
     private static final String KEY_SELECTED_PAGE_ID = "selected_page_id";
 

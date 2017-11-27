@@ -3,6 +3,7 @@ package com.mindcoders.phial.internal.overlay;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 
 import com.mindcoders.phial.Page;
@@ -68,8 +69,9 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
             }
 
             isExpanded = false;
+            view.freeExpandedContent();
+            notifier.fireDebugWindowHide();
             view.showButton(activity, false);
-            view.removeExpandedView(activity, true);
         }
     }
 
@@ -77,7 +79,7 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
     public void onActivityPaused(Activity activity) {
         if (ObjectUtil.equals(activity, curActivity)) {
             if (isExpanded) {
-                view.removeExpandedView(curActivity, false);
+                view.removeExpandedView(curActivity);
             }
 
             curActivity = null;
@@ -101,7 +103,6 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         }
     }
 
-
     void closeDebugWindow() {
         if (isExpanded) {
             view.animateHideExpandedView();
@@ -113,7 +114,8 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         isExpanded = false;
 
         if (curActivity != null) {
-            view.removeExpandedView(curActivity, true);
+            view.freeExpandedContent();
+            view.removeExpandedView(curActivity);
             view.showButton(curActivity, true);
         }
     }
@@ -134,17 +136,19 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
                 return;
             }
             isExpanded = false;
-            view.removeExpandedView(curActivity, true);
+            view.freeExpandedContent();
+            notifier.fireDebugWindowHide();
+            view.removeExpandedView(curActivity);
             view.showButton(curActivity, false);
         }
     }
 
+    @VisibleForTesting
     @NonNull
-    private List<Page> calcVisiblePages() {
+    List<Page> calcVisiblePages() {
         final List<Page> visiblePages = new ArrayList<>(allPages.size());
-        final Screen screen = screenTracker.getCurrentScreen();
         for (Page page : allPages) {
-            final boolean shouldShowPage = screen.matchesAny(page.getTargetScreens());
+            final boolean shouldShowPage = screenTracker.matchesAny(page.getTargetScreens());
             if (shouldShowPage) {
                 visiblePages.add(page);
             }
@@ -152,7 +156,9 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
         return visiblePages;
     }
 
-    private Page findSelected(List<Page> visible) {
+    @VisibleForTesting
+    @NonNull
+    Page findSelected(List<Page> visible) {
         final String selectedPageId = selectedPageStorage.getSelectedPage();
         for (Page page : visible) {
             if (ObjectUtil.equals(selectedPageId, page.getId())) {
@@ -164,15 +170,32 @@ public class OverlayPresenter extends SimpleActivityLifecycleCallbacks implement
 
     @Nullable
     public View findViewById(int id) {
-        final Screen currentScreen = screenTracker.getCurrentScreen();
-        if (currentScreen == null)
-            return null;
-        return currentScreen.findTarget(id);
+        return screenTracker.findTarget(id);
     }
 
     public void destroy() {
         if (isExpanded) {
             closeDebugWindow();
         }
+    }
+
+    @VisibleForTesting
+    void setExpanded(boolean expanded) {
+        this.isExpanded = expanded;
+    }
+
+    @VisibleForTesting
+    void setCurActivity(Activity curActivity) {
+        this.curActivity = curActivity;
+    }
+
+    @VisibleForTesting
+    boolean isExpanded() {
+        return isExpanded;
+    }
+
+    @VisibleForTesting
+    Activity getCurActivity() {
+        return curActivity;
     }
 }
