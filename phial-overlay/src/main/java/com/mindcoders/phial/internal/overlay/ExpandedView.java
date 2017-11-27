@@ -38,7 +38,6 @@ public class ExpandedView extends FrameLayout {
     private static final int ANIMATION_DURATION = 400;
     private static final int BACKGROUND_COLOR_RES = R.color.phial_palette_gray_darkest_transparent;
     public static final int BACGROUND_TRANSPARENT_COLOR_RES = R.color.phial_palette_gray_darkest_full_transparent;
-    private View settingsButton;
 
     interface ExpandedViewCallback extends OverlayCallback {
         void onPageSelected(Page page);
@@ -47,6 +46,7 @@ public class ExpandedView extends FrameLayout {
     private final LinearLayout iconsHolder;
     private final View arrow;
     private final TextView title;
+    private final View settingsButton;
     private final FrameLayout contentContainer;
 
     private Animator animator = ValueAnimator.ofInt();
