@@ -143,8 +143,12 @@ public class ScreenTest {
         assertNull(screen.findTarget(1));
     }
 
-    private static class ActivityA extends Activity {}
+    private static class ActivityA extends Activity {
 
-    private static class ActivityB extends Activity {}
+    }
+
+    private static class ActivityB extends Activity {
+
+    }
 
 }
