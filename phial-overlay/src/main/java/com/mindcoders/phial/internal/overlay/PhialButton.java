@@ -76,6 +76,8 @@ public class PhialButton extends View {
     public void setIcon(Drawable drawable) {
         if (drawable != null) {
             icon = drawable.mutate();
+        } else {
+            icon = null;
         }
         refreshDrawableState();
         invalidate();
@@ -153,7 +155,6 @@ public class PhialButton extends View {
     }
 
     @Override
-
     protected void onDraw(Canvas canvas) {
         int w = getWidth();
         int h = getHeight();

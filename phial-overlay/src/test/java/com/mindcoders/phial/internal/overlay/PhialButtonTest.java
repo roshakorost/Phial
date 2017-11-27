@@ -1,7 +1,9 @@
 package com.mindcoders.phial.internal.overlay;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.View.MeasureSpec;
 
@@ -16,6 +18,7 @@ import org.robolectric.RuntimeEnvironment;
 
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -63,6 +66,21 @@ public class PhialButtonTest {
         assertEquals(context.getDrawable(R.drawable.ic_handle), button.getIcon());
         assertEquals(20, button.getSuggestedSize());
         assertEquals(5, button.getShadowSize());
+    }
+
+    @Test
+    public void testSetNullIcon() {
+        final PhialButton button = new PhialButton(context);
+        button.setIcon((Bitmap) null);
+        assertNull(button.getIcon());
+    }
+
+    @Test
+    public void testSetIcon() {
+        final PhialButton button = new PhialButton(context);
+        final Bitmap bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
+        button.setIcon(bitmap);
+        assertEquals(new BitmapDrawable(context.getResources(), bitmap), button.getIcon());
     }
 
     @Test
