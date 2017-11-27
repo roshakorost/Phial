@@ -79,6 +79,12 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
     executionData = files()
 
     publishedProjects.each { p ->
+        p.android.testOptions.unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+
         p.android.unitTestVariants.each { variant ->
             sourceDirectories += files(variant.testedVariant.sourceSets.java.srcDirs.flatten())
             classDirectories += fileTree(
