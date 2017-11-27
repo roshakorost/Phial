@@ -2,6 +2,7 @@ package com.mindcoders.phial.internal.overlay;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
@@ -16,6 +17,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
+import static android.view.View.MeasureSpec.UNSPECIFIED;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -32,7 +34,7 @@ public class PhialButtonTest {
     }
 
     @Test
-    public void readAttributes() {
+    public void init_fromAttributes() {
         final int bgColor = Color.RED;
         final int iconColor = Color.YELLOW;
         final int shadowColor = Color.BLUE;
@@ -69,14 +71,14 @@ public class PhialButtonTest {
     }
 
     @Test
-    public void testSetNullIcon() {
+    public void setIcon_null_returns_null_drawable() {
         final PhialButton button = new PhialButton(context);
         button.setIcon((Bitmap) null);
         assertNull(button.getIcon());
     }
 
     @Test
-    public void testSetIcon() {
+    public void setIcon_bitmap_returns_bitmapDrawable() {
         final PhialButton button = new PhialButton(context);
         final Bitmap bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
         button.setIcon(bitmap);
@@ -84,7 +86,7 @@ public class PhialButtonTest {
     }
 
     @Test
-    public void testMeasure() {
+    public void measure_honors_measure_specs() {
         final PhialButton button = new PhialButton(context);
         button.setSuggestedSize(10);
         button.setShadowSize(2);
@@ -107,6 +109,29 @@ public class PhialButtonTest {
         button.measure(specsExactly, specsExactly);
         assertEquals(15, button.getMeasuredWidth());
         assertEquals(15, button.getMeasuredHeight());
+    }
+
+    //test is stupid it only can check rather on draw will crash or not.
+    @Test
+    public void check_draw_crash() {
+        final PhialButton button = new PhialButton(context);
+        button.setSuggestedSize(10);
+        button.setShadowSize(1);
+        button.measure(UNSPECIFIED, UNSPECIFIED);
+        button.setIcon((Bitmap) null);
+
+        final Bitmap bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+        button.onDraw(canvas);
+
+        button.setIcon(Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_4444));
+        button.onDraw(canvas);
+    }
+
+    @Test
+    public void getIconSize_returns_correct_size() {
+        assertEquals(10, PhialButton.getIconSize(10, -1));
+        assertEquals(10, PhialButton.getIconSize(10, 20));
     }
 
     private static int getButtonStyleable(int styleable) {

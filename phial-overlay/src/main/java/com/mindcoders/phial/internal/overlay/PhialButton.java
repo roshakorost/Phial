@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -198,7 +199,8 @@ public class PhialButton extends View {
         }
     }
 
-    private int getIconSize(int maxSize, int intrinsicSize) {
+    @VisibleForTesting
+    static int getIconSize(int maxSize, int intrinsicSize) {
         if (intrinsicSize == -1 || intrinsicSize > maxSize) {
             return maxSize;
         }
