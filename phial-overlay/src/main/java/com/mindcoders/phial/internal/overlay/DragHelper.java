@@ -2,6 +2,7 @@ package com.mindcoders.phial.internal.overlay;
 
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
+import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -25,13 +26,12 @@ class DragHelper {
     private static final float DEFAULT_Y = 0.7f;
 
     private final PositionStorage positionStorage;
-    private final int animatedXPos;
-    private final int animatedYPos;
+    @DimenRes
+    private final int paddingRes;
 
-    DragHelper(PositionStorage positionStorage, int animatedXPos, int animatedYPos) {
+    DragHelper(PositionStorage positionStorage, @DimenRes int paddingRes) {
         this.positionStorage = positionStorage;
-        this.animatedXPos = animatedXPos;
-        this.animatedYPos = animatedYPos;
+        this.paddingRes = paddingRes;
     }
 
     void manage(WindowManager windowManager, View view) {
@@ -49,7 +49,7 @@ class DragHelper {
         findDragger(view).animateFromDefaultPosition(endAction);
     }
 
-    void animateToDefaultPosition(View view, Runnable endAction) {
+    void animateToCorner(View view, Runnable endAction) {
         findDragger(view).animateToDefaultPosition(endAction);
     }
 
@@ -105,8 +105,9 @@ class DragHelper {
             initParentRect();
             animator.cancel();
 
-            final int startX = parent.right - animatedXPos;
-            final int startY = parent.top - animatedYPos;
+            final int paddingValue = view.getResources().getDimensionPixelSize(paddingRes);
+            final int startX = parent.right - paddingValue;
+            final int startY = parent.top + paddingValue;
 
             final PositionStorage.Position position = positionStorage.getPosition(DEFAULT_X, DEFAULT_Y);
             final int targetX = (int) (parent.left + parent.width() * position.x);

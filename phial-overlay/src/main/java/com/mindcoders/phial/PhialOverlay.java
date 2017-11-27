@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.support.annotation.DrawableRes;
 
-import com.mindcoders.phial.internal.OverlayFactory;
 import com.mindcoders.phial.internal.PhialCore;
+import com.mindcoders.phial.internal.overlay.OverlayFactory;
 import com.mindcoders.phial.internal.overlay.OverlayPresenter;
 
 /**
@@ -46,7 +46,9 @@ public final class PhialOverlay {
     static void init(PhialBuilder builder) {
         destroy();
         PhialOverlay.phialCore = PhialCore.create(builder);
-        PhialOverlay.overlay = OverlayFactory.createOverlay2(builder, phialCore);
+        PhialOverlay.overlay = OverlayFactory.createPresenter(builder.getApplication(), phialCore);
+
+        phialCore.getScreenTracker().addListener(PhialOverlay.overlay);
         phialCore.getApplication().registerActivityLifecycleCallbacks(PhialOverlay.overlay);
     }
 
