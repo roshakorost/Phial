@@ -78,4 +78,10 @@ public class ScreenTrackerTest {
         verify(listener).onScreenChanged(any());
     }
 
+    @Test
+    public void destroy() throws Exception {
+        screenTracker.destroy();
+        assertNull(screenTracker.getCurrentScreen().getActivity());
+    }
+
 }
