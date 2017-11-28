@@ -5,14 +5,18 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.VisibleForTesting;
 
 import com.mindcoders.phial.ShareDescription;
 import com.mindcoders.phial.Shareable;
 
+import static android.support.annotation.VisibleForTesting.PACKAGE_PRIVATE;
+
 /**
  * Created by rost on 10/23/17.
  */
-abstract class ShareItem {
+@VisibleForTesting(otherwise = PACKAGE_PRIVATE)
+public abstract class ShareItem {
     private final ShareDescription description;
 
     static ShareItem create(Shareable shareable) {
@@ -41,28 +45,3 @@ abstract class ShareItem {
     }
 }
 
-class UserShareItem extends ShareItem {
-    private final Shareable shareable;
-
-    UserShareItem(Shareable shareable) {
-        super(shareable.getDescription());
-        this.shareable = shareable;
-    }
-
-    public Shareable getShareable() {
-        return shareable;
-    }
-}
-
-class SystemShareItem extends ShareItem {
-    private final ComponentName componentName;
-
-    SystemShareItem(ShareDescription shareDescription, ComponentName componentName) {
-        super(shareDescription);
-        this.componentName = componentName;
-    }
-
-    ComponentName getComponentName() {
-        return componentName;
-    }
-}

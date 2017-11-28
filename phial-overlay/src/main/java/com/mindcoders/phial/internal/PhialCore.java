@@ -35,6 +35,8 @@ import static com.mindcoders.phial.internal.InternalPhialConfig.DEFAULT_SHARE_IM
  */
 
 public final class PhialCore {
+    public static final String KEYVALUE_PAGE_KEY = "keyvalue";
+    public static final String SHARE_PAGE_KEY = "share";
     private final Application application;
     private final ShareManager shareManager;
     private final AttachmentManager attachmentManager;
@@ -189,6 +191,18 @@ public final class PhialCore {
         return sharedPreferences;
     }
 
+    public ShareManager getShareManager() {
+        return shareManager;
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public KVSaver getKvSaver() {
+        return kvSaver;
+    }
+
     public List<Page> getPages() {
         return pages;
     }
@@ -196,7 +210,7 @@ public final class PhialCore {
     @NonNull
     private static Page createShareView(Application application, ShareManager shareManager, AttachmentManager attachmentManager) {
         return new Page(
-                "share",
+                SHARE_PAGE_KEY,
                 R.drawable.ic_share,
                 application.getString(R.string.share_page_title),
                 new ShareViewFactory(shareManager, attachmentManager),
@@ -207,7 +221,7 @@ public final class PhialCore {
     @NonNull
     private static Page createKVPage(Application application, KVSaver kvSaver) {
         return new Page(
-                "keyvalue",
+                KEYVALUE_PAGE_KEY,
                 R.drawable.ic_keyvalue,
                 application.getString(R.string.system_info_page_title),
                 new KVPageFactory(kvSaver),
