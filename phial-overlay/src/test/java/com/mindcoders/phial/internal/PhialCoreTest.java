@@ -1,6 +1,7 @@
 package com.mindcoders.phial.internal;
 
 import com.mindcoders.phial.ListAttacher;
+import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialBuilder;
 import com.mindcoders.phial.Shareable;
@@ -39,6 +40,7 @@ public class PhialCoreTest {
 
         final PhialCore phialCore = PhialCore.create(builder);
 
+        assertNotNull(phialCore.getApplication());
         assertNotNull(phialCore.getKvSaver());
         assertNotNull(phialCore.getScreenTracker());
         assertNotNull(phialCore.getNotifier());
@@ -48,10 +50,10 @@ public class PhialCoreTest {
         assertNotNull(phialCore.getActivityProvider());
         assertEquals(phialCore.getAttachmentManager().getProviders().size(), 2);
         assertNotNull(phialCore.getSharedPreferences());
-        assertNotNull(phialCore.getPages());
-        assertEquals(phialCore.getPages().size(), 2);
-        assertEquals(phialCore.getPages().get(0).getId(), PhialCore.KEYVALUE_PAGE_KEY);
-        assertEquals(phialCore.getPages().get(1).getId(), PhialCore.SHARE_PAGE_KEY);
+        final List<Page> pages = phialCore.getPages();
+        assertEquals(pages.size(), 2);
+        verifyPage(pages.get(0), PhialCore.KEYVALUE_PAGE_KEY);
+        verifyPage(pages.get(1), PhialCore.SHARE_PAGE_KEY);
 
         verify(writers.get(0)).writeInfo();
         verify(writers.get(1)).writeInfo();
@@ -98,12 +100,6 @@ public class PhialCoreTest {
         assertTrue(createdPages.containsAll(pages));
     }
 
-    private List<Page> generatePages(int count) {
-        return IntStream.range(0, count)
-                .mapToObj(this::createPage)
-                .collect(Collectors.toList());
-    }
-
     @Test
     public void create_with_custom_sharables() {
         final List<Shareable> shareables = Stream.generate(() -> mock(Shareable.class)).limit(2)
@@ -146,6 +142,21 @@ public class PhialCoreTest {
 
         final PhialCore phialCore = PhialCore.create(builder);
         assertTrue(phialCore.getAttachmentManager().getProviders().containsAll(attachers));
+    }
+
+    private void verifyPage(Page page, String expectedKey) {
+        assertEquals(page.getId(), expectedKey);
+        assertNotNull(page.getPageViewFactory());
+        assertNotNull(page.getPageViewFactory().createPageView(
+                RuntimeEnvironment.application,
+                mock(OverlayCallback.class))
+        );
+    }
+
+    private List<Page> generatePages(int count) {
+        return IntStream.range(0, count)
+                .mapToObj(this::createPage)
+                .collect(Collectors.toList());
     }
 
     private Page createPage(int i) {
