@@ -67,6 +67,30 @@ public class ExpandedViewTest {
     }
 
     @Test
+    public void setSelected() throws Exception {
+        View pageView1 = mock(View.class, withSettings().extraInterfaces(PageView.class));
+        View pageView2 = mock(View.class, withSettings().extraInterfaces(PageView.class));
+
+        List<Page> pages = ImmutableList.of(
+                new Page("page1", R.drawable.ic_share, "page1", (context, overlayCallback) -> pageView1),
+                new Page("page2", R.drawable.ic_share, "page2", (context, overlayCallback) -> pageView2)
+        );
+
+        view.displayPages(pages, pages.get(0), false);
+
+        ViewGroup iconHolder = view.findViewById(R.id.tab_icons_holder);
+
+        Page selectedPage = pages.get(1);
+        view.setSelected(selectedPage);
+        for (int i = 0; i < iconHolder.getChildCount(); i++) {
+            View child = iconHolder.getChildAt(i);
+            assertTrue(child.isSelected() == ObjectUtil.equals(child.getTag(), selectedPage.getId()));
+        }
+        View selectedView = iconHolder.findViewWithTag(selectedPage.getId());
+        assertEquals(selectedPage.getId(), selectedView.getTag());
+    }
+
+    @Test
     public void destroyContent() throws Exception {
         view.destroyContent();
         assertEquals(View.INVISIBLE, view.getVisibility());
