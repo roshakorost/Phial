@@ -21,7 +21,7 @@ class AutoFillPageFactory implements Page.PageViewFactory<FillView> {
     public FillView createPageView(Context context, OverlayCallback overlayCallback) {
         final Store store = Store.create(context, config.getScreen().getName());
         final ConfigManager manager = new ConfigManager(config, store);
-        return new FillView(context, manager, overlayCallback, null);
+        return new FillView(context, manager, overlayCallback);
     }
 
 }

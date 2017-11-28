@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.mindcoders.phial.OverlayCallback;
 import com.mindcoders.phial.PageView;
-import com.mindcoders.phial.internal.ScreenTracker;
 import com.mindcoders.phial.internal.util.Precondition;
 import com.mindcoders.phial.internal.util.SimpleTextWatcher;
 
@@ -39,7 +38,7 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
         manager = null;
     }
 
-    FillView(@NonNull Context context, ConfigManager manager, OverlayCallback overlayCallback, ScreenTracker screenTracker) {
+    FillView(@NonNull Context context, ConfigManager manager, OverlayCallback overlayCallback) {
         super(context);
         this.manager = manager;
         this.overlayCallback = overlayCallback;
