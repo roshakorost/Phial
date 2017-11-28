@@ -48,10 +48,10 @@ public class PhialCoreTest {
         assertTrue(phialCore.getShareManager().getShareables().isEmpty());
         assertNotNull(phialCore.getAttachmentManager());
         assertNotNull(phialCore.getActivityProvider());
-        assertEquals(phialCore.getAttachmentManager().getProviders().size(), 2);
+        assertEquals(2, phialCore.getAttachmentManager().getProviders().size());
         assertNotNull(phialCore.getSharedPreferences());
         final List<Page> pages = phialCore.getPages();
-        assertEquals(pages.size(), 2);
+        assertEquals(2, pages.size());
         verifyPage(pages.get(0), PhialCore.KEYVALUE_PAGE_KEY);
         verifyPage(pages.get(1), PhialCore.SHARE_PAGE_KEY);
 
@@ -79,7 +79,7 @@ public class PhialCoreTest {
         builder.enableShareView(false);
 
         final PhialCore phialCore = PhialCore.create(builder);
-        assertEquals(phialCore.getPages(), pages);
+        assertEquals(pages, phialCore.getPages());
     }
 
     @Test
@@ -94,9 +94,9 @@ public class PhialCoreTest {
         final PhialCore phialCore = PhialCore.create(builder);
         final List<Page> createdPages = phialCore.getPages();
 
-        assertEquals(pages.size() + 2, createdPages.size());
-        assertEquals(createdPages.get(0).getId(), PhialCore.KEYVALUE_PAGE_KEY);
-        assertEquals(createdPages.get(1).getId(), PhialCore.SHARE_PAGE_KEY);
+        assertEquals(createdPages.size(), pages.size() + 2);
+        assertEquals(PhialCore.KEYVALUE_PAGE_KEY, createdPages.get(0).getId());
+        assertEquals(PhialCore.SHARE_PAGE_KEY, createdPages.get(1).getId());
         assertTrue(createdPages.containsAll(pages));
     }
 
@@ -145,7 +145,7 @@ public class PhialCoreTest {
     }
 
     private void verifyPage(Page page, String expectedKey) {
-        assertEquals(page.getId(), expectedKey);
+        assertEquals(expectedKey, page.getId());
         assertNotNull(page.getPageViewFactory());
         assertNotNull(page.getPageViewFactory().createPageView(
                 RuntimeEnvironment.application,

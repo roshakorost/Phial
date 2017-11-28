@@ -26,13 +26,13 @@ import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION;
  * Manages interaction with window manager
  */
 class OverlayView implements ExpandedView.ExpandedViewCallback {
-    private final static int WINDOW_TYPE = TYPE_APPLICATION;
-    private final static LayoutParams BUTTON_PARAMS = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT,
+    private static final int WINDOW_TYPE = TYPE_APPLICATION;
+    private static final LayoutParams BUTTON_PARAMS = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT,
             WINDOW_TYPE,
             FLAG_NOT_FOCUSABLE | FLAG_DIM_BEHIND,
             PixelFormat.TRANSLUCENT
     );
-    private final static LayoutParams EXPANDED_VIEW_PARAMS = new LayoutParams(MATCH_PARENT, MATCH_PARENT,
+    private static final LayoutParams EXPANDED_VIEW_PARAMS = new LayoutParams(MATCH_PARENT, MATCH_PARENT,
             WINDOW_TYPE,
             FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
