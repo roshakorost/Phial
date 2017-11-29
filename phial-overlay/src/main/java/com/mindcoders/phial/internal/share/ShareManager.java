@@ -30,7 +30,7 @@ public class ShareManager {
         this.userShareItems = createUserShareItem(userShareables);
     }
 
-    List<ShareItem> getShareables() {
+    public List<ShareItem> getShareables() {
         final Intent shareIntent = createShareIntent(null, "dummy message");
 
         final List<ResolveInfo> infos = context.getPackageManager().queryIntentActivities(shareIntent, 0);
@@ -40,6 +40,10 @@ public class ShareManager {
         result.addAll(createSystemShareItems(infos));
 
         return result;
+    }
+
+    public List<ShareItem> getUserShareItems() {
+        return userShareItems;
     }
 
     void share(ShareItem shareItem, ShareContext shareContext, File attachment, String message) {
@@ -79,22 +83,12 @@ public class ShareManager {
     }
 
     private ArrayList<ShareItem> createSystemShareItems(List<ResolveInfo> infos) {
-        return CollectionUtils.map(infos, new CollectionUtils.Function1<ShareItem, ResolveInfo>() {
-            @Override
-            public ShareItem call(ResolveInfo info) {
-                return ShareItem.create(context, info);
-            }
-        });
+        return CollectionUtils.map(infos, info -> ShareItem.create(context, info));
     }
 
     private static List<ShareItem> createUserShareItem(List<Shareable> userShareables) {
         return Collections.unmodifiableList(
-                CollectionUtils.map(userShareables, new CollectionUtils.Function1<ShareItem, Shareable>() {
-                    @Override
-                    public ShareItem call(Shareable shareable) {
-                        return ShareItem.create(shareable);
-                    }
-                })
+                CollectionUtils.map(userShareables, ShareItem::create)
         );
     }
 }

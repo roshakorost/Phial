@@ -36,11 +36,11 @@ public class SimpleFileAttacher implements ListAttacher {
 
     @Override
     public void onPreDebugWindowCreated() {
-
+        //optional method for implementation.
     }
 
     @Override
     public void onAttachmentNotNeeded() {
-
+        //optional method for implementation.
     }
 }

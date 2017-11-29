@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -69,5 +70,9 @@ public class AttachmentManager implements PhialListener {
         for (ListAttacher provider : providers) {
             provider.onAttachmentNotNeeded();
         }
+    }
+
+    public List<ListAttacher> getProviders() {
+        return Collections.unmodifiableList(providers);
     }
 }

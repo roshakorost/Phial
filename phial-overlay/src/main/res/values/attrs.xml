@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="phial_button_style" format="reference" />
+    <attr name="phial_title_text_color" format="color|reference" />
+    <attr name="phial_title_text_size" format="dimension|reference" />
+
+    <declare-styleable name="PhialButton">
+        <attr name="phial_color_icon" format="color|reference" />
+        <attr name="phial_color_background" format="color|reference" />
+        <attr name="phial_color_shadow" format="color|reference" />
+        <attr name="phial_size" format="dimension|reference" />
+        <attr name="phial_size_shadow" format="dimension|reference" />
+        <attr name="phial_icon" format="reference" />
+    </declare-styleable>
+</resources>

@@ -1,4 +1,5 @@
-# Phial [![Release](https://jitpack.io/v/roshakorost/Phial.svg)](https://jitpack.io/#roshakorost/Phial)  [![Build Status](https://travis-ci.org/roshakorost/Phial.svg?branch=master)](https://travis-ci.org/roshakorost/Phial)
+# Phial [![Release](https://jitpack.io/v/roshakorost/Phial.svg)](https://jitpack.io/#roshakorost/Phial)  [![Build Status](https://travis-ci.org/roshakorost/Phial.svg?branch=master)](https://travis-ci.org/roshakorost/Phial)  [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=com.mindcoders.phial)](https://sonarcloud.io/dashboard/index/com.mindcoders.phial)
+
 
 **Phial is an Android library that captures your bug data directly to Jira or other services.** When a bug is found, Phial allows the Tester to export logs, screenshot, system, build and many more data from a device to a JIRA bug report. 
 

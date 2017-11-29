@@ -1,15 +1,23 @@
 package com.mindcoders.phial.internal;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.mindcoders.phial.Attacher;
 import com.mindcoders.phial.ListAttacher;
+import com.mindcoders.phial.OverlayCallback;
+import com.mindcoders.phial.Page;
 import com.mindcoders.phial.PhialBuilder;
+import com.mindcoders.phial.R;
+import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.keyvalue.InfoWriter;
 import com.mindcoders.phial.internal.keyvalue.KVAttacher;
 import com.mindcoders.phial.internal.keyvalue.KVSaver;
+import com.mindcoders.phial.internal.keyvalue.KeyValueView;
 import com.mindcoders.phial.internal.share.ShareManager;
+import com.mindcoders.phial.internal.share.ShareView;
 import com.mindcoders.phial.internal.share.attachment.AttacherAdaptor;
 import com.mindcoders.phial.internal.share.attachment.AttachmentManager;
 import com.mindcoders.phial.internal.share.attachment.ScreenShotAttacher;
@@ -17,6 +25,7 @@ import com.mindcoders.phial.internal.util.CurrentActivityProvider;
 import com.mindcoders.phial.keyvalue.Phial;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.mindcoders.phial.internal.InternalPhialConfig.DEFAULT_SHARE_IMAGE_QUALITY;
@@ -26,6 +35,8 @@ import static com.mindcoders.phial.internal.InternalPhialConfig.DEFAULT_SHARE_IM
  */
 
 public final class PhialCore {
+    public static final String KEYVALUE_PAGE_KEY = "keyvalue";
+    public static final String SHARE_PAGE_KEY = "share";
     private final Application application;
     private final ShareManager shareManager;
     private final AttachmentManager attachmentManager;
@@ -33,6 +44,8 @@ public final class PhialCore {
     private final PhialNotifier notifier;
     private final CurrentActivityProvider activityProvider;
     private final ScreenTracker screenTracker;
+    private final SharedPreferences sharedPreferences;
+    private final List<Page> pages;
 
     private PhialCore(
             Application application,
@@ -41,8 +54,9 @@ public final class PhialCore {
             KVSaver kvSaver,
             PhialNotifier notifier,
             CurrentActivityProvider activityProvider,
-            ScreenTracker screenTracker
-    ) {
+            ScreenTracker screenTracker,
+            SharedPreferences sharedPreferences,
+            List<Page> pages) {
         this.application = application;
         this.shareManager = shareManager;
         this.attachmentManager = attachmentManager;
@@ -50,6 +64,8 @@ public final class PhialCore {
         this.notifier = notifier;
         this.activityProvider = activityProvider;
         this.screenTracker = screenTracker;
+        this.sharedPreferences = sharedPreferences;
+        this.pages = pages;
     }
 
     public static PhialCore create(PhialBuilder phialBuilder) {
@@ -76,6 +92,23 @@ public final class PhialCore {
         for (InfoWriter writer : writers) {
             writer.writeInfo();
         }
+        final SharedPreferences sharedPreferences = application.getSharedPreferences(
+                InternalPhialConfig.PREFERENCES_FILE_NAME,
+                Context.MODE_PRIVATE
+        );
+
+        final List<Page> pages = new ArrayList<>();
+        if (phialBuilder.enableKeyValueView()) {
+            final Page page = createKVPage(application, kvSaver);
+            pages.add(page);
+        }
+
+        if (phialBuilder.enableShareView()) {
+            final Page page = createShareView(application, shareManager, attachmentManager);
+            pages.add(page);
+        }
+
+        pages.addAll(phialBuilder.getPages());
 
         return new PhialCore(
                 application,
@@ -84,7 +117,9 @@ public final class PhialCore {
                 kvSaver,
                 phialNotifier,
                 activityProvider,
-                screenTracker
+                screenTracker,
+                sharedPreferences,
+                pages
         );
     }
 
@@ -92,6 +127,7 @@ public final class PhialCore {
         application.unregisterActivityLifecycleCallbacks(activityProvider);
         Phial.removeSaver(kvSaver);
         notifier.destroy();
+        screenTracker.destroy();
     }
 
     @NonNull
@@ -135,32 +171,89 @@ public final class PhialCore {
         return attachers;
     }
 
-    Application getApplication() {
+    public Application getApplication() {
         return application;
     }
 
-    ShareManager getShareManager() {
-        return shareManager;
-    }
-
-    AttachmentManager getAttachmentManager() {
-        return attachmentManager;
-    }
-
-    KVSaver getKvSaver() {
-        return kvSaver;
-    }
-
-    PhialNotifier getNotifier() {
+    public PhialNotifier getNotifier() {
         return notifier;
     }
 
-    CurrentActivityProvider getActivityProvider() {
+    public CurrentActivityProvider getActivityProvider() {
         return activityProvider;
     }
 
-    ScreenTracker getScreenTracker() {
+    public ScreenTracker getScreenTracker() {
         return screenTracker;
     }
 
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
+
+    public ShareManager getShareManager() {
+        return shareManager;
+    }
+
+    public AttachmentManager getAttachmentManager() {
+        return attachmentManager;
+    }
+
+    public KVSaver getKvSaver() {
+        return kvSaver;
+    }
+
+    public List<Page> getPages() {
+        return pages;
+    }
+
+    @NonNull
+    private static Page createShareView(Application application, ShareManager shareManager, AttachmentManager attachmentManager) {
+        return new Page(
+                SHARE_PAGE_KEY,
+                R.drawable.ic_share,
+                application.getString(R.string.share_page_title),
+                new ShareViewFactory(shareManager, attachmentManager),
+                Collections.<TargetScreen>emptySet()
+        );
+    }
+
+    @NonNull
+    private static Page createKVPage(Application application, KVSaver kvSaver) {
+        return new Page(
+                KEYVALUE_PAGE_KEY,
+                R.drawable.ic_keyvalue,
+                application.getString(R.string.system_info_page_title),
+                new KVPageFactory(kvSaver),
+                Collections.<TargetScreen>emptySet()
+        );
+    }
+
+    private static final class KVPageFactory implements Page.PageViewFactory<KeyValueView> {
+        private final KVSaver kvSaver;
+
+        KVPageFactory(KVSaver kvSaver) {
+            this.kvSaver = kvSaver;
+        }
+
+        @Override
+        public KeyValueView createPageView(Context context, OverlayCallback overlayCallback) {
+            return new KeyValueView(context, kvSaver);
+        }
+    }
+
+    private static final class ShareViewFactory implements Page.PageViewFactory<ShareView> {
+        private final ShareManager shareManager;
+        private final AttachmentManager attachmentManager;
+
+        ShareViewFactory(ShareManager shareManager, AttachmentManager attachmentManager) {
+            this.shareManager = shareManager;
+            this.attachmentManager = attachmentManager;
+        }
+
+        @Override
+        public ShareView createPageView(Context context, OverlayCallback overlayCallback) {
+            return new ShareView(context, shareManager, attachmentManager, overlayCallback);
+        }
+    }
 }

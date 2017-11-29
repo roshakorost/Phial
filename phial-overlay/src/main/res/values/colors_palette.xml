@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="phial_palette_white">#ffffff</color>
+    <color name="phial_palette_gray_lightest">#f5f6f7</color>
+    <color name="phial_palette_gray_very_light">#f1f2f3</color>
+    <color name="phial_palette_gray_light">#d3d4d5</color>
+    <color name="phial_palette_gray_dark">#4b4b4b</color>
+    <color name="phial_palette_gray_darkest">#24292e</color>
+    <color name="phial_palette_gray_darkest_transparent">#7024292e</color>
+    <color name="phial_palette_gray_darkest_full_transparent">#0024292e</color>
+    <color name="phial_palette_black">#000000</color>
+</resources>

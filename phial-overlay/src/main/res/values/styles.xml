@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Phial.Base" parent="@android:style/Theme.Holo.Light" />
+
+    <style name="Theme.Phial" parent="Theme.Phial.Base">
+        <item name="phial_button_style">@style/Widget.Phial.Button</item>
+        <item name="phial_title_text_color">@color/phial_title_color</item>
+        <item name="phial_title_text_size">20sp</item>
+    </style>
+
+    <style name="Widget.Phial.Button" parent="">
+        <item name="phial_color_icon">@color/phial_icon_color</item>
+        <item name="phial_color_background">@color/phial_button_color</item>
+        <item name="phial_color_shadow">@color/phial_palette_gray_darkest_transparent</item>
+        <item name="phial_size">@dimen/phial_button_size</item>
+        <item name="phial_size_shadow">@dimen/phial_button_shadow_size</item>
+    </style>
+
+    <style name="TextAppearance.Phial.Title" parent="@android:style/TextAppearance.DeviceDefault" tools:ignore="NewApi">
+        <item name="android:fontFamily">@string/phial_font_medium</item>
+        <item name="android:textColor">?phial_title_text_color</item>
+        <item name="android:textSize">?phial_title_text_size</item>
+    </style>
+</resources>

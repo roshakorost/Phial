@@ -7,6 +7,18 @@ android:
 jdk:
   - oraclejdk8
 
+before_install:
+  - git fetch --unshallow
+
+addons:
+  sonarcloud:
+    organization: "phial"
+    token:
+      secure: "NCDsMoyjfXH6IxHpew+nwrp2AZj4dUIB19X0Fsg4ekzu4X2Y7TPcaC3HTmfJTDbqxhNSAYM6gANxdAbU/CKLMjAPD1C79Y4WF+QI9oeTHaUvcVKRjyw1+b/13INZkFlKaNdJCfV1jancJa1eo0+RFzV7G4oC6YGdpM4WjlY5ZPgNiAbDW1aRv0fKNo0au3td0DZSyNWm4O8EcTlvxoXvHll49LLFfCSrm0ooPY37c4UvKnxwgyA4SoyfUuWRcO4wGoR4PKU2BFt21zBZ1nKNXPYsjfahDGIBJ1XaEah/u3lZwAZtACbWdRo2X3UXFxE/me8jvIYRpE0R51MQ1AyneTMXHtj3kAG+txSVxJBI9FWG2yrKfGOi4bdjy1bHI8/j6mTwYSoqBWgV11FP77nbUZBGkmj65ldGQEQa0tdty4neHy9KmO8b3oxRpJDtO3mdOK1NnUqlx0b+WfqSEJrFzd12lqtevZTH1dLjLFJDFGcykhzbhio77OgBvGQLxI+bbw6Q43kht6M9YkSh66ndXbjWfEWD1VVwSFx3ljgd4QnqRBxah4IndvZD/TY9lQqnL7y6NFp2v3vh2tVzpvLQuDxNfYGI6Id7ZlYOR3phSpQzk0M+UnhwtPWR1LjRJUk5q/7rxgBW/5gIJk+CbKyWh8xe34E4Wyt4jvaJayQvcVA="
+    branches:
+      - master
+      - develop
+
 # safelist
 branches:
   only:
@@ -15,7 +27,7 @@ branches:
 
 
 script:
-  - ./gradlew check --no-daemon
+  - ./gradlew check sonarqube --no-daemon
 
 notifications:
   email: false

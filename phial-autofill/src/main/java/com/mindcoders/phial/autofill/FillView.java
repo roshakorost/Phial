@@ -1,6 +1,5 @@
 package com.mindcoders.phial.autofill;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -83,16 +82,11 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
 
     @Override
     public void onItemClicked(FillOption option) {
-        final Activity currentActivity = overlayCallback.getCurrentActivity();
-        if (currentActivity == null) {
-            return;
-        }
-
         final List<String> dataToFill = option.getDataToFill();
         final List<Integer> ids = manager.getTargetIds();
 
         for (int i = 0; i < Math.min(dataToFill.size(), ids.size()); i++) {
-            final View view = currentActivity.findViewById(ids.get(i));
+            final View view = overlayCallback.findViewById(ids.get(i));
             if (view instanceof TextView) {
                 ((TextView) view).setText(dataToFill.get(i));
             }
@@ -102,11 +96,6 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
     }
 
     private void saveOption(String optionName) {
-        final Activity currentActivity = overlayCallback.getCurrentActivity();
-        if (currentActivity == null) {
-            return;
-        }
-
         if (optionName.isEmpty()) {
             return;
         }
@@ -114,7 +103,7 @@ class FillView extends FrameLayout implements PageView, Adapter.OnItemClickedLis
         final List<Integer> ids = manager.getTargetIds();
         final List<String> values = new ArrayList<>(ids.size());
         for (int i = 0; i < ids.size(); i++) {
-            final View view = currentActivity.findViewById(ids.get(i));
+            final View view = overlayCallback.findViewById(ids.get(i));
             final String value = readValueOrDefault(view);
             values.add(value);
         }

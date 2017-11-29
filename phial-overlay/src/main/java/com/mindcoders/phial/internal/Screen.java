@@ -8,17 +8,18 @@ import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.util.CollectionUtils;
 import com.mindcoders.phial.internal.util.ObjectUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Screen {
 
     private Activity activity;
-    private Set<String> scopes = Collections.synchronizedSet(new HashSet<String>());
+    private Map<String, WeakReference<View>> scopes = Collections.synchronizedMap(new HashMap<String, WeakReference<View>>());
 
-    Screen(Activity activity, String scope) {
+    Screen(Activity activity, String scopeName) {
         this.activity = activity;
     }
 
@@ -26,12 +27,12 @@ public class Screen {
         return new Screen(null, null);
     }
 
-    void enterScope(String scope) {
-        this.scopes.add(scope);
+    void enterScope(String scopeName, View view) {
+        this.scopes.put(scopeName, new WeakReference<>(view));
     }
 
-    void exitScope(String scope) {
-        this.scopes.remove(scope);
+    void exitScope(String scopeName) {
+        this.scopes.remove(scopeName);
     }
 
     void clearActivity() {
@@ -43,8 +44,8 @@ public class Screen {
             return false;
         }
 
-        if (screen.getScope() != null) {
-            final boolean sameScope = scopes.contains(screen.getScope());
+        if (screen.getScopeName() != null) {
+            final boolean sameScope = scopes.containsKey(screen.getScopeName());
             if (!sameScope) {
                 return false;
             }
@@ -84,9 +85,22 @@ public class Screen {
 
     @Nullable
     public View findTarget(int id) {
-        if (activity != null) {
-            return activity.findViewById(id);
+        View resultView = null;
+
+        for (WeakReference<View> weakRefView : scopes.values()) {
+            View scopeView = weakRefView.get();
+            if (scopeView != null) {
+                resultView = scopeView.findViewById(id);
+            }
+
+            if (resultView != null) {
+                return resultView;
+            }
         }
-        return null;
+
+        if (activity != null) {
+            resultView = activity.findViewById(id);
+        }
+        return resultView;
     }
 }

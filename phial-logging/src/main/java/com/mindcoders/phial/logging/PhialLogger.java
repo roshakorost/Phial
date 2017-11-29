@@ -153,11 +153,11 @@ public class PhialLogger implements Attacher {
 
     @Override
     public void onPreDebugWindowCreated() {
-
+        //not interested when debug window is shown
     }
 
     @Override
     public void onAttachmentNotNeeded() {
-
+        //not interested when debug window is closed
     }
 }

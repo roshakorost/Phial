@@ -12,7 +12,9 @@ import android.view.ViewAnimationUtils;
  */
 
 public abstract class AnimatorFactory {
-    final int x, y, startRadius;
+    final int x;
+    final int y;
+    final int startRadius;
 
     AnimatorFactory(View startView) {
         final int width = startView.getWidth();
@@ -38,7 +40,7 @@ public abstract class AnimatorFactory {
     public abstract Animator createDisappearAnimator(View targetView);
 
     static int calcRadius(int width, int height) {
-        return (int) Math.round(Math.sqrt(width * width + height * height));
+        return (int) Math.round(Math.sqrt((float) width * width + height * height));
     }
 }
 

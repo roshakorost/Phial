@@ -1,23 +1,23 @@
 package com.mindcoders.phial.internal;
 
 import android.app.Activity;
+import android.view.View;
 
+import com.mindcoders.phial.TargetScreen;
 import com.mindcoders.phial.internal.util.ObjectUtil;
 import com.mindcoders.phial.internal.util.SimpleActivityLifecycleCallbacks;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by rost on 11/3/17.
  */
 
-public final class ScreenTracker extends SimpleActivityLifecycleCallbacks implements PhialScopeNotifier.OnScopeChangedListener {
-
+public class ScreenTracker extends SimpleActivityLifecycleCallbacks implements PhialScopeNotifier.OnScopeChangedListener {
     public interface ScreenListener {
-
         void onScreenChanged(Screen screen);
-
     }
 
     private final Screen currentScreen = Screen.empty();
@@ -57,14 +57,27 @@ public final class ScreenTracker extends SimpleActivityLifecycleCallbacks implem
     }
 
     @Override
-    public void onEnterScope(String scope) {
-        currentScreen.enterScope(scope);
+    public void onEnterScope(String scopeName, View view) {
+        currentScreen.enterScope(scopeName, view);
         fireOnScreenChanged();
     }
 
     @Override
-    public void onExitScope(String scope) {
-        currentScreen.exitScope(scope);
+    public void onExitScope(String scopeName) {
+        currentScreen.exitScope(scopeName);
         fireOnScreenChanged();
+    }
+
+    void destroy() {
+        listeners.clear();
+        currentScreen.clearActivity();
+    }
+
+    public boolean matchesAny(Set<TargetScreen> targetScreen) {
+        return currentScreen.matchesAny(targetScreen);
+    }
+
+    public View findTarget(int id) {
+        return currentScreen.findTarget(id);
     }
 }

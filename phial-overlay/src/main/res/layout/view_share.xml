@@ -8,9 +8,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/share.padding.small"
-        android:background="@color/phial.background.light"
-        android:padding="@dimen/share.padding.default">
+        android:layout_marginBottom="@dimen/phial_padding_small"
+        android:padding="@dimen/phial_padding_default">
 
         <EditText
             android:id="@+id/message"
@@ -24,11 +23,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:horizontalSpacing="@dimen/share.padding.items"
+        android:horizontalSpacing="@dimen/phial_share_padding_items"
         android:numColumns="4"
-        android:padding="@dimen/share.padding.default"
+        android:padding="@dimen/phial_padding_default"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="@dimen/share.padding.items"
+        android:verticalSpacing="@dimen/phial_share_padding_items"
         tools:listitem="@layout/listitem_share" />
 
 </LinearLayout>

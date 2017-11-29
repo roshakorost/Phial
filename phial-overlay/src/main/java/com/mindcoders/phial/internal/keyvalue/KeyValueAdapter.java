@@ -119,12 +119,12 @@ final class KeyValueAdapter extends BaseAdapter implements ExpandableListAdapter
 
     @Override
     public void onGroupExpanded(int groupPosition) {
-
+        //don't interested in the callback
     }
 
     @Override
     public void onGroupCollapsed(int groupPosition) {
-
+        //don't interested in the callback
     }
 
     @Override

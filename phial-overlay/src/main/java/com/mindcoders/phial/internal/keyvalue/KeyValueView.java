@@ -13,6 +13,7 @@ import com.mindcoders.phial.PageView;
 import com.mindcoders.phial.R;
 import com.mindcoders.phial.internal.util.Precondition;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -62,8 +63,9 @@ public final class KeyValueView extends FrameLayout implements Observer, PageVie
     }
 
     private void updateData() {
-        adapter.swapData(kvSaver.getData());
-        if (!expandFirst) {
+        final List<KVSaver.KVCategory> data = kvSaver.getData();
+        adapter.swapData(data);
+        if (!expandFirst && !data.isEmpty()) {
             listView.expandGroup(0, true);
             expandFirst = true;
         }
