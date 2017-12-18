@@ -81,7 +81,9 @@ public class Phial {
      */
     public static void removeCategory(String name) {
         Category category = CATEGORIES.remove(name);
-        category.clear();
+        if (category != null) {
+            category.clear();
+        }
     }
 
     /**
