@@ -11,7 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -23,6 +25,7 @@ import java.util.stream.IntStream;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -64,6 +67,16 @@ public class OverlayViewTest {
         verify(dragHelper).animateFromDefaultPosition(eq(viewArgumentCaptor.getValue()), any());
         view.removeButton(activity);
         verify(windowManager).removeView(viewArgumentCaptor.getValue());
+    }
+
+    @Test
+    public void remove_twice_the_same_no_crash() {
+        view.showButton(activity, true);
+
+        view.removeButton(activity);
+        view.removeButton(activity);
+
+        verify(dragHelper, Mockito.never()).unmanage(Matchers.isNull(View.class));
     }
 
     @Test

@@ -82,8 +82,11 @@ class OverlayView implements ExpandedView.ExpandedViewCallback {
 
     void removeButton(Activity activity) {
         final View button = buttons.remove(activity);
-        dragHelper.unmanage(button);
-        activity.getWindowManager().removeView(button);
+
+        if (button != null){
+            dragHelper.unmanage(button);
+            activity.getWindowManager().removeView(button);
+        }
     }
 
     void showExpandedView(Activity activity, List<Page> pages, Page selected, boolean animated) {
